@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MSM HS refresh orchestrator. Exit codes: 0 ok/skip, 12 guard mismatch, 13 stale base, 14 diff scope, 15 deploy fail, 16 verify fail (rolled back)."""
+"""MSM HS refresh orchestrator. Exit codes: 0 ok/skip, 12 guard mismatch, 13 stale base, 14 diff scope, 15 deploy fail, 16 verify fail (rolled back, hold set), 17 rollback failed/unconfirmed (hold set), 18 production refused: hold set."""
 import argparse, json, os, sys, shutil, hashlib, filecmp, subprocess, datetime, re, urllib.request
 sys.path.insert(0, os.path.dirname(__file__)); import hs
 ap = argparse.ArgumentParser()
@@ -25,6 +25,16 @@ def finish(code, status):
 J = lambda p: json.load(open(os.path.join(R, p)))
 sched, scores, state = J('data/hs_schedule.json'), J('data/hs_scores.json'), J('state.json')
 dates = {g['date'] for g in sched['games']}
+import copy; state0 = copy.deepcopy(state)  # on-disk state at start; failure paths write only hold onto this
+
+# 0. production hold (set on exit 16/17; cleared by hand, see README "Clearing the hold")
+if A.target == 'production' and state.get('hold'):
+    log('HOLD SET -> refusing production deploy', json.dumps(state['hold']))
+    rep['issues'].append({'title': 'HS refresh: production on HOLD', 'body': 'state.json has a hold from a failed production verify/rollback. Check live, then clear by hand (README: Clearing the hold).\n\n' + json.dumps(state['hold'], indent=1)})
+    finish(18, 'fail-hold')
+def set_hold(code, why):
+    h = dict(code=code, reason=why, at=rep['now'], live_id_expected=state0.get('live_id'))
+    state0['hold'] = h; json.dump(state0, open(os.path.join(R, 'state.json'), 'w'), indent=1); log('HOLD SET', json.dumps(h))
 
 # 1. window gate (scheduled runs only)
 if A.event == 'schedule' and not A.ignore_window:
@@ -73,11 +83,17 @@ json.dump(scores, open(os.path.join(R, 'data/hs_scores.json'), 'w'), indent=1)
 # 5. patch copy of live base
 out = os.path.join(R, A.out); shutil.rmtree(out, ignore_errors=True); shutil.copytree(os.path.join(R, 'site'), out)
 pr = hs.patch_site(out, sched, scores, today); log('patch', pr)
+if os.environ.get('HS_MOCK'):  # test hook: simulate a patch step that drops a file
+    for d in json.load(open(os.environ['HS_MOCK'])).get('delete', []): os.remove(os.path.join(out, d))
 changed = []
 for d, _, fs in os.walk(out):
     for f in fs:
         p = os.path.join(d, f); rel = os.path.relpath(p, out); b = os.path.join(R, 'site', rel)
         if not os.path.exists(b) or not filecmp.cmp(p, b, shallow=False): changed.append(rel)
+for d, _, fs in os.walk(os.path.join(R, 'site')):  # deletions count as changes too
+    for f in fs:
+        rel = os.path.relpath(os.path.join(d, f), os.path.join(R, 'site'))
+        if not os.path.exists(os.path.join(out, rel)): changed.append(rel); log('DELETED', rel)
 rep['changed'] = sorted(changed); log('changed files', changed)
 if any(not c.startswith('high-school/') for c in changed): log('DIFF SCOPE VIOLATION'); finish(14, 'fail-diff-scope')
 state['input_hash'] = ih; state['last_run'] = rep['now']
@@ -87,7 +103,16 @@ if A.target == 'none': log('dry run: not deploying'); finish(0, 'dry-run')
 
 # 6. guard
 TOK = os.environ.get('CLOUDFLARE_API_TOKEN')
+MOCK = json.load(open(os.environ['HS_MOCK'])) if os.environ.get('HS_MOCK') else None  # offline tests only
+_cseq = list(MOCK.get('canon', [])) if MOCK else []
 def cf(path, method='GET'):
+    if MOCK is not None:
+        if path.endswith('/rollback'):
+            if MOCK.get('rollback_raises'): raise RuntimeError('mock rollback error')
+            return {}
+        return {'canonical_deployment': {'id': _cseq.pop(0) if len(_cseq) > 1 else _cseq[0]}}
+    return _cf(path, method)
+def _cf(path, method='GET'):
     r = urllib.request.Request(f'https://api.cloudflare.com/client/v4/accounts/{ACCT}/pages/projects/{PROJ}{path}', method=method, headers={'Authorization': f'Bearer {TOK}'})
     return json.load(urllib.request.urlopen(r, timeout=60))['result']
 canon = cf('')['canonical_deployment']['id']; rep['guard'] = canon
@@ -95,7 +120,13 @@ if canon != state['live_id']:
     rep['issues'].append({'title': 'HS refresh: live changed outside the HS job (guard mismatch)', 'body': f'canonical {canon} != recorded {state["live_id"]}. Re-sync site/ from the new live lineage and update state.json live_id.'})
     log('GUARD MISMATCH', canon, state['live_id']); finish(12, 'fail-guard')
 UA = {'User-Agent': 'Mozilla/5.0 MSM-HS-Refresh'}
-def fetch(u): return urllib.request.urlopen(urllib.request.Request(u + ('&' if '?' in u else '?') + 'cb=' + str(os.getpid()), headers=UA), timeout=60).read()
+def fetch(u):
+    if MOCK is not None:
+        rel = u.split('://', 1)[1].split('/', 1)[1].split('?')[0]; rel = (rel + 'index.html') if (rel == '' or rel.endswith('/')) else rel
+        if MOCK.get('verify_bad') and MOCK.get('_deployed'): return b'BAD'
+        return open(os.path.join(R, 'site', rel), 'rb').read()
+    return _fetch(u)
+def _fetch(u): return urllib.request.urlopen(urllib.request.Request(u + ('&' if '?' in u else '?') + 'cb=' + str(os.getpid()), headers=UA), timeout=60).read()
 NORM = re.compile(rb'<a href="(?:mailto:[^"]*|/cdn-cgi/l/email-protection[^"]*)">.*?</a>', re.S)
 BEACON = re.compile(rb'<!-- Cloudflare Pages Analytics -->|<script[^>]*static\.cloudflareinsights\.com[^>]*>\s*</script>\n?(<!-- Cloudflare Pages Analytics -->)?', re.S)
 def norm(b): return NORM.sub(b'@', BEACON.sub(b'', b))
@@ -107,10 +138,37 @@ log('guard ok', canon, '+ base == live')
 
 # 7. deploy
 br = 'main' if A.target == 'production' else A.preview_branch
-p = subprocess.run(['wrangler', 'pages', 'deploy', out, '--project-name', PROJ, '--branch', br, '--commit-dirty=true'], capture_output=True, text=True)
+def wrangler():
+    if MOCK is not None:
+        MOCK['_deployed'] = True; d = MOCK.get('deploy', {})
+        return subprocess.CompletedProcess([], d.get('rc', 0), d.get('out', 'https://abcdef12.' + PROJ + '.pages.dev'), '')
+    return subprocess.run(['wrangler', 'pages', 'deploy', out, '--project-name', PROJ, '--branch', br, '--commit-dirty=true'], capture_output=True, text=True)
+def rollback_confirm(why):
+    """Roll production back to the pre-deploy canonical and re-read it. Exits 17 (hold set) on any error or mismatch."""
+    try:
+        cf(f'/deployments/{canon}/rollback', 'POST'); now_id = cf('')['canonical_deployment']['id']
+    except Exception as e:
+        now_id = None; err = f'{type(e).__name__}: {e}'
+    else:
+        err = None if now_id == canon else f'canonical after rollback {now_id} != pre-deploy {canon}'
+    rep['rollback'] = dict(target=canon, after=now_id, error=err)
+    if err:
+        log('ROLLBACK FAILED', err)
+        rep['issues'].append({'title': 'PRODUCTION ROLLBACK FAILED', 'body': f'Reason for rollback: {why}\nError: {err}\nPre-deploy canonical: {canon}\nRoll back by hand in Cloudflare Pages (mountaingridiron) now.'})
+        set_hold(17, why + ' / ' + err); finish(17, 'fail-rollback')
+    log('ROLLED BACK to', canon, 'confirmed')
+p = wrangler()
 print(p.stdout[-1500:], p.stderr[-1500:])
 m = re.search(r'https://([0-9a-f]{8})\.' + PROJ + r'\.pages\.dev', p.stdout + p.stderr)
-if p.returncode or not m: log('DEPLOY FAILED rc', p.returncode); finish(15, 'fail-deploy')
+if p.returncode or not m:
+    log('DEPLOY FAILED rc', p.returncode)
+    if A.target == 'production':
+        try: after = cf('')['canonical_deployment']['id']
+        except Exception as e: after = f'unknown ({type(e).__name__})'
+        if after != canon:
+            log('canonical changed despite deploy failure', after); rollback_confirm(f'wrangler failed but canonical moved to {after}')
+            rep['issues'].append({'title': 'HS refresh: production deploy failed after creating a deployment, rolled back', 'body': after}); set_hold(15, 'deploy failed, rolled back')
+    finish(15, 'fail-deploy')
 rep['deploy_url'] = m.group(0); log('deployed', m.group(0), 'branch', br)
 hosts = ['https://mtnsportsmedia.com', 'https://www.mtnsportsmedia.com'] if A.target == 'production' else [m.group(0), f'https://{br}.{PROJ}.pages.dev']
 
@@ -121,11 +179,12 @@ for h in hosts:
         if not rel.endswith('.html'): continue
         if not same(os.path.join(out, rel), fetch(h + '/' + rel.replace('index.html', ''))): bad.append(h + '/' + rel)
 log('bytecmp', 'ok' if not bad else bad)
-sm = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'smoke.py'), hosts[0]], capture_output=True, text=True)
+sm = subprocess.CompletedProcess([], MOCK.get('smoke_rc', 0), 'mock smoke', '') if MOCK is not None else subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'smoke.py'), hosts[0]], capture_output=True, text=True)
 print(sm.stdout[-3000:], sm.stderr[-1500:]); log('smoke', 'ok' if sm.returncode == 0 else 'FAIL')
 if bad or sm.returncode:
     if A.target == 'production':
-        cf(f'/deployments/{canon}/rollback', 'POST'); log('ROLLED BACK to', canon)
+        rollback_confirm('production verify failed')
+        set_hold(16, 'production verify failed, rolled back')
         rep['issues'].append({'title': 'HS refresh: production verify failed, rolled back', 'body': json.dumps({'bad': bad, 'smoke': sm.stdout[-1500:]}, indent=1)})
     finish(16, 'fail-verify')
 if A.target == 'production':

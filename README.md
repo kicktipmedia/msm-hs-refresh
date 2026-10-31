@@ -10,3 +10,15 @@ Flow (`tools/run.py`): window gate -> fetch KSL -> input-hash skip -> merge (new
 
 Enable the cron: `gh variable set HS_SCHEDULE --body on -R kicktipmedia/msm-hs-refresh` (off = gated). Manual: Actions -> hs-refresh -> Run workflow (deploy_target none|preview|production).
 Tests: `tests/run_tests.sh` (fixtures are fake and never deployed).
+
+## Production hold (exit 16/17/15-with-rollback)
+A failed production verify, a failed/unconfirmed rollback, or a wrangler failure that still moved canonical sets `hold` in `state.json` (committed alone; data/site changes from that run are discarded). While `hold` is set every production run exits 18 (`fail-hold`) and opens "HS refresh: production on HOLD". Preview runs still work.
+
+### Clearing the hold (by hand only)
+1. Confirm live: Cloudflare Pages `mountaingridiron` canonical == `hold.live_id_expected` (or re-sync `site/` + `live_id` to the new live).
+2. Fix the cause (see the run's report.json / issue).
+3. `jq 'del(.hold)' state.json > s && mv s state.json && git commit -am "clear hs hold" && git push`
+
+Exit codes: 0 ok/skip, 12 guard mismatch, 13 stale base, 14 diff scope (incl. deletions), 15 deploy fail, 16 verify fail (rolled back + confirmed, hold), 17 PRODUCTION ROLLBACK FAILED (issue, hold), 18 refused: hold set.
+
+Sources: KSL only (`sports.ksl.com`, `ksl.com`, `www.ksl.com`, https, re-checked after redirects). UHSAA/school sites are hand-entry only.

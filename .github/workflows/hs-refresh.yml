@@ -51,11 +51,27 @@ jobs:
               if i['title'] in open_titles: continue
               subprocess.run(['gh', 'issue', 'create', '--label', 'hs-pending', '--title', i['title'], '--body', i['body'] + f"\n\nRun: {r['now']} target={r['target']} status={r.get('status')}"], check=True)
           P
-      - name: Commit lineage (production only)
-        if: steps.run.outputs.target == 'production'
+      - name: Commit lineage (production, rc 0 only)
+        if: steps.run.outputs.target == 'production' && steps.run.outputs.rc == '0'
         run: |
+          set -e
           git config user.name hs-refresh-bot; git config user.email actions@users.noreply.github.com
-          git add data state.json site && git commit -qm "hs-refresh: $(jq -r .status report.json) $(date -u +%FT%TZ)" && git push || echo nothing to commit
+          git add -A data state.json site
+          if git diff --cached --quiet; then echo nothing to commit; exit 0; fi
+          git commit -qm "hs-refresh: $(jq -r .status report.json) $(date -u +%FT%TZ)"
+          git push
+      - name: Discard data on failure; commit hold only (production, rc != 0)
+        if: always() && steps.run.outputs.target == 'production' && steps.run.outputs.rc != '0'
+        run: |
+          set -e
+          git checkout -- data site
+          git clean -fdq data site
+          if jq -e .hold state.json >/dev/null && ! git diff --quiet -- state.json; then
+            git config user.name hs-refresh-bot; git config user.email actions@users.noreply.github.com
+            git add state.json; git commit -qm "hs-refresh: HOLD set (rc ${{ steps.run.outputs.rc }}) $(date -u +%FT%TZ)"; git push
+          else
+            git checkout -- state.json
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: hs-refresh-report, path: "report.json\n/tmp/hs-tests\n"}

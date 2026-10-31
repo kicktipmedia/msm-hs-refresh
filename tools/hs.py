@@ -1,10 +1,10 @@
 """MSM high school refresh library: allowed-source fetch, parse, merge, live-HTML patch.
-Allowed: sports.ksl.com, uhsaa.org, school athletics sites. Blocked: MaxPreps, Deseret News, Yahoo, NFHS Network."""
+Allowed: KSL only (sports.ksl.com, ksl.com/www.ksl.com for KSL redirects). Re-checked after redirects. Blocked: MaxPreps, Deseret News, Yahoo, NFHS Network."""
 import re, json, html, hashlib, datetime, urllib.request
 from zoneinfo import ZoneInfo
 MT = ZoneInfo('America/Denver')
 BLOCK = ('maxpreps.', 'deseret.', 'yahoo.', 'nfhsnetwork.', 'nfhs.org')
-ALLOW = ('sports.ksl.com', 'ksl.com', 'uhsaa.org')
+ALLOW = ('sports.ksl.com', 'ksl.com', 'www.ksl.com')  # exact hosts; UHSAA/school sites are hand-entry only
 RNAME = {'R1': 'First round', 'QF': 'Quarterfinals', 'SF': 'Semifinals', 'F': 'Final'}
 RLAB = {'R1': 'First round', 'QF': 'Quarterfinal', 'SF': 'Semifinal', 'F': 'State final'}
 UA = 'Mozilla/5.0 (MSM-HS-Refresh; +https://mtnsportsmedia.com)'
@@ -12,11 +12,12 @@ UA = 'Mozilla/5.0 (MSM-HS-Refresh; +https://mtnsportsmedia.com)'
 def allowed(url):
     h = re.sub(r'^https?://', '', url).split('/')[0].lower()
     if any(b in h for b in BLOCK): return False
-    return any(h == a or h.endswith('.' + a) for a in ALLOW) or h.endswith('.org') and 'school' in h or h.endswith('.k12.ut.us')
+    return url.startswith('https://') and h in ALLOW
 
 def get(url, timeout=30):
     if not allowed(url): raise SystemExit(f'refusing non-allowed source {url}')
     r = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': UA}), timeout=timeout)
+    if not allowed(r.geturl()): raise SystemExit(f'refusing redirect {url} -> {r.geturl()}')
     return r.read().decode('utf-8', 'replace')
 
 def ksl_discover(index_html, limit=4):
