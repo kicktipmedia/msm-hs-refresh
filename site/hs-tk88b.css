@@ -1,0 +1,2 @@
+/* next88b: HS ticker seamless loop. Offset moved from padding to margin so translateX(-50%) equals exactly one copy. */
+html body .ticker[data-lvl=hs]>div{padding-left:0;margin-left:84px}

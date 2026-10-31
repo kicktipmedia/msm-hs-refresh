@@ -1,0 +1,64 @@
+name: hs-refresh
+on:
+  schedule:
+    - cron: '0 13,14 * * *'      # 7 AM MT daily (13 UTC in MDT, 14 UTC in MST; script keeps only MT hour 7)
+    - cron: '*/30 0-7 * * *'     # 6 PM-12:30 AM MT, only acts on game days in data/hs_schedule.json
+  workflow_dispatch:
+    inputs:
+      deploy_target: {type: choice, options: [none, preview, production], default: preview}
+      force: {type: boolean, default: false}
+      ignore_window: {type: boolean, default: true}
+permissions: {contents: write, issues: write}
+concurrency: {group: hs-refresh, cancel-in-progress: false}
+jobs:
+  refresh:
+    # Production cron is gated: set repo variable HS_SCHEDULE=on to enable.
+    if: github.event_name != 'schedule' || vars.HS_SCHEDULE == 'on'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install wrangler + playwright
+        run: |
+          npm i -g wrangler@4 >/dev/null
+          pip install -q playwright && python -m playwright install --with-deps chromium >/dev/null
+      - name: Offline tests (fixtures, no deploy)
+        run: tests/run_tests.sh /tmp/hs-tests
+      - name: Refresh
+        id: run
+        run: |
+          T='${{ github.event_name == 'schedule' && 'production' || inputs.deploy_target }}'
+          ARGS="--target $T --event ${{ github.event_name }}"
+          [ "${{ inputs.force }}" = "true" ] && ARGS="$ARGS --force"
+          [ "${{ inputs.ignore_window }}" = "true" ] && ARGS="$ARGS --ignore-window"
+          set +e; python tools/run.py $ARGS; rc=$?; echo "rc=$rc" >> $GITHUB_OUTPUT; echo "target=$T" >> $GITHUB_OUTPUT; exit 0
+      - name: Open hs-pending issues (dedup by title)
+        if: always()
+        run: |
+          [ -f report.json ] || exit 0
+          gh label create hs-pending --color D93F0B -f >/dev/null 2>&1 || true
+          python - <<'P'
+          import json, subprocess
+          r = json.load(open('report.json'))
+          open_titles = {i['title'] for i in json.loads(subprocess.check_output(['gh', 'issue', 'list', '--label', 'hs-pending', '--state', 'open', '--limit', '200', '--json', 'title']))}
+          for i in r.get('issues', []):
+              if i['title'] in open_titles: continue
+              subprocess.run(['gh', 'issue', 'create', '--label', 'hs-pending', '--title', i['title'], '--body', i['body'] + f"\n\nRun: {r['now']} target={r['target']} status={r.get('status')}"], check=True)
+          P
+      - name: Commit lineage (production only)
+        if: steps.run.outputs.target == 'production'
+        run: |
+          git config user.name hs-refresh-bot; git config user.email actions@users.noreply.github.com
+          git add data state.json site && git commit -qm "hs-refresh: $(jq -r .status report.json) $(date -u +%FT%TZ)" && git push || echo nothing to commit
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: hs-refresh-report, path: "report.json\n/tmp/hs-tests\n"}
+      - name: Fail on nonzero
+        if: steps.run.outputs.rc != '0'
+        run: exit ${{ steps.run.outputs.rc }}

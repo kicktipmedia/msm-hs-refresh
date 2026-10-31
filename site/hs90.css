@@ -1,0 +1,6 @@
+/* next90: HS hero locked height so nav + tab rows land at the same y on every HS view */
+html body .hs .phead{box-sizing:border-box;height:auto;min-height:349px}
+@media(max-width:599px){html body .hs .phead{min-height:310px}}
+@media(max-width:359px){html body .hs .phead{min-height:335px}}
+html body .hs .hsbar,html body .hs .hsnavbar+.sec .wrap>.hstabs{margin-top:20px}
+html body .hs .hsbar .hstabs{margin:0}

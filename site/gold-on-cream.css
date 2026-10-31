@@ -1,0 +1,15 @@
+/* M1 gold-on-cream -> navy (Jared approved Oct 22). Interior pages only; gold stays on navy, accent bars and section breaks unchanged. */
+html body .grc .grp,html body .pw .pwk,html body .tlinks a.btn:not(.dark),html body #hsbr,html body .hsrow .chip.s,html body .hs .rtabs button[aria-selected=true],html body .slpshare a.btn{background:#000E28;color:#FBF3E4}
+html body a.slpback{border-bottom-color:#000E28}
+/* POTW pill: 8px cream gap from the team-colour left rail so BYU royal never touches navy */
+html body .pw .pwk{margin-left:-12px;box-shadow:none}
+/* Focus/hover on the navy buttons (on cream) */
+html body .tlinks a.btn:not(.dark):focus-visible,html body .slpshare a.btn:focus-visible,html body #hsbr:focus-visible{outline:3px solid #000E28;outline-offset:3px}
+html body .tlinks a.btn:not(.dark):hover,html body .slpshare a.btn:hover{background:#000E28;color:#FBF3E4;text-decoration:underline}
+/* Remaining gold-on-cream text spots */
+html body .mg-sources-body a{text-decoration-color:#000E28}
+html body .hs .chip.f{box-shadow:inset 0 0 0 2px #000E28}
+html body details.mg-sources{border-top-color:#000E28}
+/* sponsor.html: icons and card top borders on cream */
+html body .sqg .sq{border-top-color:#000E28}
+html body .sqg .sw,html body .sqg .si{color:#000E28}

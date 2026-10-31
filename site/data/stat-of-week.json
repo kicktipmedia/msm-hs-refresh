@@ -1,0 +1,91 @@
+{
+ "week": "2026-10-31",
+ "through": "2026-10-24",
+ "note": "Factual stats only, each from an official athletics site. No projections.",
+ "stats": [
+  {
+   "team": "byu",
+   "name": "BYU",
+   "num": "129",
+   "label": "Receiving yards by Kyler Kasper",
+   "line": "Kyler Kasper caught six passes for 129 yards and a touchdown, the Cougars' top receiving total, in BYU's 39-31 double-overtime loss at UCF. BYU is 6-1 overall and 3-1 in Big 12 play.",
+   "game": "UCF 39, BYU 31 (2OT) — Sat Oct 24, Orlando",
+   "sources": [
+    {
+     "name": "BYU Athletics",
+     "url": "https://byucougars.com/news/2026/10/24/byu-vs-ucf-2026"
+    }
+   ]
+  },
+  {
+   "team": "utah",
+   "name": "Utah",
+   "num": "150",
+   "label": "Rushing yards by Devon Dampier",
+   "line": "Devon Dampier ran for a season-high 150 yards and two touchdowns and completed 18 of 26 passes for 204 yards in No. 10 Utah's 21-13 win over No. 14 Houston. His 1,183 rushing yards in two seasons at Utah trail only Travis Wilson (1,225, 2012-15) among quarterbacks in recorded program history.",
+   "game": "No. 10 Utah 21, No. 14 Houston 13 — Sat Oct 24, Salt Lake City",
+   "sources": [
+    {
+     "name": "Utah Athletics",
+     "url": "https://utahutes.com/news/2026/10/25/football-dampier-defense-lead-no-10-utah-past-no-14-houston"
+    }
+   ]
+  },
+  {
+   "team": "usu",
+   "name": "Utah State",
+   "num": "8",
+   "label": "Catches by Anthony Garcia, a career high",
+   "line": "Graduate receiver Anthony Garcia posted a career-high eight receptions for 87 yards and also threw his first pass attempt of the season, a 6-yard touchdown to Kaina Watson on a trick play, in Utah State's 20-17 loss at Texas State.",
+   "game": "Texas State 20, Utah State 17 — Sat Oct 24, San Marcos",
+   "sources": [
+    {
+     "name": "Utah State Athletics",
+     "url": "https://utahstateaggies.com/news/2026/10/24/aggie-football-drops-20-17-heartbreaker-at-texas-state.aspx"
+    }
+   ]
+  },
+  {
+   "team": "weber",
+   "name": "Weber State",
+   "num": "124",
+   "label": "Receiving yards by Noah Kjar",
+   "line": "Noah Kjar led Weber State with eight receptions for 124 yards, including a 68-yard reception early in the game, in the 38-33 loss at No. 3 Montana State. Nate Dahle threw for 240 yards and two touchdowns without an interception.",
+   "game": "No. 3 Montana State 38, No. 22 Weber State 33 — Sat Oct 24, Bozeman",
+   "sources": [
+    {
+     "name": "Weber State Athletics",
+     "url": "https://weberstatesports.com/news/2026/10/24/football-no-22-wildcats-fall-to-no-3-bobcats-in-bozeman"
+    }
+   ]
+  },
+  {
+   "team": "suu",
+   "name": "Southern Utah",
+   "num": "392",
+   "label": "Total yards by Will Burns",
+   "line": "Will Burns finished with 392 yards of total offense, 205 passing and 187 rushing, and threw a 57-yard touchdown pass to Mark Bails on fourth-and-10 with 42 seconds left to tie it at 28 in the 31-28 loss at Idaho. His rushing total extended Southern Utah's run of having a 100-yard rusher in every game dating back to homecoming in 2025.",
+   "game": "Idaho 31, Southern Utah 28 — Sat Oct 24, Moscow",
+   "sources": [
+    {
+     "name": "Southern Utah Athletics",
+     "url": "https://suutbirds.com/news/2026/10/24/football-thunderbirds-erase-10-point-deficit-late-fall-31-28-on-final-play-field-goal-at-idaho.aspx"
+    }
+   ]
+  },
+  {
+   "team": "utech",
+   "name": "Utah Tech",
+   "num": "46.6",
+   "label": "Yards per punt by Ryan Marks",
+   "line": "Ryan Marks is averaging 46.6 yards on 32 punts through eight games, with ten punts of 50 yards or more and a long of 70 against Northern Arizona.",
+   "game": "Season stats through Oct 24 — Utah Tech 43, Cal Poly 26",
+   "sources": [
+    {
+     "name": "Utah Tech Athletics season stats",
+     "url": "https://utahtechtrailblazers.com/sports/football/stats/2026"
+    }
+   ]
+  }
+ ]
+}

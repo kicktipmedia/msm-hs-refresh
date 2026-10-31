@@ -1,0 +1,36 @@
+/* next103b: Top 25 submenu, rankings tabs, Playoff Picture card/line, homepage mobile trims */
+.top nav .ndd{position:relative;display:flex;align-items:center}
+.top nav .ndt{background:none;border:0;color:#fff;width:44px;height:44px;min-height:44px;margin:-6px 0;padding:0;position:relative;z-index:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.top nav .ndt .chev{display:inline-block;width:7px;height:7px;border:solid currentColor;border-width:0 2px 2px 0;transform:translateY(-2px) rotate(45deg)}
+.top nav .ndt:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+.top nav .ndm{display:none;position:absolute;top:100%;left:0;z-index:80;min-width:190px;background:var(--navy);border:2px solid var(--gold);padding:6px}
+.top nav .ndm a{display:block}
+.top nav .ndd:hover .ndm,.top nav .ndd.open .ndm{display:block}
+@media(max-width:1099px){.top nav .ndd{display:block}.top nav .ndd>a{display:block}.top nav .ndt{display:none}.top nav .ndm{display:block;position:static;min-width:0;border:0;padding:0 0 0 18px;background:none}.top nav .ndm a{display:flex;align-items:center;min-height:44px}.top nav .ndm a::before{content:"";width:10px;height:2px;background:var(--gold);margin-right:8px}}
+.msmtabs{background:#fff;border-bottom:1px solid #d9ccb2;padding:0 32px}
+.msmtabs .w{max-width:1040px;margin:0 auto;display:flex;gap:0;padding:0}
+.msmtabs a:first-child{padding-left:0}
+.msmtabs a{display:flex;align-items:center;min-height:48px;padding:0 18px;font:600 15px 'Oswald','Oswald FB1','Oswald FB2','Oswald FB3',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);text-decoration:none;border-bottom:4px solid transparent}
+.msmtabs a[aria-current="page"]{border-bottom-color:#000E28}
+.msmtabs a:hover,.msmtabs a:focus-visible{background:rgba(0,71,186,.07)}
+.msmtabs a:focus-visible{outline:3px solid #000E28;outline-offset:-3px}
+@media(max-width:640px){.msmtabs{padding:0 14px}.msmtabs a{padding:0 12px;font-size:14px}.msmtabs a:first-child{padding-left:0}}
+.pocard{display:flex;align-items:center;gap:14px;background:var(--navy);color:var(--cream);text-decoration:none;border-left:8px solid var(--gold);padding:14px 18px;margin:0 0 24px}
+.pocard b{display:block;font:700 20px 'Oswald','Oswald FB1',sans-serif;text-transform:uppercase;color:var(--gold)}
+.pocard span.t{flex:1;min-width:0;font-size:15px}
+.pocard .arr{font-size:22px}
+.pocard:hover,.pocard:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.rk2po{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;margin:0;padding:6px 14px 6px 20px;border-top:1px solid #d9ccb2;background:#fff4d6;font:700 .9rem/1.2 'Oswald','Oswald FB1',sans-serif;text-transform:uppercase;letter-spacing:.04em;color:#000E28;text-decoration:none}
+.rk2po:hover,.rk2po:focus-visible{background:rgba(0,71,186,.07);outline:3px solid #000E28;outline-offset:-3px}
+.xbtn{display:none;align-items:center;justify-content:center;width:100%;min-height:48px;margin:12px 0 0;border:2px solid var(--navy);background:#fff;color:var(--navy);font:700 15px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:0}
+.xbtn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+#storylines .xbtn{display:flex;background:var(--cream)}
+#storylines.clp .styrow:nth-of-type(n+4){display:none}
+@media(max-width:600px){#slate .xbtn{display:flex}#slate.clp .c1w .grid>article:nth-child(n+4){display:none}}
+.schrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 0;padding:14px 0 0;border-top:2px solid #d9ccb2}
+.schrow .lb{font:700 14px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-right:4px;flex:1 1 100%}
+.schrow a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;background:#fff;border:1px solid #d9ccb2;border-left:5px solid var(--tc,#000E28);font:600 14px 'Oswald','Oswald FB1',sans-serif;text-transform:uppercase;color:#000E28;text-decoration:none}
+.schrow a:hover,.schrow a:focus-visible{outline:3px solid #000E28;outline-offset:1px}
+@media(max-width:600px){#potw .pwgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:0 0 10px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}#potw .pw{flex:0 0 86%;scroll-snap-align:start;min-width:0}#potw .pwgrid:focus-visible{outline:3px solid var(--gold);outline-offset:2px}.pwhint{display:block!important}}
+.pwhint{display:none;font:600 12px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#FBF3E4;margin:0 0 8px}
+#slate .xbtn:focus-visible{outline-color:#000E28}

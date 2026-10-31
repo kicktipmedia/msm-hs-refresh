@@ -1,0 +1,6 @@
+/* next89: remove leftover old-tab lines (HS only) */
+/* old .hs .hsbar .hstabs{border-bottom:3px solid navy} out-specified tabs88's border:0 */
+html body .hs .hsbar .hstabs,html body .hs .hstabs{border:0;border-bottom:0;box-shadow:none}
+html body .hs .hstabs::before,html body .hs .hstabs::after,html body .hs .hsbar::before,html body .hs .hsbar::after,html body .hs .view::after,html body .hs .rtabs::after{content:none}
+/* old Full Bracket round-heading bars (navy 2px under heads, gold 4px under State Final) */
+html body .hs .fbx .fb-heads,html body .hs .fbx .fb-heads .hc{box-shadow:none}

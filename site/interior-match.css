@@ -1,0 +1,7 @@
+/* M2 interior pages match home: navy mountain banner head + 4px gold bar inside navy (Jared approved Oct 22). Scoped to non-team .phead. */
+section.phead:not(.team){background:linear-gradient(90deg,#000E28 0,#000E28 64%,rgba(0,14,40,.6) 86%,rgba(0,14,40,.2)),url(/brand/rankings/mtn-strip.jpg) right bottom/auto 100% no-repeat,#000E28;border-bottom:0;box-shadow:none;padding-top:clamp(40px,5vw,64px);padding-bottom:clamp(40px,5vw,64px);color:#FBF3E4}
+section.phead:not(.team)::before{content:"";position:absolute;left:0;right:0;bottom:8px;height:4px;background:#F5B82E;z-index:1}
+section.phead:not(.team) h1{font-family:'Anton','Anton FB1','Anton FB2','Anton FB3',Impact,sans-serif;text-transform:uppercase;color:#FBF3E4}
+section.phead:not(.team) p{color:#FBF3E4}
+@media(max-width:600px){section.phead:not(.team){background:linear-gradient(90deg,rgba(0,14,40,.92) 0,rgba(0,14,40,.86) 100%),url(/brand/rankings/mtn-strip.jpg) right bottom/auto 100% no-repeat,#000E28}}
+section.phead:not(.team) a:focus-visible,section.phead:not(.team) button:focus-visible{outline:2px solid #FBF3E4;outline-offset:3px}

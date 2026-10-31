@@ -1,0 +1,2 @@
+/* next82b: win probability cards are static markup written by make_winprob.py. This only REMOVES a card once the visitor's clock is past its kickoff. */
+(function(){function sweep(){var n=Date.now();[].forEach.call(document.querySelectorAll('.msm-wp[data-kickoff]'),function(e){var k=Date.parse(e.getAttribute('data-kickoff'));if(!(k>0)||n>=k)e.remove();else if(k-n<864e5&&!e.__t)e.__t=setTimeout(sweep,k-n+50)})}sweep()})();

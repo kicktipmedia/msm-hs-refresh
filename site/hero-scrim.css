@@ -1,0 +1,14 @@
+/* Hero headline scrim (live defect: white h1 over the snowy peak #FBE4C1 at 1280 = 1.24:1).
+   A soft navy panel behind the hero text column only. It is solid behind every glyph and feathers out
+   on the right edge (toward the photo's peak) and on the top and bottom. The rest of the photo is untouched.
+   Paint-only (absolute pseudo-element under the text, inside .hero{overflow:hidden}): no layout change, no CLS. */
+html body #this-week .hero .in>div:first-child{position:relative;isolation:isolate}
+html body #this-week .hero .in>div:first-child::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;
+  top:-48px;bottom:-24px;left:-100vw;right:-28px;
+  background:linear-gradient(90deg,rgba(0,14,40,.9) calc(100% - 72px),rgba(0,14,40,0));
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 48px,#000 calc(100% - 24px),transparent);
+          mask-image:linear-gradient(180deg,transparent,#000 48px,#000 calc(100% - 24px),transparent);
+}
+/* keep the countdown card above the scrim (paint order only, no layout change) */
+html body #this-week .hero .hside{position:relative;z-index:1}

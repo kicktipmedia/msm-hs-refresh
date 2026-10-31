@@ -1,0 +1,963 @@
+{
+ "_note": "MG high school data. Seeds, records and RPI from the official UHSAA final RPI/bracket PDFs (published Sat Oct 17, 2026). Badges come from data/hs_badges.json (MG Company Image); hexes are Mtn Sports Media approximations of UHSAA-listed colour names, not school-official. Semifinal/final kickoff times and Rice-Eccles venue verified against the live UHSAA bracket PDFs (sha matched local copies Oct 20) and uhsaa.org/football; semifinal slot order (QF1/QF2 winners 11:00 AM, QF3/QF4 winners 2:30 PM) read from the PDF bracket layout. Not affiliated with the UHSAA.",
+ "retrieved": "2026-10-20",
+ "season": 2026,
+ "sources": {
+  "6A_pdf": "https://www.uhsaa.org/rpi/football/2026/6Afinal.pdf",
+  "5A_pdf": "https://www.uhsaa.org/rpi/football/2026/5Afinal.pdf",
+  "uhsaa_football": "https://uhsaa.org/football/",
+  "alignment_pdf": "https://www.uhsaa.org/realignment/202527RealignmentFinal.pdf",
+  "ksl_stream": "https://kslsports.com/stream/",
+  "nfhs_uhsaa": "https://www.nfhsnetwork.com/associations/uhsaa",
+  "tickets": "https://gofan.co/app/school/UHSAA"
+ },
+ "rounds": {
+  "6A": [
+   [
+    "First round",
+    "Fri Oct 30",
+    "6:00 PM",
+    "Home site of higher seed"
+   ],
+   [
+    "Quarterfinals",
+    "Fri Nov 6",
+    "6:00 PM",
+    "Home site of higher seed"
+   ],
+   [
+    "Semifinals",
+    "Thu Nov 12",
+    "11:00 AM and 2:30 PM",
+    "Rice-Eccles Stadium, University of Utah"
+   ],
+   [
+    "Final",
+    "Fri Nov 20",
+    "2:30 PM",
+    "Rice-Eccles Stadium, University of Utah"
+   ]
+  ],
+  "5A": [
+   [
+    "First round",
+    "Fri Oct 30",
+    "6:00 PM",
+    "Home site of higher seed"
+   ],
+   [
+    "Quarterfinals",
+    "Fri Nov 6",
+    "6:00 PM",
+    "Home site of higher seed"
+   ],
+   [
+    "Semifinals",
+    "Fri Nov 13",
+    "11:00 AM and 2:30 PM",
+    "Rice-Eccles Stadium, University of Utah"
+   ],
+   [
+    "Final",
+    "Fri Nov 20",
+    "11:00 AM",
+    "Rice-Eccles Stadium, University of Utah"
+   ]
+  ]
+ },
+ "rpi": {
+  "6A": [
+   {
+    "rank": 1,
+    "school": "Skyridge",
+    "wl": "8-1",
+    "rpi": "0.807",
+    "status": "Seed 1"
+   },
+   {
+    "rank": 2,
+    "school": "Mountain Ridge",
+    "wl": "10-0",
+    "rpi": "0.784",
+    "status": "Seed 2"
+   },
+   {
+    "rank": 3,
+    "school": "Corner Canyon",
+    "wl": "8-2",
+    "rpi": "0.705",
+    "status": "Seed 3"
+   },
+   {
+    "rank": 4,
+    "school": "Herriman",
+    "wl": "8-2",
+    "rpi": "0.675",
+    "status": "Seed 4"
+   },
+   {
+    "rank": 5,
+    "school": "Davis",
+    "wl": "7-3",
+    "rpi": "0.647",
+    "status": "Seed 5"
+   },
+   {
+    "rank": 6,
+    "school": "Westlake",
+    "wl": "7-3",
+    "rpi": "0.645",
+    "status": "Seed 6"
+   },
+   {
+    "rank": 7,
+    "school": "Lone Peak",
+    "wl": "5-5",
+    "rpi": "0.601",
+    "status": "Seed 7"
+   },
+   {
+    "rank": 8,
+    "school": "American Fork",
+    "wl": "6-4",
+    "rpi": "0.594",
+    "status": "Seed 8"
+   },
+   {
+    "rank": 9,
+    "school": "Copper Hills",
+    "wl": "7-3",
+    "rpi": "0.576",
+    "status": "Seed 9"
+   },
+   {
+    "rank": 10,
+    "school": "Lehi",
+    "wl": "5-5",
+    "rpi": "0.575",
+    "status": "Seed 10"
+   },
+   {
+    "rank": 11,
+    "school": "Syracuse",
+    "wl": "5-4",
+    "rpi": "0.562",
+    "status": "Seed 11"
+   },
+   {
+    "rank": 12,
+    "school": "Farmington",
+    "wl": "4-6",
+    "rpi": "0.480",
+    "status": "Seed 12"
+   },
+   {
+    "rank": 13,
+    "school": "Weber",
+    "wl": "5-5",
+    "rpi": "0.455",
+    "status": "Seed 13"
+   },
+   {
+    "rank": 14,
+    "school": "Bingham",
+    "wl": "3-7",
+    "rpi": "0.435",
+    "status": "Seed 14"
+   },
+   {
+    "rank": 15,
+    "school": "Cedar Valley",
+    "wl": "1-9",
+    "rpi": "0.379",
+    "status": "Seed 15"
+   },
+   {
+    "rank": 16,
+    "school": "Riverton",
+    "wl": "2-8",
+    "rpi": "0.370",
+    "status": "Seed 16"
+   },
+   {
+    "rank": 17,
+    "school": "Layton",
+    "wl": "2-8",
+    "rpi": "0.357",
+    "status": "Out"
+   }
+  ],
+  "5A": [
+   {
+    "rank": 1,
+    "school": "West",
+    "wl": "10-0",
+    "rpi": "0.708",
+    "status": "Seed 1"
+   },
+   {
+    "rank": 2,
+    "school": "Orem",
+    "wl": "7-2",
+    "rpi": "0.675",
+    "status": "Seed 2"
+   },
+   {
+    "rank": 3,
+    "school": "Box Elder",
+    "wl": "9-1",
+    "rpi": "0.671",
+    "status": "Seed 3"
+   },
+   {
+    "rank": 4,
+    "school": "Bountiful",
+    "wl": "7-2",
+    "rpi": "0.650",
+    "status": "Seed 4"
+   },
+   {
+    "rank": 5,
+    "school": "Springville",
+    "wl": "7-2",
+    "rpi": "0.642",
+    "status": "Seed 5"
+   },
+   {
+    "rank": 6,
+    "school": "Alta",
+    "wl": "7-3",
+    "rpi": "0.602",
+    "status": "Seed 6"
+   },
+   {
+    "rank": 7,
+    "school": "Spanish Fork",
+    "wl": "6-4",
+    "rpi": "0.575",
+    "status": "Seed 7"
+   },
+   {
+    "rank": 8,
+    "school": "Fremont",
+    "wl": "6-4",
+    "rpi": "0.560",
+    "status": "Seed 8"
+   },
+   {
+    "rank": 9,
+    "school": "West Field",
+    "wl": "7-3",
+    "rpi": "0.551",
+    "status": "Seed 9"
+   },
+   {
+    "rank": 10,
+    "school": "Pleasant Grove",
+    "wl": "5-4",
+    "rpi": "0.545",
+    "status": "Seed 10"
+   },
+   {
+    "rank": 11,
+    "school": "Hillcrest",
+    "wl": "8-2",
+    "rpi": "0.538",
+    "status": "Seed 11"
+   },
+   {
+    "rank": 12,
+    "school": "Olympus",
+    "wl": "5-5",
+    "rpi": "0.525",
+    "status": "Seed 12"
+   },
+   {
+    "rank": 13,
+    "school": "Granger",
+    "wl": "5-5",
+    "rpi": "0.487",
+    "status": "Seed 13"
+   },
+   {
+    "rank": 14,
+    "school": "Woods Cross",
+    "wl": "4-6",
+    "rpi": "0.484",
+    "status": "Seed 14"
+   },
+   {
+    "rank": 15,
+    "school": "Timpview",
+    "wl": "4-6",
+    "rpi": "0.475",
+    "status": "Seed 15"
+   },
+   {
+    "rank": 16,
+    "school": "Roy",
+    "wl": "4-6",
+    "rpi": "0.467",
+    "status": "Seed 16"
+   },
+   {
+    "rank": 17,
+    "school": "Hunter",
+    "wl": "4-5",
+    "rpi": "0.456",
+    "status": "Out"
+   },
+   {
+    "rank": 18,
+    "school": "Payson",
+    "wl": "3-6",
+    "rpi": "0.429",
+    "status": "Out"
+   },
+   {
+    "rank": 19,
+    "school": "Northridge",
+    "wl": "4-6",
+    "rpi": "0.422",
+    "status": "Out"
+   },
+   {
+    "rank": 20,
+    "school": "Viewmont",
+    "wl": "3-6",
+    "rpi": "0.398",
+    "status": "Out"
+   },
+   {
+    "rank": 21,
+    "school": "Maple Mountain",
+    "wl": "2-7",
+    "rpi": "0.387",
+    "status": "Out"
+   },
+   {
+    "rank": 22,
+    "school": "Brighton",
+    "wl": "1-9",
+    "rpi": "0.382",
+    "status": "Out"
+   },
+   {
+    "rank": 23,
+    "school": "West Jordan",
+    "wl": "3-7",
+    "rpi": "0.380",
+    "status": "Out"
+   },
+   {
+    "rank": 24,
+    "school": "Bonneville",
+    "wl": "2-7",
+    "rpi": "0.341",
+    "status": "Out"
+   },
+   {
+    "rank": 25,
+    "school": "Clearfield",
+    "wl": "2-8",
+    "rpi": "0.305",
+    "status": "Out"
+   },
+   {
+    "rank": 26,
+    "school": "Cyprus",
+    "wl": "2-8",
+    "rpi": "0.290",
+    "status": "Out"
+   },
+   {
+    "rank": 27,
+    "school": "Taylorsville",
+    "wl": "1-9",
+    "rpi": "0.273",
+    "status": "Out"
+   },
+   {
+    "rank": 28,
+    "school": "Kearns",
+    "wl": "0-9",
+    "rpi": "0.169",
+    "status": "Out"
+   }
+  ]
+ },
+ "bracket": {
+  "6A": {
+   "first_round": [
+    {
+     "game": 1,
+     "home_seed": 1,
+     "home": "Skyridge",
+     "away_seed": 16,
+     "away": "Riverton"
+    },
+    {
+     "game": 2,
+     "home_seed": 8,
+     "home": "American Fork",
+     "away_seed": 9,
+     "away": "Copper Hills"
+    },
+    {
+     "game": 3,
+     "home_seed": 4,
+     "home": "Herriman",
+     "away_seed": 13,
+     "away": "Weber"
+    },
+    {
+     "game": 4,
+     "home_seed": 5,
+     "home": "Davis",
+     "away_seed": 12,
+     "away": "Farmington"
+    },
+    {
+     "game": 5,
+     "home_seed": 2,
+     "home": "Mountain Ridge",
+     "away_seed": 15,
+     "away": "Cedar Valley"
+    },
+    {
+     "game": 6,
+     "home_seed": 7,
+     "home": "Lone Peak",
+     "away_seed": 10,
+     "away": "Lehi"
+    },
+    {
+     "game": 7,
+     "home_seed": 3,
+     "home": "Corner Canyon",
+     "away_seed": 14,
+     "away": "Bingham"
+    },
+    {
+     "game": 8,
+     "home_seed": 6,
+     "home": "Westlake",
+     "away_seed": 11,
+     "away": "Syracuse"
+    }
+   ]
+  },
+  "5A": {
+   "first_round": [
+    {
+     "game": 1,
+     "home_seed": 1,
+     "home": "West",
+     "away_seed": 16,
+     "away": "Roy"
+    },
+    {
+     "game": 2,
+     "home_seed": 8,
+     "home": "Fremont",
+     "away_seed": 9,
+     "away": "West Field"
+    },
+    {
+     "game": 3,
+     "home_seed": 4,
+     "home": "Bountiful",
+     "away_seed": 13,
+     "away": "Granger"
+    },
+    {
+     "game": 4,
+     "home_seed": 5,
+     "home": "Springville",
+     "away_seed": 12,
+     "away": "Olympus"
+    },
+    {
+     "game": 5,
+     "home_seed": 2,
+     "home": "Orem",
+     "away_seed": 15,
+     "away": "Timpview"
+    },
+    {
+     "game": 6,
+     "home_seed": 7,
+     "home": "Spanish Fork",
+     "away_seed": 10,
+     "away": "Pleasant Grove"
+    },
+    {
+     "game": 7,
+     "home_seed": 3,
+     "home": "Box Elder",
+     "away_seed": 14,
+     "away": "Woods Cross"
+    },
+    {
+     "game": 8,
+     "home_seed": 6,
+     "home": "Alta",
+     "away_seed": 11,
+     "away": "Hillcrest"
+    }
+   ]
+  }
+ },
+ "schools": {
+  "Davis": {
+   "slug": "davis",
+   "class": "6A",
+   "region": 1,
+   "city": "Kaysville",
+   "mascot": "Darts",
+   "colors": "Brown and Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Davis&Reg=1&schoolID=25",
+   "note": ""
+  },
+  "Farmington": {
+   "slug": "farmington",
+   "class": "6A",
+   "region": 1,
+   "city": "Farmington",
+   "mascot": "Phoenix",
+   "colors": "Teal, Silver, Black",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Farmington&Reg=1&schoolID=223",
+   "note": ""
+  },
+  "Layton": {
+   "slug": "layton",
+   "class": "6A",
+   "region": 1,
+   "city": "Layton",
+   "mascot": "Lancers",
+   "colors": "Navy, Columbia Blue",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Layton&Reg=1&schoolID=55",
+   "note": ""
+  },
+  "Syracuse": {
+   "slug": "syracuse",
+   "class": "6A",
+   "region": 1,
+   "city": "Syracuse",
+   "mascot": "Titans",
+   "colors": "Forest Green, Navy Blue, White and Black",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Syracuse&Reg=1&schoolID=112",
+   "note": ""
+  },
+  "Weber": {
+   "slug": "weber",
+   "class": "6A",
+   "region": 1,
+   "city": "Pleasant View",
+   "mascot": "Warriors",
+   "colors": "Red and Black",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Weber&Reg=1&schoolID=131",
+   "note": ""
+  },
+  "Bingham": {
+   "slug": "bingham",
+   "class": "6A",
+   "region": 2,
+   "city": "South Jordan",
+   "mascot": "Miners",
+   "colors": "Blue and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Bingham&Reg=2&schoolID=11",
+   "note": ""
+  },
+  "Cedar Valley": {
+   "slug": "cedar-valley",
+   "class": "6A",
+   "region": 2,
+   "city": "Eagle Mountain",
+   "mascot": "Aviators",
+   "colors": "Red and Black",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Cedar%20Valley&Reg=2&schoolID=4014",
+   "note": ""
+  },
+  "Copper Hills": {
+   "slug": "copper-hills",
+   "class": "6A",
+   "region": 2,
+   "city": "West Jordan",
+   "mascot": "Grizzlies",
+   "colors": "Navy Blue, Forest Green and Silver",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Copper%20Hills&Reg=2&schoolID=21",
+   "note": ""
+  },
+  "Herriman": {
+   "slug": "herriman",
+   "class": "6A",
+   "region": 2,
+   "city": "Herriman",
+   "mascot": "Mustangs",
+   "colors": "Red, Blue, Vegas Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Herriman&Reg=2&schoolID=43",
+   "note": ""
+  },
+  "Mountain Ridge": {
+   "slug": "mountain-ridge",
+   "class": "6A",
+   "region": 2,
+   "city": "Herriman",
+   "mascot": "Sentinels",
+   "colors": "Scarlet Red, Gray and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Mountain%20Ridge&Reg=2&schoolID=4016",
+   "note": ""
+  },
+  "Riverton": {
+   "slug": "riverton",
+   "class": "6A",
+   "region": 2,
+   "city": "Riverton",
+   "mascot": "Silverwolves",
+   "colors": "Purple, Silver and Black",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Riverton&Reg=2&schoolID=95",
+   "note": ""
+  },
+  "Westlake": {
+   "slug": "westlake",
+   "class": "6A",
+   "region": 2,
+   "city": "Saratoga Springs",
+   "mascot": "Thunder",
+   "colors": "Navy, Columbia Blue and Vegas Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Westlake&Reg=2&schoolID=137",
+   "note": ""
+  },
+  "American Fork": {
+   "slug": "american-fork",
+   "class": "6A",
+   "region": 3,
+   "city": "American Fork",
+   "mascot": "Cavemen",
+   "colors": "Red, Black and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=American%20Fork&Reg=3&schoolID=3",
+   "note": ""
+  },
+  "Corner Canyon": {
+   "slug": "corner-canyon",
+   "class": "6A",
+   "region": 3,
+   "city": "Draper",
+   "mascot": "Chargers",
+   "colors": "Navy, Silver and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Corner%20Canyon&Reg=3&schoolID=22",
+   "note": ""
+  },
+  "Lehi": {
+   "slug": "lehi",
+   "class": "6A",
+   "region": 3,
+   "city": "Lehi",
+   "mascot": "Pioneers",
+   "colors": "Purple and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Lehi&Reg=3&schoolID=57",
+   "note": ""
+  },
+  "Lone Peak": {
+   "slug": "lone-peak",
+   "class": "6A",
+   "region": 3,
+   "city": "Highland",
+   "mascot": "Knights",
+   "colors": "Maroon, Vegas Gold, Black",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Lone%20Peak&Reg=3&schoolID=59",
+   "note": ""
+  },
+  "Skyridge": {
+   "slug": "skyridge",
+   "class": "6A",
+   "region": 3,
+   "city": "Lehi",
+   "mascot": "Falcons",
+   "colors": "Burnt Orange, Steel Gray",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Skyridge&Reg=3&schoolID=200",
+   "note": ""
+  },
+  "Cyprus": {
+   "slug": "cyprus",
+   "class": "5A",
+   "region": 4,
+   "city": "Magna",
+   "mascot": "Pirates",
+   "colors": "Royal Blue and Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Cyprus&Reg=4&schoolID=24",
+   "note": ""
+  },
+  "Granger": {
+   "slug": "granger",
+   "class": "5A",
+   "region": 4,
+   "city": "West Valley City",
+   "mascot": "Lancers",
+   "colors": "Crimson Red, Columbia Blue and Silver Gray",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Granger&Reg=4&schoolID=39",
+   "note": ""
+  },
+  "Hillcrest": {
+   "slug": "hillcrest",
+   "class": "5A",
+   "region": 4,
+   "city": "Midvale",
+   "mascot": "Huskies",
+   "colors": "Green and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Hillcrest&Reg=4&schoolID=45",
+   "note": ""
+  },
+  "Hunter": {
+   "slug": "hunter",
+   "class": "5A",
+   "region": 4,
+   "city": "West Valley City",
+   "mascot": "Wolverines",
+   "colors": "Navy, White, and Gray",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Hunter&Reg=4&schoolID=46",
+   "note": ""
+  },
+  "Kearns": {
+   "slug": "kearns",
+   "class": "5A",
+   "region": 4,
+   "city": "Kearns",
+   "mascot": "Cougars",
+   "colors": "Green and Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Kearns&Reg=4&schoolID=54",
+   "note": ""
+  },
+  "Taylorsville": {
+   "slug": "taylorsville",
+   "class": "5A",
+   "region": 4,
+   "city": "Taylorsville",
+   "mascot": "Warriors",
+   "colors": "Blue and Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Taylorsville&Reg=4&schoolID=114",
+   "note": ""
+  },
+  "West": {
+   "slug": "west",
+   "class": "5A",
+   "region": 4,
+   "city": "Salt Lake City",
+   "mascot": "Panthers",
+   "colors": "Red and Black",
+   "directory_url": "https://uhsaa.org/school-directory/?id=West&Reg=4&schoolID=133",
+   "note": ""
+  },
+  "West Jordan": {
+   "slug": "west-jordan",
+   "class": "5A",
+   "region": 4,
+   "city": "West Jordan",
+   "mascot": "Jaguars",
+   "colors": "Black, White and Columbia Blue",
+   "directory_url": "https://uhsaa.org/school-directory/?id=West%20Jordan&Reg=4&schoolID=135",
+   "note": ""
+  },
+  "Bonneville": {
+   "slug": "bonneville",
+   "class": "5A",
+   "region": 5,
+   "city": "Ogden",
+   "mascot": "Lakers",
+   "colors": "Navy and Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Bonneville&Reg=5&schoolID=12",
+   "note": ""
+  },
+  "Box Elder": {
+   "slug": "box-elder",
+   "class": "5A",
+   "region": 5,
+   "city": "Brigham City",
+   "mascot": "Bees",
+   "colors": "Purple, White and Black",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Box%20Elder&Reg=5&schoolID=14",
+   "note": ""
+  },
+  "Clearfield": {
+   "slug": "clearfield",
+   "class": "5A",
+   "region": 5,
+   "city": "Clearfield",
+   "mascot": "Falcons",
+   "colors": "Green and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Clearfield&Reg=5&schoolID=20",
+   "note": ""
+  },
+  "Fremont": {
+   "slug": "fremont",
+   "class": "5A",
+   "region": 5,
+   "city": "Plain City",
+   "mascot": "Silverwolves",
+   "colors": "Blue and Silver",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Fremont&Reg=5&schoolID=37",
+   "note": ""
+  },
+  "Northridge": {
+   "slug": "northridge",
+   "class": "5A",
+   "region": 5,
+   "city": "Layton",
+   "mascot": "Knights",
+   "colors": "Cardinal and Silver",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Northridge&Reg=5&schoolID=78",
+   "note": ""
+  },
+  "Roy": {
+   "slug": "roy",
+   "class": "5A",
+   "region": 5,
+   "city": "Roy",
+   "mascot": "Royals",
+   "colors": "Black, Gold and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Roy&Reg=5&schoolID=98",
+   "note": ""
+  },
+  "West Field": {
+   "slug": "west-field",
+   "class": "5A",
+   "region": 5,
+   "city": "Taylor",
+   "mascot": "Longhorns",
+   "colors": "Burnt Orange, White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=West%20Field&Reg=5&schoolID=9011",
+   "note": ""
+  },
+  "Alta": {
+   "slug": "alta",
+   "class": "5A",
+   "region": 6,
+   "city": "Sandy",
+   "mascot": "Hawks",
+   "colors": "Black, Silver and Scarlet",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Alta&Reg=6&schoolID=1",
+   "note": ""
+  },
+  "Bountiful": {
+   "slug": "bountiful",
+   "class": "5A",
+   "region": 6,
+   "city": "Bountiful",
+   "mascot": "Redhawks",
+   "colors": "Red and Gray",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Bountiful&Reg=6&schoolID=13",
+   "note": ""
+  },
+  "Brighton": {
+   "slug": "brighton",
+   "class": "5A",
+   "region": 6,
+   "city": "Cottonwood Heights",
+   "mascot": "Bengals",
+   "colors": "Orange and Blue",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Brighton&Reg=6&schoolID=15",
+   "note": ""
+  },
+  "Olympus": {
+   "slug": "olympus",
+   "class": "5A",
+   "region": 6,
+   "city": "Holladay City",
+   "mascot": "Titans",
+   "colors": "Green and Gray",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Olympus&Reg=6&schoolID=81",
+   "note": ""
+  },
+  "Viewmont": {
+   "slug": "viewmont",
+   "class": "5A",
+   "region": 6,
+   "city": "Bountiful",
+   "mascot": "Vikings",
+   "colors": "Cardinal Red and Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Viewmont&Reg=6&schoolID=126",
+   "note": ""
+  },
+  "Woods Cross": {
+   "slug": "woods-cross",
+   "class": "5A",
+   "region": 6,
+   "city": "Woods Cross",
+   "mascot": "Wildcats",
+   "colors": "Blue, Red and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Woods%20Cross&Reg=6&schoolID=139",
+   "note": ""
+  },
+  "Maple Mountain": {
+   "slug": "maple-mountain",
+   "class": "5A",
+   "region": 7,
+   "city": "Spanish Fork",
+   "mascot": "Golden Eagles",
+   "colors": "Maroon and Gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Maple%20Mountain&Reg=7&schoolID=63",
+   "note": ""
+  },
+  "Orem": {
+   "slug": "orem",
+   "class": "5A",
+   "region": 7,
+   "city": "Orem",
+   "mascot": "Tigers",
+   "colors": "Royal blue and gold",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Orem&Reg=7&schoolID=82",
+   "note": "UHSAA 2025-27 alignment: 4A Region 8 for all activities except football; FOOTBALL-ONLY alignment lists Orem in 5A Region 7. Bracket (5A No. 2) is correct."
+  },
+  "Payson": {
+   "slug": "payson",
+   "class": "5A",
+   "region": 7,
+   "city": "Payson",
+   "mascot": "Lions",
+   "colors": "Green and Silver",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Payson&Reg=7&schoolID=86",
+   "note": ""
+  },
+  "Pleasant Grove": {
+   "slug": "pleasant-grove",
+   "class": "5A",
+   "region": 7,
+   "city": "Pleasant Grove",
+   "mascot": "Vikings",
+   "colors": "Royal Blue and White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Pleasant%20Grove&Reg=7&schoolID=91",
+   "note": ""
+  },
+  "Spanish Fork": {
+   "slug": "spanish-fork",
+   "class": "5A",
+   "region": 7,
+   "city": "Spanish Fork",
+   "mascot": "Dons",
+   "colors": "Red and Gray",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Spanish%20Fork&Reg=7&schoolID=108",
+   "note": ""
+  },
+  "Springville": {
+   "slug": "springville",
+   "class": "5A",
+   "region": 7,
+   "city": "Springville",
+   "mascot": "Red Devils",
+   "colors": "Red, White and Navy",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Springville&Reg=7&schoolID=109",
+   "note": ""
+  },
+  "Timpview": {
+   "slug": "timpview",
+   "class": "5A",
+   "region": 7,
+   "city": "Provo",
+   "mascot": "Thunderbirds",
+   "colors": "Orange, Blue, White",
+   "directory_url": "https://uhsaa.org/school-directory/?id=Timpview&Reg=7&schoolID=117",
+   "note": ""
+  }
+ }
+}

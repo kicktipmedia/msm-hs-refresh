@@ -1,0 +1,9 @@
+/* next82: ESPN win probability cards (scoped .msm-wp) */
+.msm-wp{background:#fff;border:1px solid #d9ccb2;border-top:4px solid #d9ccb2;border-radius:8px;padding:12px 14px!important;margin:12px 0!important;box-sizing:border-box;max-width:560px;font:14px/1.35 Inter,system-ui,sans-serif;color:#000E28;text-align:left}
+.msm-wp .wph{margin:0 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:#000E28}
+.msm-wp .wpr{display:flex;justify-content:space-between;gap:8px;font-weight:700;flex-wrap:wrap}
+.msm-wp .wpb{display:flex;gap:3px;height:12px;margin:6px 0 4px;border-radius:6px;overflow:hidden;background:#FBF3E4}
+.msm-wp .wpb i{display:block;min-width:4px}
+.msm-wp .wps{font-size:12px;color:#4a4f5a}
+.msm-wp.c{border-top-width:1px;border-radius:6px;padding:7px 10px!important;margin:8px 0!important;font-size:12px;max-width:none}
+.msm-wp.c .wph{font-size:10px;margin:0 0 2px}.msm-wp.c .wpb{height:6px;gap:2px;margin:5px 0 3px}.msm-wp.c .wps{font-size:10.5px}

@@ -1,0 +1,10 @@
+/* hs-bracket.css (next85): bracket rows link to HS game cards; footer date/kickoff + NWS chip (space reserved) */
+.hs .g a.t{color:inherit;text-decoration:none;cursor:pointer}
+.hs .g a.t:hover .nm,.hs .g a.t:focus-visible .nm{text-decoration:underline}
+.hs .g a.t:focus-visible{outline:2px solid var(--navy);outline-offset:-2px}
+.hs .gm.hsbx{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.hs .gm.hsbx>span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hs .gm .wx{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto;min-width:48px;height:18px;padding:0 6px;background:var(--navy,#000E28);color:#FBF3E4;font-weight:700;letter-spacing:0;box-sizing:border-box}
+.hs .gm .wx svg{width:13px;height:13px;flex:0 0 auto}
+.hs .gm .wx[data-wx-state="hidden"]{visibility:hidden}
+.hs .fbx .gm .wx{height:14px;min-width:40px;padding:0 4px}.hs .fbx .gm .wx svg{width:10px;height:10px}

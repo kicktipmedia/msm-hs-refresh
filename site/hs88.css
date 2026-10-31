@@ -1,0 +1,6 @@
+/* next88: HS-only fixes */
+html body .hs h2.hsh em{box-shadow:none}
+html body .hs .fbx .gm .wx[data-wx-state="hidden"]{display:none}
+html body .hs .fbx .gm>span:first-child{flex:0 1 auto;min-width:0}
+html body .hs .fbx .gm .wx{margin-left:auto}
+html body .hs .fbx .gm{min-height:17.4px;box-sizing:border-box}

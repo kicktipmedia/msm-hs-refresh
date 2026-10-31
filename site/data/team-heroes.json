@@ -1,0 +1,59 @@
+{
+ "note": "Team hero art map (slug -> files). Desktop 1280x285, phone 780x174 at 600px or below. headline null = keep the live h1. Missing img = default hero.",
+ "heroes": {
+  "byu": {
+   "img": "/heroes/byu.jpg",
+   "webp": "/heroes/byu.webp",
+   "phone": "/heroes/byu-phone.jpg",
+   "phoneWebp": "/heroes/byu-phone.webp",
+   "alt": "Mountain range at dusk under a navy sky, with a BYU team tag in the top corner.",
+   "altPhone": "Mountain range at dusk under a navy sky, with a BYU team tag in the top corner.",
+   "headline": null
+  },
+  "utah": {
+   "img": "/heroes/utah.jpg",
+   "webp": "/heroes/utah.webp",
+   "phone": "/heroes/utah-phone.jpg",
+   "phoneWebp": "/heroes/utah-phone.webp",
+   "alt": "Mountain range at dusk under a navy sky, with a Utah team tag in the top corner.",
+   "altPhone": "Mountain range at dusk under a navy sky, with a Utah team tag in the top corner.",
+   "headline": null
+  },
+  "usu": {
+   "img": "/heroes/utah-state.jpg",
+   "webp": "/heroes/utah-state.webp",
+   "phone": "/heroes/utah-state-phone.jpg",
+   "phoneWebp": "/heroes/utah-state-phone.webp",
+   "alt": "Mountain range at dusk under a navy sky, with a Utah State team tag in the top corner.",
+   "altPhone": "Mountain range at dusk under a navy sky, with a Utah State team tag in the top corner.",
+   "headline": null
+  },
+  "weber": {
+   "img": "/heroes/weber-state.jpg",
+   "webp": "/heroes/weber-state.webp",
+   "phone": "/heroes/weber-state-phone.jpg",
+   "phoneWebp": "/heroes/weber-state-phone.webp",
+   "alt": "Mountain range at dusk under a navy sky, with a Weber State team tag in the top corner.",
+   "altPhone": "Mountain range at dusk under a navy sky, with a Weber State team tag in the top corner.",
+   "headline": null
+  },
+  "suu": {
+   "img": "/heroes/southern-utah.jpg",
+   "webp": "/heroes/southern-utah.webp",
+   "phone": "/heroes/southern-utah-phone.jpg",
+   "phoneWebp": "/heroes/southern-utah-phone.webp",
+   "alt": "Mountain range at dusk under a navy sky, with a Southern Utah team tag in the top corner.",
+   "altPhone": "Mountain range at dusk under a navy sky, with a Southern Utah team tag in the top corner.",
+   "headline": null
+  },
+  "utech": {
+   "img": "/heroes/utah-tech.jpg",
+   "webp": "/heroes/utah-tech.webp",
+   "phone": "/heroes/utah-tech-phone.jpg",
+   "phoneWebp": "/heroes/utah-tech-phone.webp",
+   "alt": "Mountain range at dusk under a navy sky, with a Utah Tech team tag in the top corner.",
+   "altPhone": "Mountain range at dusk under a navy sky, with a Utah Tech team tag in the top corner.",
+   "headline": null
+  }
+ }
+}

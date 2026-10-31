@@ -1,0 +1,107 @@
+{
+ "note": "Real CFP selection committee decisions, 12-team format. Ranks are the official final CFP rankings. Source links go to collegefootballplayoff.com.",
+ "rule": "The five highest-ranked conference champions and the next seven highest-ranked teams make the field (CFP release, Dec. 7, 2025).",
+ "precedents": [
+  {
+   "id": "smu24",
+   "tags": [
+    "titleloss",
+    "bubble"
+   ],
+   "season": 2024,
+   "text": "2024: SMU (No. 10) lost the ACC title game and still made the field. Alabama (No. 11) was the first team out.",
+   "url": "https://collegefootballplayoff.com/news/2024/12/8/cfp-rankings-241208"
+  },
+  {
+   "id": "ind24",
+   "tags": [
+    "atlarge",
+    "bubble"
+   ],
+   "season": 2024,
+   "text": "2024: Indiana (No. 8), with no title game, made the field as an at-large team. Miami (No. 13) did not.",
+   "url": "https://collegefootballplayoff.com/news/2024/12/8/cfp-rankings-241208"
+  },
+  {
+   "id": "tlg24",
+   "tags": [
+    "titleloss"
+   ],
+   "season": 2024,
+   "text": "2024: Texas (No. 3) and Penn State (No. 4) lost conference title games and stayed in the top four of the final rankings.",
+   "url": "https://collegefootballplayoff.com/news/2024/12/8/cfp-rankings-241208"
+  },
+  {
+   "id": "clem24",
+   "tags": [
+    "champ",
+    "g6"
+   ],
+   "season": 2024,
+   "text": "2024: ACC champion Clemson (No. 16) and Mountain West champion Boise State (No. 9) made the field as conference champions.",
+   "url": "https://collegefootballplayoff.com/news/2024/12/8/cfp-rankings-241208"
+  },
+  {
+   "id": "asu24",
+   "tags": [
+    "champ",
+    "big12"
+   ],
+   "season": 2024,
+   "text": "2024: Big 12 champion Arizona State (No. 12) made the field. BYU finished No. 17.",
+   "url": "https://collegefootballplayoff.com/news/2024/12/8/cfp-rankings-241208"
+  },
+  {
+   "id": "mia25",
+   "tags": [
+    "h2h",
+    "bubble",
+    "atlarge"
+   ],
+   "season": 2025,
+   "text": "2025: Miami (No. 10) finished one spot ahead of Notre Dame (No. 11) and took the last at-large spot. Notre Dame was the first team out.",
+   "url": "https://collegefootballplayoff.com/news/2025/12/7/cfp-rankings"
+  },
+  {
+   "id": "byu25",
+   "tags": [
+    "titleloss",
+    "big12",
+    "bubble"
+   ],
+   "season": 2025,
+   "text": "2025: BYU (No. 12) lost the Big 12 title game to Texas Tech (No. 4) and was left out. Utah finished No. 15.",
+   "url": "https://collegefootballplayoff.com/news/2025/12/7/cfp-rankings"
+  },
+  {
+   "id": "g625",
+   "tags": [
+    "champ",
+    "g6"
+   ],
+   "season": 2025,
+   "text": "2025: Tulane (No. 20) and James Madison (No. 24) made the field as the fourth and fifth highest-ranked conference champions. The ACC champion was not ranked.",
+   "url": "https://collegefootballplayoff.com/news/2025/12/7/cfp-rankings"
+  },
+  {
+   "id": "bama25",
+   "tags": [
+    "titleloss",
+    "atlarge"
+   ],
+   "season": 2025,
+   "text": "2025: Alabama (No. 9) lost the SEC title game and stayed in the field.",
+   "url": "https://collegefootballplayoff.com/news/2025/12/7/cfp-rankings"
+  },
+  {
+   "id": "seed25",
+   "tags": [
+    "seed"
+   ],
+   "season": 2025,
+   "text": "2025: Seeds followed the final ranking. Ohio State (No. 2) lost the Big Ten title game and still got the No. 2 seed and a bye.",
+   "url": "https://collegefootballplayoff.com/news/2025/12/7/cfp-rankings"
+  }
+ ],
+ "verified": "All ranks checked against the official final CFP rankings pages on collegefootballplayoff.com, Oct. 23, 2026."
+}

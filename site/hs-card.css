@@ -1,0 +1,21 @@
+/* hs-card.css: scoped styles for HS card venue line, countdown and NWS weather chip (from college .c1w .cd/.wx) */
+.hs .hsc .hskx{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:10px 0 4px}
+.hs .hsc .hsv{font-size:.88rem;color:#5b6475;margin-top:6px}
+.hs .hsc .hsv a{color:var(--navy);font-weight:600}
+.hs .hsc .cd{display:inline-flex;border:1.5px solid var(--navy);background:#fff;max-width:100%}
+.hs .hsc .cd div{display:flex;flex-direction:column;align-items:center;min-width:40px;padding:6px 5px 4px;border-right:1.5px solid var(--navy)}
+.hs .hsc .cd div:last-child{border-right:0}
+.hs .hsc .cd b{font-family:'Anton','Anton FB1','Anton FB2','Anton FB3',Impact,'Arial Black',sans-serif;font-weight:400;font-size:20px;line-height:1.2;color:var(--navy)}
+.hs .hsc .cd i{font-style:normal;font-family:'Oswald','Oswald FB1','Oswald FB2','Oswald FB3','Arial Narrow',Arial,sans-serif;font-weight:600;font-size:10px;letter-spacing:1px;color:#5b6475}
+.hs .hsc .cd .lbl{justify-content:center;background:var(--navy);min-width:0}
+.hs .hsc .cd .lbl i{color:var(--cream)}
+.hs .hsc .cd .st{padding:7px 10px 5px;justify-content:center}
+.hs .hsc .cd .st b{font-size:17px;letter-spacing:1px}
+.hs .hsc .wx{display:inline-flex;align-items:center;gap:6px;height:31px;line-height:1;background:var(--navy);color:var(--cream);padding:3px 10px;font-family:'Oswald','Oswald FB1','Oswald FB2','Oswald FB3','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:16px;white-space:nowrap;box-sizing:border-box}
+.hs .hsc .wx svg{width:22px;height:22px;flex:0 0 auto}
+.hs .hsc .wx .t{color:var(--cream)}
+.hs .hsc .wx[data-wx-state="hidden"]{display:none}
+.hs .hsc .wx[data-wx-state="hidden"][data-lat]{display:inline-flex;visibility:hidden;min-width:94px;min-height:31px}
+.hs .hsc .wx[data-wx-state="forecast"]{min-width:94px;min-height:31px}
+.hs .wxsym{position:absolute;width:0;height:0;overflow:hidden}
+@media(max-width:359px){.hs .hsc .cd div{min-width:34px;padding:6px 3px 4px}.hs .hsc .cd b{font-size:18px}}

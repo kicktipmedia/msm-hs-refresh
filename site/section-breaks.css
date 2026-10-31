@@ -1,0 +1,53 @@
+/* MSM section-breaks — package B (4px gold bar on navy edges). Pre-approved by Jared, replaces A1 (e4516c35) in place.
+   Load as the LAST <link>/<style> at end of <head> (after next69 css).
+   Every selector is prefixed `html body main` so it wins over next69 without !important
+   and touches only band/section-break properties (padding, rule, h2 type, reveal). */
+:root{
+  --sb-pad:clamp(40px,5vw,64px);      /* one vertical rhythm: top = bottom, every band */
+  --sb-head-gap:24px;                   /* h2 row -> content */
+  --sb-h2:clamp(32px,4.2vw,48px);
+  --sb-bar:4px;
+  --sb-navy:#000E28;--sb-cream:#FBF3E4;--sb-gold:#F5B82E;--sb-tan:#d9ccb2;
+}
+/* 1. spacing: band wrappers add nothing; inner .sec owns equal top/bottom padding */
+html body main>.band{padding-top:0;padding-bottom:0}
+/* !important only here: storylines/potw/stadiums carry inline padding styles in next67+ */
+html body main>.band:not(#this-week):not(.this-week)>.sec{padding-top:var(--sb-pad)!important;padding-bottom:var(--sb-pad)!important;margin-top:0;margin-bottom:0}
+html body main>#newsletter.band{padding:0}
+html body main>#newsletter.band>*{padding-top:var(--sb-pad);padding-bottom:var(--sb-pad)}
+/* hero (.this-week) keeps its own art-directed padding */
+/* 3. one header style: Anton, uppercase, token size, 4px bar accent */
+html body main>.band .sh{margin-bottom:var(--sb-head-gap)}
+html body main>.band:not(#this-week):not(.this-week) h2{font-family:'Anton','Anton FB1','Anton FB2',Impact,sans-serif;font-size:var(--sb-h2);line-height:1.02;text-transform:uppercase;letter-spacing:.01em;border-bottom:0}
+html body main>.band.cream:not(#rankings):not(#schedules):not(#newsletter) h2{color:var(--sb-navy)}
+html body main>.band.navy:not(.this-week) h2{color:var(--sb-cream)}
+html body main>.band.cream .sh .bar{background:var(--sb-navy);height:var(--sb-bar)}
+html body main>.band.navy .sh .bar{background:var(--sb-gold);height:var(--sb-bar)}
+/* 4. background rhythm: strict navy/cream alternation already holds; lock it */
+html body main>.band.navy{background:var(--sb-navy)}
+html body main>.band.cream{background:var(--sb-cream)}
+
+/* Rankings + Schedules keep their navy photo banner */
+html body main>#rankings.band h2{color:var(--sb-cream)}
+
+/* 2. mountain strip removed from every boundary */
+html body main>.hsx-div{display:none}
+/* 5. one slide-up fade: 24px / 500ms, transform+opacity only (no CLS).
+   Gated on html.rvl (added by site JS) so content stays visible if JS fails. */
+html.rvl body main>.band>*{opacity:0;transform:translateY(24px);transition:opacity .5s cubic-bezier(.22,.61,.36,1),transform .5s cubic-bezier(.22,.61,.36,1)}
+html.rvl body main>.band.rv-in>*{opacity:1;transform:none}
+html.rvl body main>.band .sh h2,html.rvl body main>.band .sh .bar{opacity:1;transform:none;transition:none}
+@media (prefers-reduced-motion:reduce){html.rvl body main>.band>*,html.rvl body main>.band.rv-in>*{opacity:1;transform:none;transition:none}}
+
+/* Divider (B): a 4px solid gold bar INSIDE navy bands only, 8px in from the edge, so gold never touches cream/white.
+   ::before = top edge (cream->navy), ::after = bottom edge (navy->cream). Skips: hero top (header above), last band bottom (footer).
+   Same 4px bar above the Rankings/Schedules photo banners (A1's plain 2px banner rule dropped: one divider, one weight). */
+html body main>.band.navy{position:relative}
+html body main>.band.navy:not(#this-week)::before,html body main>.band.navy:not(:last-child)::after{content:"";position:absolute;left:0;right:0;height:var(--sb-bar);background:var(--sb-gold);pointer-events:none;z-index:1}
+html body main>.band.navy:not(#this-week)::before{top:8px}
+html body main>.band.navy:not(:last-child)::after{bottom:8px}
+
+
+/* CLS guard (pre-existing hero shift): the countdown sub-line #cdw is empty in HTML and filled by JS (22px),
+   pushing every section below it down after first paint. Reserve its line. */
+html body #this-week #cdw{min-height:22px}

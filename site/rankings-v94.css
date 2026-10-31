@@ -1,0 +1,36 @@
+/* next94 /rankings/ page, scoped to .rk94 */
+.rk94{--grey:#5B6475;--tan:#d9ccb2}
+.rk94 .w{max-width:1040px;margin:0 auto}
+.rk94 .rkhero{background:var(--navy);color:var(--cream);padding:48px 32px 56px}
+.rk94 .rkhero .kick{display:block;background:none;padding:0;font:600 14px 'Oswald','Oswald FB1','Oswald FB2','Oswald FB3',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+.rk94 .rkhero h1{font:700 56px/1.05 'Oswald','Oswald FB1','Oswald FB2','Oswald FB3',sans-serif;text-transform:uppercase;margin:0 0 16px;color:#fff}
+.rk94 .rkhero p{max-width:680px;font-size:18px;margin:0 0 20px}
+.rk94 .pills{display:flex;flex-wrap:wrap;gap:10px;padding:0;margin:0;list-style:none}
+.rk94 .pills li{border:1px solid var(--tan);color:var(--cream);border-radius:999px;padding:5px 14px;font:600 13px 'Inter','Inter FB1',sans-serif}
+.rk94 .rkmain{padding:40px 32px 8px}
+.rk94 h2{font:700 28px 'Oswald','Oswald FB1','Oswald FB2','Oswald FB3',sans-serif;text-transform:uppercase;margin:0 0 6px}
+.rk94 .meta{color:var(--grey);font-size:14px;margin:0 0 18px}
+.rk94 table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--grey);color:var(--navy)}
+.rk94 th{background:var(--tan);color:var(--navy);font:600 13px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:10px 12px}
+.rk94 td{padding:8px 12px;border-top:1px solid var(--tan);vertical-align:middle}
+.rk94 tbody tr:nth-child(even){background:var(--cream)}
+.rk94 .rk{font:700 22px 'Oswald','Oswald FB1',sans-serif;width:56px;text-align:center}.rk94 .lg{width:60px}.rk94 .lg img{display:block}
+.rk94 td.rec{display:table-cell;background:none;color:inherit;padding:8px 12px;margin:0}
+.rk94 .tm{font-weight:600}.rk94 .rec{font:600 17px 'Oswald','Oswald FB1',sans-serif}
+.rk94 .sos b{font:600 16px 'Oswald','Oswald FB1',sans-serif;margin-right:8px}.rk94 .sos span{color:var(--grey);font-size:14px}
+.rk94 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.rk94 .note,.rk94 .credit{font-size:14px;color:var(--grey);margin:12px 0 0}
+.rk94 .how{margin-top:48px;background:#fff;border:1px solid var(--grey);padding:28px 32px}
+.rk94 .how ol{list-style:none;padding:0;margin:16px 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.rk94 .how li{border-top:4px solid var(--navy);padding-top:12px}
+.rk94 .how .pct{display:block;font:700 40px/1 'Oswald','Oswald FB1',sans-serif}.rk94 .how .lbl{display:block;font-weight:600;margin:6px 0 4px}
+.rk94 .how .d{display:block;font-size:14px;color:var(--grey)}
+.rk94 .rule{margin:20px 0 0;padding-top:14px;border-top:1px solid var(--tan);font-weight:600}.rk94 .how li.zero{border-top-color:var(--grey)}
+@media(max-width:700px){
+.rk94 .rkhero{padding:32px 16px 36px}.rk94 .rkhero h1{font-size:38px}.rk94 .rkhero p{font-size:16px}
+.rk94 .rkmain{padding:28px 12px 8px}.rk94 th,.rk94 td,.rk94 td.rec{padding:8px 6px}.rk94 th{font-size:11px;letter-spacing:.04em}
+.rk94 .rk{width:34px;font-size:18px}.rk94 .lg{width:38px}.rk94 .lg img{width:28px;height:28px}
+.rk94 .tm{font-size:14px;line-height:1.25}.rk94 .rec{font-size:15px}
+.rk94 .sos b{display:block;margin:0;font-size:15px}.rk94 .sos span{font-size:12px}
+.rk94 .how{padding:20px 16px}.rk94 .how ol{grid-template-columns:1fr 1fr}}
+@media(max-width:360px){.rk94 .rkmain{padding:28px 8px 8px}.rk94 th,.rk94 td,.rk94 td.rec{padding:7px 4px}.rk94 th{font-size:10px;letter-spacing:.02em}.rk94 .rk{width:28px}.rk94 .lg{width:34px}.rk94 .tm{font-size:13px}}
+.rk94 .tw{overflow-x:auto}

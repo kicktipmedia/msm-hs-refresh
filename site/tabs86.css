@@ -1,0 +1,14 @@
+/* next86: standings tabs match the top College/High School toggle (.seg a) */
+html body .hs .hstabs,html body .hs .view,html body .hs .rtabs{display:flex;flex-wrap:wrap;gap:6px;border:0;box-shadow:none;background:none;width:auto}
+html body .hs .hstabs{margin:20px 0 12px}
+html body .hs .view{margin:0 0 12px}
+html body .hs .rtabs{margin:10px 0 6px}
+html body .hs .hstabs button,html body .hs .view button,html body .hs .rtabs button{flex:0 1 auto;margin:0;font:700 .82rem/1.1 'Oswald','Oswald FB1','Oswald FB2','Oswald FB3',sans-serif;text-transform:uppercase;letter-spacing:.1em;padding:6px 12px 5px;border:1px solid #5B6475;border-radius:4px;background:#000E28;color:#FBF3E4;box-shadow:none;background-image:none;cursor:pointer}
+html body .hs .hstabs button:hover,html body .hs .view button:hover,html body .hs .rtabs button:hover{border-color:#FBF3E4;color:#FBF3E4;background:#000E28}
+html body .hs .hstabs button[aria-selected=true],html body .hs .view button[aria-selected=true],html body .hs .rtabs button[aria-selected=true]{background:#FBF3E4;color:#000E28;border-color:#000E28;box-shadow:none}
+html body .hs .hstabs button:focus-visible,html body .hs .view button:focus-visible,html body .hs .rtabs button:focus-visible{outline:2px solid #F5B82E;outline-offset:2px}
+html body .hs .hstabs button::before,html body .hs .hstabs button::after,html body .hs .view button::before,html body .hs .view button::after,html body .hs .rtabs button::before,html body .hs .rtabs button::after{content:none}
+@media(max-width:600px){html body .hs .hstabs button,html body .hs .view button,html body .hs .rtabs button{flex:1 1 0;padding:6px 4px 5px;font-size:.76rem;letter-spacing:.06em;text-align:center}}
+/* full bracket footer: whole line visible, weather chip on its own line */
+html body .hs .fbx .gm{white-space:normal;overflow:visible;text-overflow:clip;padding:2px 4px;display:flex;flex-wrap:wrap;align-items:center;column-gap:4px;line-height:1.25}
+html body .hs .fbx .gm>span:first-child{flex:1 0 100%;white-space:nowrap;font-size:.5rem;letter-spacing:0}

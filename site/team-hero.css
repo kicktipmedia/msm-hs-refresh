@@ -1,0 +1,7 @@
+/* M4 team hero: navy mountain banner (Jared approved Oct 22). Scoped to team pages. */
+.tp section.phead.team{background:linear-gradient(90deg,#000E28 0,#000E28 38%,rgba(0,14,40,.35) 75%,rgba(0,14,40,.1)),url(/brand/rankings/mtn-strip.jpg) right bottom/auto 100% no-repeat,#000E28;border-bottom:0;padding-top:clamp(40px,5vw,64px);padding-bottom:clamp(40px,5vw,64px);color:#FBF3E4}
+.tp section.phead.team::before{content:"";position:absolute;left:0;right:0;bottom:8px;height:4px;background:#F5B82E;z-index:1}
+.tp section.phead.team .kick{box-shadow:0 0 0 2px #d9ccb2}
+.tp section.phead.team .cfc{background:#FBF3E4;color:#000E28;box-shadow:inset 0 0 0 2px #d9ccb2}
+.tp section.phead.team h1,.tp section.phead.team .nk{color:#FBF3E4}
+@media(max-width:600px){.tp section.phead.team{background:linear-gradient(90deg,#000E28 0,#000E28 62%,rgba(0,14,40,.55) 85%,rgba(0,14,40,.25)),url(/brand/rankings/mtn-strip.jpg) right bottom/auto 100% no-repeat,#000E28}}

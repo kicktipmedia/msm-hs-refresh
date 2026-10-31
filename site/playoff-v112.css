@@ -1,0 +1,339 @@
+/* next102 /playoff/ page, scoped to .po102 */
+.po102{--grey:#5B6475;--tan:#d9ccb2;--hl:#fff4d6}
+.po102 .w{max-width:1040px;margin:0 auto}
+.po102 .rkhero{background:var(--navy);color:var(--cream);padding:48px 32px 56px}
+.po102 .rkhero .kick{display:block;background:none;padding:0;border:0;font:600 14px 'Oswald','Oswald FB1','Oswald FB2','Oswald FB3',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+.po102 h1{font:700 56px/1.05 'Oswald','Oswald FB1','Oswald FB2','Oswald FB3',sans-serif;text-transform:uppercase;margin:0 0 16px;color:#fff}
+.po102 .rkhero p{max-width:700px;font-size:18px;margin:0 0 20px}
+.po102 .pills{display:flex;flex-wrap:wrap;gap:10px;padding:0;margin:0;list-style:none}
+.po102 .pills li{border:1px solid var(--tan);color:var(--cream);border-radius:999px;padding:5px 14px;font:600 13px 'Inter','Inter FB1',sans-serif}
+.po102 .main{padding:36px 32px 24px;color:var(--navy)}
+.po102 h2{font:700 28px 'Oswald','Oswald FB1','Oswald FB2','Oswald FB3',sans-serif;text-transform:uppercase;margin:28px 0 6px}
+.po102 h2:first-child{margin-top:0}
+.po102 .meta{color:var(--grey);font-size:14px;margin:0 0 16px}
+.po102 .ut{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 8px}
+.po102 .ut a{display:block;background:#fff;border:1px solid var(--grey);border-top:5px solid #000E28;padding:12px 14px;color:var(--navy);text-decoration:none;min-height:44px}
+.po102 .ut a:hover,.po102 .ut a:focus-visible{background:rgba(0,71,186,.07)}
+.po102 .ut b{display:block;font:700 20px 'Oswald','Oswald FB1',sans-serif;text-transform:uppercase}
+.po102 .ut .st{display:block;font:700 26px/1.15 'Oswald','Oswald FB1',sans-serif;margin:4px 0 2px}
+.po102 .ut .sub{display:block;font-size:13px;color:var(--grey)}
+.po102 .wi{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 14px}
+.po102 .wi span{font:600 13px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-right:4px}
+.po102 .wi button{min-height:44px;padding:0 14px;border:2px solid var(--navy);background:#fff;color:var(--navy);font:600 14px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border-radius:0}
+.po102 .wi button[aria-pressed="true"]{background:var(--navy);color:var(--gold)}
+.po102 .wi button:focus-visible{outline:3px solid #000E28;outline-offset:2px}
+.po102 .note{font-size:14px;color:var(--navy);background:var(--hl);border-left:4px solid #000E28;padding:8px 12px;margin:0 0 14px}
+.po102 .br{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+.po102 .col h3{font:700 16px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.1em;text-transform:uppercase;background:var(--tan);margin:0 0 10px;padding:8px 12px}
+.po102 .gm{background:#fff;border:1px solid var(--grey);margin:0 0 12px}
+.po102 .gm .lab{font:600 12px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);padding:6px 10px 0}
+.po102 .tm{display:grid;grid-template-columns:30px 28px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 10px;border-top:1px solid var(--tan)}
+.po102 .lab+.tm{border-top:0}
+.po102 .tm .sd{display:flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--navy);color:var(--gold);font:700 15px 'Oswald','Oswald FB1',sans-serif}
+.po102 .tm .nm{font:600 16px 'Oswald','Oswald FB1',sans-serif;overflow-wrap:anywhere}
+.po102 .tm .nm small{display:block;font:400 12px 'Inter','Inter FB1',sans-serif;color:var(--grey)}
+.po102 .tm .rk{font:600 13px 'Oswald','Oswald FB1',sans-serif;color:var(--grey);white-space:nowrap}
+.po102 .tm.tbd .sd{background:none;border:1px dashed var(--tan)}
+.po102 .tm.tbd .nm{color:var(--grey);font-weight:400;font-style:italic}
+.po102 .tm.instate{background:var(--hl)}
+.po102 .tm.instate .sd{background:#000E28;color:#fff}
+.po102 table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--grey)}
+.po102 th{background:var(--tan);color:var(--navy);font:600 13px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:9px 10px}
+.po102 td{padding:8px 10px;border-top:1px solid var(--tan);font-size:15px}
+.po102 tr.instate td{background:var(--hl);font-weight:600}
+.po102 .tw{overflow-x:auto}
+.po102 .out{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;list-style:none}
+.po102 .out li{background:#fff;border:1px solid var(--grey);padding:6px 12px;font:600 15px 'Oswald','Oswald FB1',sans-serif}
+.po102 .out li.instate{background:var(--hl)}
+.po102 .rules{font-size:15px;line-height:1.5;padding-left:20px}
+.po102 a.txt{color:#0047BA}
+@media(max-width:900px){.po102 .br{grid-template-columns:repeat(2,minmax(0,1fr))}.po102 .br .col.sf{grid-column:1/-1}}
+@media(max-width:640px){.po102 h1{font-size:40px}.po102 .rkhero{padding:32px 18px 36px}.po102 .rkhero p{font-size:16px}.po102 .main{padding:24px 14px 16px}.po102 .br,.po102 .ut{grid-template-columns:minmax(0,1fr)}.po102 .hide-s{display:none}}
+@media(max-width:360px){.po102 h1{font-size:34px}.po102 .wi button{padding:0 10px;font-size:13px}}
+
+/* next104 logos */
+.po102 .lgw{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;flex:0 0 28px;overflow:hidden}
+.po102 .lgw img{width:28px;height:28px;object-fit:contain;display:block}
+.po102 .lgw.nolg::before{content:attr(data-i);font:700 10px/1 'Oswald','Oswald FB1',sans-serif;color:var(--navy);background:var(--tan);width:28px;height:28px;display:flex;align-items:center;justify-content:center}
+.po102 .tm.tbd .lgw{visibility:hidden}
+.po102 td .tc{display:inline-flex;align-items:center;gap:8px}
+@media(max-width:360px){.po102 .tm{grid-template-columns:28px 24px minmax(0,1fr) auto;gap:6px;padding:8px}.po102 .tm .lgw,.po102 .tm .lgw img,.po102 .tm .lgw.nolg::before{width:24px;height:24px;flex-basis:24px}}
+
+/* next104b: HS-style round tabs on phones (same pattern as /high-school/standings/ .rtabs + .bk .col.act) */
+.po102 .rtabs{display:none}
+@media(min-width:901px){.po102 .br{grid-template-columns:repeat(4,minmax(0,1fr))}.po102 .br .col.sf{grid-column:auto}}
+@media(min-width:601px) and (max-width:900px){.po102 .br .col.sf{grid-column:auto}}
+@media(max-width:600px){.po102 .rtabs{display:flex;gap:6px;margin:14px 0 8px;position:sticky;top:0;z-index:4;background:var(--cream);padding:4px 0}
+.po102 .rtabs button{flex:1 1 0;min-width:0;min-height:44px;text-align:center;font:700 .76rem/1.1 'Oswald','Oswald FB1',sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:6px 4px 5px;border:2px solid #000E28;border-radius:4px;background:#fff;color:#000E28;cursor:pointer}
+.po102 .rtabs button[aria-selected=true]{background:#000E28;color:#fff}
+.po102 .rtabs button:focus-visible{outline:3px solid #000E28;outline-offset:2px}
+.po102 .br{display:block}.po102 .br .col{display:none}.po102 .br .col.act{display:block}}
+
+/* next104b: compact Utah-teams list on phones (no dark status boxes; gold only as an accent bar) */
+.po102 .ut .ss,.po102 .ut .mr{display:none}
+@media(max-width:600px){.po102 .ut{display:block;border:1px solid var(--grey);background:#fff;margin:0 0 8px}
+.po102 .ut a{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n r" "s s";align-items:baseline;column-gap:10px;row-gap:1px;border:0;border-top:1px solid #d9ccb2;border-left:5px solid transparent;padding:8px 12px;min-height:44px;box-sizing:border-box}
+.po102 .ut a:first-child{border-top:0}
+.po102 .ut a.in{border-left-color:#000E28}
+.po102 .ut b{grid-area:n;font-size:17px;line-height:1.2;min-width:0}
+.po102 .ut .mr{display:block;grid-area:r;font:600 12px 'Inter',sans-serif;color:#5B6475;white-space:nowrap}
+.po102 .ut .ss{display:block;grid-area:s;font:600 14px/1.3 'Inter',sans-serif;color:var(--navy)}
+.po102 .ut .st,.po102 .ut .sub{display:none}}
+
+/* next105: What If area, full bracket view on phones */
+.po102 .wl{background:#000E28;color:#FBF3E4;padding:22px 22px 18px;margin:26px 0 22px;border-radius:10px}
+.po102 .wl-hd h2{color:#fff;margin:0 0 4px}
+.po102 .wl-hd p{margin:0 0 16px;font-size:15px;max-width:640px}
+.po102 .wl-b12{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;background:rgba(251,243,228,.07);border-radius:8px;padding:12px}
+.po102 .b12lg{flex:none;width:48px;height:48px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center}
+.po102 .b12lg img{width:40px;height:40px;display:block}
+.po102 .wl-q{font:700 16px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#F5B82E}
+.po102 .chips{display:flex;flex-wrap:wrap;gap:8px;flex:1 1 100%}
+.po102 .chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px 0 8px;border:0;border-radius:999px;background:#fff;color:#000E28;font:600 15px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.03em;text-transform:uppercase;cursor:pointer}
+.po102 .chip .lgw,.po102 .chip .lgw img,.po102 .chip .lgw.nolg::before{width:24px;height:24px;flex-basis:24px}
+.po102 .chip small{font:500 11px 'Inter','Inter FB1',sans-serif;text-transform:none;color:#5B6475}
+.po102 .chip[aria-pressed="true"]{background:#F5B82E;color:#000E28;box-shadow:0 0 0 3px #fff}
+.po102 .chip[aria-pressed="true"] small{color:#000E28}
+.po102 .wl button:focus-visible,.po102 .wl input:focus-visible,.po102 .wl a:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.po102 .ask{margin:16px 0 8px}
+.po102 .ask label{display:block;font:700 16px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#F5B82E;margin:0 0 6px}
+.po102 .ask-r{display:flex;gap:8px}
+.po102 .ask input{flex:1;min-width:0;min-height:48px;box-sizing:border-box;border:0;border-radius:8px;padding:0 14px;font:500 16px 'Inter','Inter FB1',sans-serif;color:#000E28;background:#fff}
+.po102 .ask button,.po102 .reset{flex:none;min-height:48px;padding:0 18px;border:0;border-radius:8px;background:#F5B82E;color:#000E28;font:700 15px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.po102 .ex{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 4px}
+.po102 .ex span{font:600 13px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#d9ccb2}
+.po102 .exb{min-height:44px;padding:6px 12px;border:1px solid rgba(251,243,228,.55);border-radius:999px;background:transparent;color:#FBF3E4;font:500 14px/1.25 'Inter','Inter FB1',sans-serif;text-align:left;cursor:pointer}
+.po102 .exb:hover{background:rgba(251,243,228,.12)}
+.po102 .res:empty{display:none}
+.po102 .res{margin:14px 0 4px;background:rgba(251,243,228,.07);border-radius:8px;padding:14px}
+.po102 .res-m{margin:0;font-size:15px}
+.po102 .res-k{margin:0 0 6px;font:700 15px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#F5B82E}
+.po102 .res-l{margin:0 0 12px;padding-left:20px;font-size:15px}
+.po102 .res-x{margin:0 0 12px;font-size:14px;color:#d9ccb2}
+.po102 .res-f{list-style:none;margin:0 0 10px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.po102 .res-f li{display:flex;align-items:center;gap:6px;background:#fff;color:#000E28;border-radius:6px;padding:6px 8px;font:600 14px 'Oswald','Oswald FB1',sans-serif;min-width:0}
+.po102 .res-f li.instate{background:#fff4d6;box-shadow:inset 4px 0 0 #000E28}
+.po102 .res-f .fs{flex:none;width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:#000E28;color:#fff;font-size:13px;border-radius:4px}
+.po102 .res-f .fn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.po102 .res-f em{flex:none;font:500 11px 'Inter','Inter FB1',sans-serif;font-style:normal;color:#5B6475}
+.po102 .res-f .lgw,.po102 .res-f .lgw img,.po102 .res-f .lgw.nolg::before{width:20px;height:20px;flex-basis:20px}
+.po102 .res-io{margin:0 0 10px;font-size:15px}
+.po102 .res-io a{color:#fff;display:inline-block;min-height:44px;line-height:44px}
+.po102 .wl-n{margin:12px 0 0;font-size:13px;color:#d9ccb2}
+.po102 #po-br{scroll-margin-top:12px}
+.po102 #po-br:focus{outline:none}
+/* view toggle + compact full bracket: phones only */
+.po102 .vt,.po102 .fbx{display:none}
+.po102 .rdx{display:block}
+.po102 .fbw{overflow:hidden;position:relative}
+.po102 .fb{width:470px;display:grid;grid-template-columns:132px 132px 108px 98px;column-gap:0;transform-origin:0 0}
+.po102 .fc{display:flex;flex-direction:column;justify-content:space-around;padding-right:10px;border-right:1px solid #d9ccb2;margin-right:-1px}
+.po102 .fc:last-child{border-right:0}
+.po102 .fc h4{margin:0 0 6px;font:700 12px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#000E28;background:#d9ccb2;padding:4px 6px;align-self:stretch}
+.po102 .fc+.fc{padding-left:8px}
+.po102 .fg{background:#fff;border:1px solid #5B6475;margin:6px 0;border-left:3px solid #000E28}
+.po102 .ft{display:flex;align-items:center;gap:5px;height:26px;padding:0 5px;border-top:1px solid #d9ccb2;font:600 13px 'Oswald','Oswald FB1',sans-serif;color:#000E28;min-width:0}
+.po102 .ft:first-child{border-top:0}
+.po102 .ft .fs{flex:none;width:18px;height:18px;display:flex;align-items:center;justify-content:center;background:#000E28;color:#fff;font-size:11px}
+.po102 .ft .fn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.po102 .ft .lgw,.po102 .ft .lgw img,.po102 .ft .lgw.nolg::before{width:18px;height:18px;flex-basis:18px;font-size:8px}
+.po102 .ft.instate{background:var(--hl)}
+.po102 .ft.tbd .fs{background:none;border:1px dashed #d9ccb2}
+.po102 .ft.tbd .fn{font:italic 400 11px 'Inter','Inter FB1',sans-serif;color:#5B6475}
+.po102 .fbw.zm{overflow:auto;-webkit-overflow-scrolling:touch}
+.po102 .zb{margin:8px 0 0;min-height:44px;padding:0 16px;border:2px solid #000E28;border-radius:4px;background:#fff;color:#000E28;font:700 13px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+@media(max-width:600px){
+.po102 .wl{padding:18px 14px 14px;margin:20px -4px 18px}
+.po102 .vt{display:flex;gap:6px;margin:10px 0 10px}
+.po102 .vt button{flex:1 1 0;min-height:44px;border:2px solid #000E28;border-radius:4px;background:#fff;color:#000E28;font:700 .8rem 'Oswald','Oswald FB1',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.po102 .vt button[aria-pressed="true"]{background:#000E28;color:#fff}
+.po102 .vt button:focus-visible,.po102 .zb:focus-visible{outline:3px solid #000E28;outline-offset:2px}
+.po102 .fbx.on{display:block}
+.po102 .rdx{display:none}.po102 .rdx.on{display:block}
+.po102 .res-f{grid-template-columns:repeat(2,minmax(0,1fr))}
+.po102 .ask-r{flex-wrap:wrap}.po102 .ask button{flex:1 1 100%}
+.po102 .exb{font-size:13px}}
+.po102 .res-l li{white-space:normal;overflow-wrap:anywhere}
+.po102 .fbx,.po102 .fbw{max-width:100%;min-width:0}
+
+/* next105b: hypothetical label + rule text, navy on light */
+.po102 .res-hy{display:inline-block;margin:0 0 12px;background:#FBF3E4;color:#000E28;border-left:4px solid #000E28;border-radius:4px;padding:6px 10px;font:700 14px/1.3 'Inter','Inter FB1',sans-serif}
+.po102 .wl-rule{display:block;width:fit-content;margin:0 0 6px;background:#FBF3E4;color:#000E28;border-radius:4px;padding:5px 10px;font:600 14px/1.3 'Inter','Inter FB1',sans-serif}
+
+.po102 .wl-rule{display:inline-block;margin:2px 0 6px}
+.po102 .res-f .fn{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;line-height:1.1}
+.po102 .res-f li{align-items:center;min-height:34px}
+.po102 .wl,.po102 #po-br,.po102 .res{scroll-margin-top:96px}
+.po102 .res-hy,.po102 .wl-rule{white-space:normal;max-width:100%;box-sizing:border-box;overflow-wrap:break-word}
+
+/* next106 additions: AI what-if, three view tabs */
+.ask label .ai{display:inline-block;margin-left:8px;font:500 12px 'Inter','Inter FB1',sans-serif;letter-spacing:0;text-transform:none;color:#d9ccb2}
+.ask button[disabled]{opacity:.7;cursor:wait}
+.cnt{margin:4px 0 0;font-size:12px;color:#d9ccb2;text-align:right}
+.res-ai{display:block;margin:0 0 10px;background:#FBF3E4;color:#000E28;border-radius:4px;padding:6px 10px;font:600 14px/1.35 'Inter','Inter FB1',sans-serif;white-space:normal;max-width:100%;box-sizing:border-box;overflow-wrap:break-word}
+.res-hy{white-space:normal;max-width:100%;box-sizing:border-box;overflow-wrap:break-word}
+.res-ex{margin:0 0 12px;font-size:15px;overflow-wrap:break-word}
+.vtabs{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}
+.vtabs button{flex:1 1 180px;min-height:48px;padding:6px 12px;border:0;border-radius:8px;background:#fff;color:#000E28;font:600 14px/1.25 'Oswald','Oswald FB1',sans-serif;letter-spacing:.03em;text-transform:uppercase;cursor:pointer;text-align:center;white-space:normal}
+.vtabs button[aria-selected="true"]{background:#F5B82E;color:#000E28;box-shadow:0 0 0 3px #fff}
+.vtabs button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.res-vn{margin:0 0 12px;font-size:14px;color:#d9ccb2;overflow-wrap:break-word}
+.res-l li{white-space:normal;overflow-wrap:break-word}
+.res-f .fn small{display:block;font-size:12px;opacity:.8}
+.ex{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.res-pc{margin:12px 0;font-size:14px;overflow-wrap:break-word}.res-pc a{color:#FBF3E4;text-decoration:underline;display:inline-block;min-height:44px;line-height:44px}
+.shr,.shs,.shd{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 16px;margin:12px 8px 0 0;border:0;border-radius:8px;background:#fff;color:#000E28;font:700 15px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+.shi{display:block;width:100%;height:auto;margin-top:12px;border-radius:6px}
+.why{padding-left:20px;font-size:15px;color:#000E28}.why li{margin:0 0 8px;overflow-wrap:break-word}
+.flp,.rsm,.bias{margin:24px 0}
+.flg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fgm{background:#FBF3E4;border-radius:8px;padding:10px;color:#000E28}.fgm p{margin:0 0 8px;font:600 14px 'Inter','Inter FB1',sans-serif}
+.flb{display:block;width:100%;min-height:48px;margin:0 0 6px;border:2px solid #000E28;border-radius:8px;background:#fff;color:#000E28;font:600 15px 'Inter','Inter FB1',sans-serif;cursor:pointer}
+.flb[aria-pressed="true"]{background:#000E28;color:#FBF3E4}
+.flb:focus-visible,.shr:focus-visible,#rsm-s:focus-visible{outline:3px solid #000E28;outline-offset:2px}
+#rsm-s{display:block;width:100%;max-width:360px;min-height:48px;margin:4px 0 12px;font:500 16px 'Inter','Inter FB1',sans-serif;color:#000E28;border:2px solid #000E28;border-radius:8px;background:#fff}
+.rsc{background:#FBF3E4;color:#000E28;border-radius:10px;padding:14px}.rsc.instate{box-shadow:inset 6px 0 0 #000E28}
+.rsc h3{margin:0 0 8px}.rsc small{font-size:13px;font-weight:500}
+.rsc dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:0}.rsc dt{font-size:12px;text-transform:uppercase;letter-spacing:.06em}.rsc dd{margin:2px 0 0;font-weight:700;overflow-wrap:break-word}
+.rsn{font-size:13px;margin:10px 0 0}
+.bias small.bl{display:block;font-size:12px;font-weight:400}
+.res p,.res-vn,.res-pc,.res-io,.res-ex{white-space:normal;overflow-wrap:break-word;max-width:100%}
+
+/* next107: Resume formula explainer and why-it-moved lines (navy on light surfaces) */
+.wl .res-w{list-style:none;margin:6px 0 12px;padding:0;display:grid;gap:8px}
+.wl .res-w li{background:#fff;border:1px solid #d9ccb2;border-left:4px solid #000E28;border-radius:8px;padding:10px 12px;color:#000E28;font-size:14px;line-height:1.45}
+.wl .res-w li b{color:#000E28}
+.wl .res-w .rw-t{color:#000E28;font-weight:600;white-space:nowrap}
+.wl .htm{background:#fff;border:1px solid #d9ccb2;border-radius:10px;padding:12px 14px;margin:14px 0 6px;color:#000E28}
+.wl .htm h3{margin:0 0 6px;font-size:17px;color:#000E28}
+.wl .htm ul{margin:0;padding-left:18px;font-size:14px;line-height:1.5}
+.wl .htm li{margin:3px 0}
+.wl .htm .meta{margin:8px 0 0}
+.wl .htm a.txt{display:inline-flex;align-items:center;min-height:44px;color:#000E28;text-decoration:underline;font-weight:600}
+/* next107: Pick / Type input tabs (never combined) */
+.wl .itabs{display:flex;gap:8px;margin:6px 0 12px}
+.wl .itabs button{flex:1 1 0;min-height:48px;padding:6px 12px;border:2px solid #fff;border-radius:8px;background:transparent;color:#fff;font:600 16px/1.2 'Oswald','Oswald FB1',sans-serif;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.wl .itabs button[aria-selected="true"]{background:#F5B82E;border-color:#F5B82E;color:#000E28}
+.wl .itabs button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.wl .ipan{margin:0 0 8px}
+.wl .ipan .flp{margin:14px 0 4px}
+.wl .ipan .flp h3{margin:0 0 4px;font-size:17px;color:#fff}
+.wl .ipan .flg{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:8px}
+.wl .ipan .wl-b12{margin:8px 0}
+.res-w{grid-template-columns:minmax(0,1fr)}
+.res-w li{min-width:0;overflow-wrap:anywhere}
+.cmr{margin:14px 0;background:#fff;color:#000E28;border-radius:8px;padding:12px 14px}
+.cmr h3{margin:0 0 4px;color:#000E28}
+.cmr .meta,.cmr .res-k{color:#000E28}
+.cmr-l,.cmr-w{margin:6px 0 10px;padding-left:20px;font-size:14px;line-height:1.45}
+.cmr-w li{margin:0 0 8px;overflow-wrap:anywhere}
+.cmr-p{margin:4px 0 0;padding-left:16px;font-size:13px}
+.cmr a.txt{color:#000E28;text-decoration:underline;display:inline-flex;align-items:center;min-height:44px}
+.cmr li,.cmr .meta{white-space:normal;font:400 14px/1.45 'Inter','Inter FB1',sans-serif;text-transform:none;letter-spacing:0;color:#000E28}
+.cmr li b{font-weight:700}
+.cmr .cmr-p li{font-size:13px}
+
+/* next108: compact top, bracket first, explainers collapsed at the bottom (MSM Creative spec) */
+.rkhero{padding:18px 32px 16px}
+.rkhero h1{margin:0;font-size:30px;line-height:1.1}
+.rkhero p{margin:4px 0 0;font-size:15px}
+@media (max-width:640px){.rkhero{padding:14px 16px 12px}.rkhero h1{font-size:24px}.rkhero p{font-size:14px}}
+.po102 .wl.sel{margin:12px 0 14px;padding:10px 12px;border-radius:10px}
+.sel .selrow{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.sel .itabs{flex:0 0 auto;margin:0;gap:6px}
+.sel .itabs button{flex:0 0 auto;min-width:72px;min-height:44px;padding:0 14px;font-size:14px;border-color:#d9ccb2}
+.sel .vtabs{flex:1 1 320px;margin:0;gap:6px;flex-wrap:nowrap}
+.sel .vtabs button{flex:1 1 0;min-height:44px;padding:4px 8px;font-size:13px;background:transparent;color:#FBF3E4;border:2px solid #d9ccb2;box-shadow:none}
+.sel .itabs button[aria-selected="true"]{background:#F5B82E;border-color:#F5B82E;color:#000E28;box-shadow:none}
+@media (max-width:640px){.sel .itabs{flex:1 1 100%}.sel .itabs button{flex:1 1 0}.sel .vtabs{flex:1 1 100%}.sel .vtabs button{font-size:12px;letter-spacing:.02em}}
+.sel .ipan{margin:8px 0 0}
+.sel .wl-b12{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0}
+.po102 .sel .wl-q{color:#FBF3E4;font-size:13px;min-width:120px}
+.sel .chips{display:flex;flex-wrap:wrap;gap:6px}
+.po102 .sel .chip{min-height:44px;font-size:14px;padding:0 12px 0 6px}
+.po102 .sel .chip small{display:none}
+.po102 .sel .ask{margin:4px 0}
+.po102 .ask label{color:#FBF3E4;font-size:13px}
+.po102 .ask button,.po102 .reset{background:#fff;color:#000E28}
+.po102 .res-k{color:#000E28}
+.po102 .sel .res-k{color:#FBF3E4}
+.sel .res{margin:6px 0 0}
+.sel .res:empty{display:none}
+.po102 .sel .res-hy{margin:4px 8px 4px 0;padding:3px 8px;font:600 12px/1.3 'Inter','Inter FB1',sans-serif}
+.sel .res-io{display:inline;margin:0 8px 0 0;font-size:13px;color:#FBF3E4}
+.po102 .sel .reset{min-height:44px;padding:0 14px;font-size:13px;margin:4px 0 0}
+.sel .res-m{margin:4px 0;font-size:14px;color:#FBF3E4}
+/* details expanders inside the navy selector (flips, examples) */
+.sel details.dx{margin:6px 0 0;background:transparent;border:1px solid #d9ccb2}
+.sel details.dx>summary{color:#FBF3E4}
+.sel details.dx .dxb{background:#000E28}
+/* bracket */
+.brk{margin:0 0 14px}
+.brk h2{margin:4px 0 6px;font-size:22px}
+.brk h2 small{font:600 13px 'Inter','Inter FB1',sans-serif;color:#5B6475;text-transform:none;letter-spacing:0;margin-left:6px}
+.po102 .shr{background:#000E28;color:#fff;margin:10px 0 0}
+.po102 .shd,.po102 .shs{background:#000E28;color:#fff}
+.shi{max-width:100%;height:auto;margin:10px 0 0;display:block;border:1px solid #d9ccb2}
+/* Utah strip: tight */
+.po102 .ut{margin:0 0 14px}
+/* collapsed explainers */
+.dxs{margin:18px 0 0;border-top:1px solid #d9ccb2}
+details.dx{border:1px solid #d9ccb2;border-radius:8px;background:#fff;margin:8px 0}
+details.dx>summary{min-height:44px;display:flex;align-items:center;padding:0 14px;cursor:pointer;font:600 15px 'Oswald','Oswald FB1',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#000E28;list-style:none}
+details.dx>summary::-webkit-details-marker{display:none}
+details.dx>summary::after{content:'+';margin-left:auto;font:700 20px 'Inter',sans-serif}
+details.dx[open]>summary::after{content:'\2212'}
+details.dx>summary:focus-visible{outline:3px solid #000E28;outline-offset:2px}
+.sel details.dx>summary:focus-visible{outline-color:#fff}
+details.dx .dxb{padding:4px 14px 12px;color:#000E28}
+details.dx .dxb>section,.dxb .htm,.dxb .cmr{margin:0;padding:0;background:none}
+.dxb .wl-n,.dxb .res-vn,.dxb .res-ai{color:#000E28;font-size:14px}
+.po102 a.txt{color:#000E28;text-decoration:underline}
+.sel .flp h3{display:none}
+main.po102 .rkhero,.po102 section.rkhero{padding:16px 32px 14px}
+@media (max-width:640px){main.po102 .rkhero,.po102 section.rkhero{padding:12px 16px 10px}}
+.po102 .sel .wl-b12{background:none;padding:0;border:0;margin:6px 0;border-radius:0}
+.po102 .sel .chip{padding-left:10px}
+.po102 .sel .chip .lgw{margin-right:2px}
+main.po102 a.txt{display:inline-block;min-height:44px;line-height:44px}
+
+.sel .vtabs button[aria-selected="true"]{background:#FBF3E4;border-color:#d9ccb2;color:#000E28;box-shadow:none}
+
+.fcue{display:none}
+@media (max-width:640px){
+main.po102 .fcue{display:block;margin:0 0 6px;font:600 13px 'Inter','Inter FB1',sans-serif;color:#5B6475}
+main.po102 .fbw{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;border-right:0;background:linear-gradient(to left,#FBF3E4 0,rgba(251,243,228,0) 28px) right/28px 100% no-repeat local,linear-gradient(to left,rgba(0,14,40,.25),rgba(0,14,40,0)) right/14px 100% no-repeat scroll;padding-bottom:6px}
+main.po102 .fb{width:700px;grid-template-columns:200px 196px 160px 144px}
+main.po102 .ft{height:34px;font-size:14px}
+main.po102 .ft .fn{font-size:14px}
+main.po102 .ft.tbd .fn{font-size:12px}
+main.po102 .ft .fs{width:22px;height:22px;font-size:12px}
+}
+
+/* next108d: restored pill + always-on hypothetical label */
+.po102 .rkhero .pills{margin-top:10px}
+.po102 .rkhero .pills li{padding:3px 10px;font-size:12px}
+.po102 .sel-hy{margin:8px 0 0;padding:4px 8px;display:block;width:fit-content;max-width:100%;background:#FBF3E4;color:#000E28;border-left:3px solid #000E28;border-radius:4px;font:600 12px/1.3 'Inter','Inter FB1',sans-serif}
+
+/* next109a */
+.po102 .fbw{overflow:auto;-webkit-overflow-scrolling:touch}
+.po102 .fb{transform-origin:0 0}
+.po102 .ask button.runb,.po102 .sel .ask button.runb{background:#000E28;color:#F5B82E;border:2px solid #F5B82E;min-height:48px;min-width:96px;display:inline-flex;align-items:center;justify-content:center}
+.po102 .ask button.runb:hover{background:#0b1d42}
+.po102 .ask button.runb:focus-visible{outline:3px solid #FBF3E4;outline-offset:2px}
+.po102 .ask button.runb[disabled]{opacity:1;cursor:wait}
+.po102 .runb .mtn{display:block;width:34px;height:22.67px;overflow:visible}
+/* next112 mountain v2: outline stroke 7, facet lines stroke 4.5, gold on the navy button; lit faces fade in 40-60% */
+.po102 .runb .mtn .tr{fill:none;stroke:#F5B82E;stroke-width:7px;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:100 100;stroke-dashoffset:100;animation:mtnTrace 2.4s linear infinite}
+.po102 .runb .mtn .tr.fc{stroke-width:4.5px}
+.po102 .runb .mtn .fl{opacity:0;animation:mtnFill 2.4s linear infinite}
+/* closed outline draws (100->0) then un-draws the same way (0->-100); period 200 so the loop is seamless */
+@keyframes mtnTrace{from{stroke-dashoffset:100}to{stroke-dashoffset:-100}}
+@keyframes mtnFill{0%,40%{opacity:0}50%{opacity:1}60%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.po102 .runb .mtn .tr{animation:none;stroke-dashoffset:0}.po102 .runb .mtn .fl{animation:none;opacity:1}}
+.po102 .vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.po102 .sel-hy{background:#000E28;color:#fff;border-left:0;border:1px solid rgba(255,255,255,.35);font:600 10.5px/1.3 'Inter','Inter FB1',sans-serif;letter-spacing:.01em;padding:2px 6px;margin:6px 0 0}
+.po102 .fbx.fitd .fcue{display:none}
+
+/* next109d: one Hypothetical line, plain white on navy, ~9.5px (never under 9px) */
+.po102 .sel-hy{background:none!important;border:0!important;outline:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;color:#fff!important;font:500 max(9px,9.5px)/1.3 'Inter','Inter FB1',sans-serif!important;letter-spacing:.01em;margin:6px 0 0!important}

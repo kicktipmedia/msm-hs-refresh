@@ -1,0 +1,206 @@
+/* next109: My team settings */
+.mt-off{display:none!important}
+.top .mtbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;min-height:44px;padding:0 12px;background:none;border:2px solid #fff;color:#fff;border-radius:0;font:700 .85rem/1 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;flex:none;order:9}
+.top .mtbtn:hover,.top .mtbtn:focus-visible{border-color:var(--gold,#F5B82E);color:var(--gold,#F5B82E);outline:0}
+@media(max-width:1099px){.top .mtbtn{margin-left:auto;order:0}.top .mtbtn+.burger{margin-left:0}}
+@media(max-width:560px){.top .mtbtn{padding:0;width:44px}.top .mtbtn-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.top .in{gap:10px;padding-left:12px;padding-right:12px}.top .brand{min-width:0;flex:0 1 auto}.top .brand img{max-width:100%;height:auto}}
+.mt-bar,.mt-strip{background:#fff;border-bottom:1px solid #d9ccb2;color:#000E28;font:500 .92rem/1.3 'Inter','Inter FB1',Arial,sans-serif}
+.mt-bar .mt-in,.mt-strip .mt-in{max-width:1180px;margin:0 auto;padding:4px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;min-height:48px;box-sizing:border-box}
+.mt-bt{flex:1 1 auto}
+.mt-go,.mt-ed,.mt-dis,.mt-all,.mt-clear,.mt-x{min-height:44px;padding:0 14px;border-radius:0;font:700 .82rem/1 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.mt-go{background:#000E28;color:#fff;border:2px solid #000E28}
+.mt-dis,.mt-ed,.mt-clear{background:#fff;color:#000E28;border:2px solid #000E28}
+.mt-go:focus-visible,.mt-dis:focus-visible,.mt-ed:focus-visible,.mt-sw:focus-visible,.mt-all:focus-visible,.mt-clear:focus-visible,.mt-x:focus-visible,.mt-dlg button:focus-visible,.mt-dlg label:focus-within{outline:3px solid #000E28;outline-offset:2px}
+.mt-st{flex:1 1 160px;min-width:0}
+.mt-st b{font-weight:700}
+.mt-sw{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 6px;background:none;border:0;color:#000E28;font:700 .9rem/1 'Inter','Inter FB1',Arial,sans-serif;cursor:pointer}
+.mt-tr{position:relative;width:44px;height:26px;border-radius:13px;background:#5B6475;flex:none}
+.mt-kn{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}
+.mt-sw[aria-checked=true] .mt-tr{background:#000E28}
+.mt-sw[aria-checked=true] .mt-kn{left:21px}
+@media(prefers-reduced-motion:reduce){.mt-kn{transition:none}}
+@media(max-width:560px){.mt-bar .mt-in,.mt-strip .mt-in{padding:4px 12px}.mt-bt{flex-basis:100%;padding-top:4px}.mt-st{flex-basis:100%;padding-top:4px}}
+.mt-dlg{border:0;padding:0;width:min(440px,calc(100vw - 24px));max-height:calc(100dvh - 24px);background:#FBF3E4;color:#000E28;box-shadow:0 10px 40px rgba(0,14,40,.35)}
+.mt-dlg::backdrop{background:rgba(0,14,40,.6)}
+.mt-hd{display:flex;align-items:center;justify-content:space-between;background:#000E28;color:#fff;padding:6px 6px 6px 16px;border-bottom:3px solid #F5B82E}
+.mt-hd h2{margin:0;font:700 1.1rem/1 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.mt-x{background:none;border:2px solid #fff;color:#fff}
+.mt-x:focus-visible{outline-color:#F5B82E}
+.mt-bd{padding:10px 16px 4px}
+.mt-sec{background:#fff;border:1px solid #d9ccb2;padding:12px;margin-bottom:12px}
+.mt-sec h3{margin:0 0 4px;font:700 1rem/1.2 'Oswald','Oswald FB1',sans-serif;text-transform:uppercase;letter-spacing:.06em;color:#000E28}
+.mt-help,.mt-fine{margin:0 0 10px;color:#5B6475;font:400 .88rem/1.35 'Inter','Inter FB1',Arial,sans-serif}
+.mt-fine{padding:0 16px 14px;margin:0}
+.mt-all{width:100%;background:#fff;color:#000E28;border:2px solid #000E28;margin-bottom:8px}
+.mt-all[aria-pressed=true]{background:#000E28;color:#fff}
+.mt-list{list-style:none;margin:0;padding:0}
+.mt-row{display:flex;align-items:center;gap:6px;border-top:1px solid #e6dcc8}
+.mt-row label{flex:1 1 auto;display:flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;font:600 1rem/1.2 'Inter','Inter FB1',Arial,sans-serif;color:#000E28}
+.mt-row input{width:22px;height:22px;margin:0 0 0 2px;accent-color:#000E28;flex:none}
+.mt-rk{margin-left:auto;white-space:nowrap;font:700 .72rem/1 'Oswald','Oswald FB1',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5B6475}
+.mt-row.mt-first .mt-rk{color:#000E28}
+.mt-clear{margin-top:10px}
+.mt-none{margin:8px 0;color:#5B6475;font:500 .9rem/1.35 'Inter','Inter FB1',Arial,sans-serif}
+/* highlights in the bracket and What If (full field stays) */
+.fbw .ft.mt-pick,.rdw .ft.mt-pick{box-shadow:inset 4px 0 0 #000E28;font-weight:700}
+.fbw .ft.mt-top,.rdw .ft.mt-top{background:#000E28!important;color:#fff!important;box-shadow:inset 4px 0 0 #F5B82E}
+.fbw .ft.mt-top .fn,.fbw .ft.mt-top .fs,.rdw .ft.mt-top .fn,.rdw .ft.mt-top .fs{color:#fff!important}
+.br .tm.mt-pick{box-shadow:inset 4px 0 0 #000E28}
+.br .tm.mt-pick .nm{font-weight:700}
+.br .tm.mt-top{background:#000E28!important;box-shadow:inset 4px 0 0 #F5B82E}
+.br .tm.mt-top .nm,.br .tm.mt-top .nm small,.br .tm.mt-top .rk{color:#fff!important}
+.tw tr.mt-pick td:first-child{box-shadow:inset 4px 0 0 #000E28}
+.tw tr.mt-top td{background:#000E28!important;color:#fff!important}
+.tw tr.mt-top td *{color:#fff!important}
+/* next110: one highlight size for every My team box: a 3px navy ring drawn inside the box (no layout change) */
+.chips .chip.mt-pick,.fgm.mt-pick,.c1w .grid>article.mt-pick,.rk2row.mt-pick,.schrow>a.mt-pick,.pwgrid>article.pw.mt-pick,#storylines .styrow.mt-pick,.stlist>a.st.mt-pick,.teamgrid>a.tile.mt-pick,.ghgrid>div.mt-pick>aside,.ut>a.mt-pick{outline:3px solid #000E28!important;outline-offset:-3px!important;box-shadow:none}
+.chips .chip.mt-pick,.fgm.mt-pick{box-shadow:none!important}
+/* top-pick rows: every logo sits in a white rounded chip so BYU royal never touches navy */
+.fbw .ft.mt-top img,.rdw .ft.mt-top img,.chips .chip.mt-top img,.br .tm.mt-top img,.tw tr.mt-top td img{background:#fff!important;padding:3px!important;border-radius:4px!important;box-sizing:content-box!important;box-shadow:0 0 0 1px #fff}
+.mt-mv button:not(:disabled){background:#fff;color:#000E28;border-color:#000E28;opacity:1}
+
+/* next109d: drag to reorder (grip handle only blocks touch scrolling) */
+.mt-grip{flex:none;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;background:#fff;color:#000E28;border:2px solid #000E28;border-radius:0;cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.mt-grip:hover{background:#FBF3E4}
+.mt-grip:focus-visible{outline:3px solid #000E28;outline-offset:2px}
+.mt-grip[aria-pressed=true]{background:#000E28;color:#fff}
+.mt-gsp{flex:none;width:44px;height:44px}
+.mt-row.mt-kgrab{background:#FBF3E4;box-shadow:inset 4px 0 0 #000E28}
+.mt-row.mt-dragging{opacity:.35}
+.mt-preview{position:fixed;z-index:10;margin:0;background:#FBF3E4;border:2px solid #000E28;box-shadow:0 8px 20px rgba(0,14,40,.3);pointer-events:none;list-style:none;padding:0 0 0 6px;box-sizing:border-box}
+.mt-preview .mt-grip{cursor:grabbing;background:#000E28;color:#fff}
+.mt-drop{list-style:none;height:4px;margin:-2px 0;background:#000E28;box-shadow:0 0 0 2px #D8C9A8;position:relative;z-index:2}
+.mt-vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
+/* next109d header: never crowd the wordmark or nav */
+@media(min-width:1100px){.top.mthd .in{max-width:1309px}.top.mthd .mtbtn{margin-left:-6px}}
+.top.mthd.mt-ico .mtbtn{padding:0;width:44px}
+.top.mthd.mt-ico .mtbtn-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.top.mthd.mt-tight .in{padding-left:8px;padding-right:8px}
+
+/* next110 */
+.mt-ft{display:flex;justify-content:flex-end;padding:12px 18px 0}
+.mt-save{min-width:120px;min-height:44px}
+.mt-save:focus-visible{outline:3px solid #000E28;outline-offset:2px}
+.mt-row.mt-sel:not(.mt-preview){background:#fff}
+.mt-row.mt-sel+.mt-row{border-top-color:transparent}
+.stlist>a.st.mt-pick,.teamgrid>a.tile.mt-pick{outline-color:#fff!important}
+#storylines .styrow.mt-pick:hover,#storylines .styrow.mt-pick:focus-visible{outline:3px solid #000E28!important;outline-offset:-3px!important}
+.mt-vh2{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* next110 same-size fix: logo chip padding goes inside the logo's existing box, so top-pick rows match pick/plain rows */
+.fbw .ft.mt-top img,.rdw .ft.mt-top img,.chips .chip.mt-top img,.br .tm.mt-top img,.tw tr.mt-top td img{box-sizing:border-box!important;object-fit:contain}
+/* next110: picked table rows keep normal weight so names never wrap at 390 (the inset bar marks them) */
+.tw tr.mt-pick td{font-weight:inherit}
+
+/* next111 My teams panel v2 (MSM Creative). Drop-in after myteam-v110.css. Scoped to .mt-dlg. */
+.mt-dlg .mt-all,.mt-dlg .mt-clear{border:1px solid #000E28!important;background:#fff;color:#000E28;min-height:44px;border-radius:6px}
+.mt-dlg .mt-all:hover,.mt-dlg .mt-clear:hover{background:#FBF3E4}
+.mt-dlg .mt-all[aria-pressed=true]{background:#000E28;color:#fff}
+.mt-dlg .mt-all{margin-bottom:12px}
+.mt-dlg .mt-clear{margin-top:12px}
+.mt-dlg .mt-all:focus-visible,.mt-dlg .mt-clear:focus-visible{outline:2px solid #000E28;outline-offset:2px}
+/* one container */
+.mt-dlg .mt-list{background:#fff;border:1px solid #d9ccb2;border-radius:8px;overflow:hidden;margin:0;padding:0}
+/* every row: same height, full width, no borders/outlines/shadows except the divider */
+.mt-dlg .mt-list>.mt-row,.mt-dlg .mt-list>.mt-row.mt-sel:not(.mt-preview){display:flex;align-items:center;gap:0;width:100%;height:56px;min-height:56px;box-sizing:border-box;margin:0;padding:0 0 0 16px;background:#fff;border:0;border-top:1px solid #d9ccb2!important;outline:none!important;box-shadow:none;position:relative}
+.mt-dlg .mt-list>.mt-row:first-child{border-top:0!important}
+.mt-dlg .mt-list>.mt-row.mt-sel:not(.mt-preview){background:#FBF3E4;box-shadow:inset 3px 0 0 #000E28}
+.mt-dlg .mt-list>.mt-row:hover{background:#F6F1E8}
+.mt-dlg .mt-list>.mt-row.mt-sel:not(.mt-preview):hover{background:#F4EAD6}
+.mt-dlg .mt-row label{flex:1 1 auto;min-width:0;height:100%;min-height:0;display:flex;align-items:center;gap:12px;padding-right:12px;outline:none!important;font:600 1rem/1.2 'Inter','Inter FB1',Arial,sans-serif;color:#000E28}
+.mt-dlg .mt-row input{width:22px;height:22px;margin:0;accent-color:#000E28;flex:none}
+.mt-dlg .mt-row .mt-n{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#000E28;font-weight:600}
+.mt-dlg .mt-row .mt-rk,.mt-dlg .mt-row.mt-first .mt-rk{flex:none;margin-left:auto;color:#5B6475;font:600 .72rem/1 'Inter','Inter FB1',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+/* grip inside the row, far right; unpicked rows reserve the same 44px */
+.mt-dlg .mt-row .mt-grip,.mt-dlg .mt-row .mt-gsp{flex:none;width:44px;height:44px;margin:0 6px 0 0;padding:0;border:0!important;border-radius:6px;background:transparent;color:#000E28;display:inline-flex;align-items:center;justify-content:center}
+.mt-dlg .mt-row .mt-gsp{visibility:hidden}
+.mt-dlg .mt-row .mt-grip:hover{background:rgba(0,14,40,.08)}
+/* keyboard focus stays inside the row */
+.mt-dlg .mt-list>.mt-row.mt-row.mt-row:has(input:focus-visible),.mt-dlg .mt-list>.mt-row.mt-sel.mt-sel:not(.mt-preview):has(input:focus-visible){outline:2px solid #000E28!important;outline-offset:-2px!important}
+.mt-dlg .mt-row label:focus-within,.mt-dlg .mt-row input:focus,.mt-dlg .mt-row input:focus-visible{outline:none!important}
+.mt-dlg .mt-row .mt-grip:focus-visible{outline:2px solid #000E28;outline-offset:-2px}
+.mt-dlg .mt-row .mt-grip[aria-pressed=true]{background:#000E28;color:#fff}
+/* drag state: earlier approved look (tan row, navy border, navy drop line) */
+.mt-dlg .mt-list>.mt-row.mt-kgrab{background:#d9ccb2!important;box-shadow:inset 0 0 0 2px #000E28!important}
+.mt-preview{background:#d9ccb2!important;border:2px solid #000E28!important;border-radius:6px;height:56px;box-sizing:border-box;padding:0 0 0 16px!important;display:flex;align-items:center;outline:none!important}
+.mt-preview label{flex:1;display:flex;align-items:center;gap:12px;font:600 1rem/1.2 'Inter',Arial,sans-serif;color:#000E28}
+.mt-preview input{width:22px;height:22px;margin:0;accent-color:#000E28}
+.mt-preview .mt-rk,.mt-dlg .mt-preview .mt-rk,.mt-preview.mt-row .mt-rk{color:#000E28!important;margin-left:auto;padding-right:12px;color:#000E28;font:600 .72rem/1 'Inter',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.mt-preview .mt-grip{border:0!important;width:44px;height:44px;margin-right:6px;background:#000E28;color:#fff;border-radius:6px}
+.mt-dlg .mt-drop{height:4px;margin:-2px 0;background:#000E28;box-shadow:0 0 0 2px #d9ccb2}
+.mt-dlg .mt-list>.mt-row.mt-kgrab .mt-rk{color:#000E28}
+
+/* next111 (b) browsers without :has(): keep a visible ring on the checkbox itself */
+@supports not selector(:has(*)){.mt-dlg .mt-row input:focus-visible{outline:2px solid #000E28!important;outline-offset:2px!important}}
+/* next111 (c) the drop line draws above the dragged row and the floating preview */
+.mt-dlg .mt-drop,.mt-drop{position:relative;z-index:12}
+
+/* next112 My team marker v2: navy colorway on light rows, gold colorway on navy rows. One-change swap: edit MK in myteam-v112.js (or restyle .mt-mkg). */
+.mt-mkw{white-space:nowrap;font-weight:inherit}
+.mt-mk{display:inline-block;margin-left:6px;vertical-align:-.1em;line-height:0;white-space:nowrap}
+/* the glyph adds no width to the line, so it never changes column widths, wraps or row heights */
+.mt-mkw .mt-mk{margin-right:calc(-6px - .9375em * 3 / 2)}.mt-mkw.mt-mk-fit .mt-mk,.mt-mkw.mt-mk-in .mt-mk{margin-right:0}
+.mt-mk .mt-mkg{display:block;height:.9375em;width:auto;aspect-ratio:3/2;stroke:none}
+.mt-mk .mt-mks,.mt-mkw.mt-mk-s .mt-mkf{display:none}.mt-mkw.mt-mk-s .mt-mks{display:block}
+.mt-mkf .a{fill:#000E28}.mt-mkf .l{fill:#5B6475}.mt-mkf .s{fill:#fff}.mt-mkf .o{fill:none;stroke:#000E28;stroke-width:5px;stroke-linejoin:round}
+.mt-mks .a{fill:#000E28}.mt-mks .n{fill:#5B6475}
+.mt-mkw.mt-mk-nv .mt-mkf .a{fill:#5B6475}.mt-mkw.mt-mk-nv .mt-mkf .l{fill:#F5B82E}.mt-mkw.mt-mk-nv .mt-mkf .s{fill:#FBF3E4}.mt-mkw.mt-mk-nv .mt-mkf .o{stroke:#F5B82E}
+.mt-mkw.mt-mk-nv .mt-mks .a{fill:#F5B82E}.mt-mkw.mt-mk-nv .mt-mks .n{fill:#000E28}
+.mt-vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* header1: no boxes on gear or menu; gear sized to menu glyph; 44px hit areas; ring on keyboard focus only */
+.top .mtbtn,.top .burger{border:0;background:none;border-radius:0}
+.top .burger{min-width:44px;min-height:44px;padding:0 10px;line-height:1}
+.top .mtbtn svg{width:26px;height:26px;flex:none}
+.top .mtbtn:focus-visible,.top .burger:focus-visible{outline:3px solid #F5B82E;outline-offset:2px}
+
+/* header2: SVG burger 22x18 (3px bars, round caps, 4.5px gaps) in a 44x44 target; 4px between gear and menu; desktop nav offset back to pre-header1 */
+.top .burger{width:44px;height:44px;min-width:44px;min-height:44px;padding:0;line-height:0;font-size:0;flex:none;color:#fff}
+.top .burger svg{display:block;width:22px;height:18px;margin:auto}
+.top .mtbtn+.burger{margin-left:-6px}
+@media(min-width:1100px){.top .mtbtn:not(.x){padding:0 11px}.top.mthd.mt-ico .mtbtn{padding:0}}
+.top .burger:hover{color:var(--gold,#F5B82E)}
+/* shared light body */
+html body{background:#FBF3E4!important;color:#000E28}
+html body main>.band.navy,html body .band.navy{background:#FBF3E4!important}
+html body main>.band.navy:nth-of-type(even){background:#FFFFFF!important}
+html body main>.band.navy h2,html body main>.band.navy .sh span,html body main>.band.navy:not(.this-week) h2{color:#000E28!important}
+html body main>.band.navy .sh h2 em,html body .band.navy .styk{color:#000E28!important}
+html body main>.band.navy .sh .bar{background:#000E28!important}
+html body main>.band.navy::before,html body main>.band.navy::after{background:#d9ccb2!important}
+html body .card.mx{background:#FFFFFF!important;color:#000E28!important;border:1px solid #d9ccb2!important}
+html body .card.mx .when,html body .card.mx .where,html body .card.mx .where b,html body .card.mx .nm,html body .card.mx .ha,html body .card.mx .at,html body .card.mx .linkrow,html body .card.mx .linkrow span,html body .card.mx .foot .brand,html body .card.mx .tv,html body .card.mx .kt,html body .card.mx .wph,html body .card.mx .wpr{color:#000E28!important}
+html body .card.mx .sub,html body .card.mx .tv,html body .card.mx .hint{color:#5B6475!important}
+html body .card.mx .btn-primary{background:#000E28!important;color:#FFFFFF!important;border-color:#000E28!important}
+html body .card.mx .btn-sec{background:#FFFFFF!important;color:#000E28!important;border:1px solid #5B6475!important}
+html body .card.mx .match{background:#FBF3E4!important}
+html body .card.rev{background:#FFFFFF!important;color:#000E28!important;border:1px solid #d9ccb2!important}
+html body .card.rev *{color:#000E28!important}
+html body .card.rev .btn{background:#000E28!important;color:#fff!important}
+html body .card.mx .cd{background:#000E28!important}
+html body .card.mx .cd b,html body .card.mx .cd i{color:#FBF3E4!important}
+html body .card.mx .cd .lbl,html body .card.mx .cd .lbl i{background:#000E28!important;color:#F5B82E!important}
+html body .rk2ban,html body .nl2ban{background:#000E28!important}
+html body main a.btn:not(.btn-sec),html body main a.btn-primary{background:#000E28!important;color:#FFFFFF!important;border-color:#000E28!important}
+/* Direction B — hybrid: navy header/hero/footer keep gold; light body. */
+html body footer{background:#000E28!important}
+/* light-b fix1 */
+html body .cd>div:not(.lbl) b,html body .card.mx .cd>div:not(.lbl) b{color:#000E28!important}
+html body .cd>div:not(.lbl) i,html body .card.mx .cd>div:not(.lbl) i{color:#5B6475!important}
+html body .c1w .wx,html body .c1w .wx .t,html body .c1w .wx .ex2{color:#000E28!important}
+html body #potw .pwhint{color:#5B6475!important}
+html body #sotw .sotw-hd,html body #sotw .srcl a.src,html body #sotw a.xmore{color:var(--fg,#FFFFFF)!important}
+html body .guide .gt .si{color:#000E28!important}
+html body .card.mx .cd>div:not(.lbl),html body .c1w .mx .cd>div:not(.lbl){background:#FFFFFF!important;border-color:#000E28!important}
+html body .card.mx .cd,html body .c1w .mx .cd{border-color:#000E28!important}
+html body .msm-wp .wpb{background:#E3E6EB!important}
+html body .msm-wp .wps{color:#5B6475!important}
+html body .msm-wp .wph,html body .msm-wp .wpr{color:#000E28!important}
+/* light-b fix2 */
+html body .jump a{box-shadow:inset 0 -2px 0 #FFFFFF!important}
+html body .pw .pwk,html body #potw .pw .pwk,html body .grc .grp{box-shadow:inset 2px 0 0 #FFFFFF!important}
+html body .stlist a.st{box-shadow:inset 0 -3px 0 #FFFFFF!important}
+/* light-b fix3 */
+html body .ticker>div{display:inline-flex;align-items:center;height:100%;box-sizing:border-box;padding-top:0;padding-bottom:0;line-height:1;vertical-align:top}
+html body .ticker .tkh{display:inline-flex;align-items:center;height:100%;line-height:1}
+html body .ticker img.tkl{margin:0 6px 0 5px;vertical-align:middle}

@@ -1,0 +1,3 @@
+/* next84: BYU royal / USU blue never touch navy. Game Day pane cards (.q): replace the accent top border that met the navy side borders with an inset accent bar framed by a 3px cream separator. */
+.gp.byu .q,.gp.usu .q{border-top:3px solid var(--navy);padding-top:29px}
+.gp.byu .q::before,.gp.usu .q::before{content:"";position:absolute;top:0;left:0;right:0;height:14px;box-sizing:border-box;background:var(--a);border:3px solid #FBF3E4;border-top-width:3px;pointer-events:none;z-index:0}

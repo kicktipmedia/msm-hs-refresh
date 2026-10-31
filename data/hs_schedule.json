@@ -1,0 +1,563 @@
+{
+ "_note": "Game-day driver for the HS refresh. Teams TBA (null) until the feeding game is final. Times MT; kickoff null = TBA. Never MaxPreps, Deseret News, Yahoo or NFHS.",
+ "games": [
+  {
+   "id": "6A-R1-1",
+   "cls": "6A",
+   "round": "R1",
+   "n": 1,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Skyridge High School",
+   "home": {
+    "seed": 1,
+    "school": "Skyridge"
+   },
+   "away": {
+    "seed": 16,
+    "school": "Riverton"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-R1-2",
+   "cls": "6A",
+   "round": "R1",
+   "n": 2,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "American Fork High School",
+   "home": {
+    "seed": 8,
+    "school": "American Fork"
+   },
+   "away": {
+    "seed": 9,
+    "school": "Copper Hills"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-R1-3",
+   "cls": "6A",
+   "round": "R1",
+   "n": 3,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Herriman High School",
+   "home": {
+    "seed": 4,
+    "school": "Herriman"
+   },
+   "away": {
+    "seed": 13,
+    "school": "Weber"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-R1-4",
+   "cls": "6A",
+   "round": "R1",
+   "n": 4,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Davis High School",
+   "home": {
+    "seed": 5,
+    "school": "Davis"
+   },
+   "away": {
+    "seed": 12,
+    "school": "Farmington"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-R1-5",
+   "cls": "6A",
+   "round": "R1",
+   "n": 5,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Mountain Ridge High School",
+   "home": {
+    "seed": 2,
+    "school": "Mountain Ridge"
+   },
+   "away": {
+    "seed": 15,
+    "school": "Cedar Valley"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-R1-6",
+   "cls": "6A",
+   "round": "R1",
+   "n": 6,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Lone Peak High School",
+   "home": {
+    "seed": 7,
+    "school": "Lone Peak"
+   },
+   "away": {
+    "seed": 10,
+    "school": "Lehi"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-R1-7",
+   "cls": "6A",
+   "round": "R1",
+   "n": 7,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Corner Canyon High School",
+   "home": {
+    "seed": 3,
+    "school": "Corner Canyon"
+   },
+   "away": {
+    "seed": 14,
+    "school": "Bingham"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-R1-8",
+   "cls": "6A",
+   "round": "R1",
+   "n": 8,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Westlake High School",
+   "home": {
+    "seed": 6,
+    "school": "Westlake"
+   },
+   "away": {
+    "seed": 11,
+    "school": "Syracuse"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-QF-1",
+   "cls": "6A",
+   "round": "QF",
+   "n": 1,
+   "date": "2026-11-06",
+   "kickoff": null,
+   "site": "Skyridge High School (higher seed hosts)",
+   "home": {
+    "seed": 1,
+    "school": "Skyridge"
+   },
+   "away": {
+    "seed": 8,
+    "school": "American Fork"
+   },
+   "status": "scheduled",
+   "source": "KSL Sports Week 2 roundup https://sports.ksl.com/prep/playoffs-week-2-recap/578612; UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-QF-2",
+   "cls": "6A",
+   "round": "QF",
+   "n": 2,
+   "date": "2026-11-06",
+   "kickoff": "18:00",
+   "site": "Herriman High School (higher seed hosts)",
+   "home": {
+    "seed": 4,
+    "school": "Herriman"
+   },
+   "away": {
+    "seed": 5,
+    "school": "Davis"
+   },
+   "status": "scheduled",
+   "source": "KSL Sports Week 2 roundup https://sports.ksl.com/prep/playoffs-week-2-recap/578612; UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-QF-3",
+   "cls": "6A",
+   "round": "QF",
+   "n": 3,
+   "date": "2026-11-06",
+   "kickoff": "18:00",
+   "site": "Mountain Ridge High School (higher seed hosts)",
+   "home": {
+    "seed": 2,
+    "school": "Mountain Ridge"
+   },
+   "away": {
+    "seed": 7,
+    "school": "Lone Peak"
+   },
+   "status": "scheduled",
+   "source": "KSL Sports Week 2 roundup https://sports.ksl.com/prep/playoffs-week-2-recap/578612; UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-QF-4",
+   "cls": "6A",
+   "round": "QF",
+   "n": 4,
+   "date": "2026-11-06",
+   "kickoff": "18:00",
+   "site": "Corner Canyon High School (higher seed hosts)",
+   "home": {
+    "seed": 3,
+    "school": "Corner Canyon"
+   },
+   "away": {
+    "seed": 11,
+    "school": "Syracuse"
+   },
+   "status": "scheduled",
+   "source": "KSL Sports Week 2 roundup https://sports.ksl.com/prep/playoffs-week-2-recap/578612; UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-SF-1",
+   "cls": "6A",
+   "round": "SF",
+   "n": 1,
+   "date": "2026-11-12",
+   "kickoff": "11:00",
+   "site": "Rice-Eccles Stadium, University of Utah",
+   "home": null,
+   "away": null,
+   "feeds": [
+    "6A-QF-1",
+    "6A-QF-2"
+   ],
+   "status": "tba",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-SF-2",
+   "cls": "6A",
+   "round": "SF",
+   "n": 2,
+   "date": "2026-11-12",
+   "kickoff": "14:30",
+   "site": "Rice-Eccles Stadium, University of Utah",
+   "home": null,
+   "away": null,
+   "feeds": [
+    "6A-QF-3",
+    "6A-QF-4"
+   ],
+   "status": "tba",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "6A-F",
+   "cls": "6A",
+   "round": "F",
+   "n": 1,
+   "date": "2026-11-20",
+   "kickoff": "14:30",
+   "site": "Rice-Eccles Stadium, University of Utah",
+   "home": null,
+   "away": null,
+   "feeds": [
+    "6A-SF-1",
+    "6A-SF-2"
+   ],
+   "status": "tba",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-R1-1",
+   "cls": "5A",
+   "round": "R1",
+   "n": 1,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "West High School",
+   "home": {
+    "seed": 1,
+    "school": "West"
+   },
+   "away": {
+    "seed": 16,
+    "school": "Roy"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-R1-2",
+   "cls": "5A",
+   "round": "R1",
+   "n": 2,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Fremont High School",
+   "home": {
+    "seed": 8,
+    "school": "Fremont"
+   },
+   "away": {
+    "seed": 9,
+    "school": "West Field"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-R1-3",
+   "cls": "5A",
+   "round": "R1",
+   "n": 3,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Bountiful High School",
+   "home": {
+    "seed": 4,
+    "school": "Bountiful"
+   },
+   "away": {
+    "seed": 13,
+    "school": "Granger"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-R1-4",
+   "cls": "5A",
+   "round": "R1",
+   "n": 4,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Springville High School",
+   "home": {
+    "seed": 5,
+    "school": "Springville"
+   },
+   "away": {
+    "seed": 12,
+    "school": "Olympus"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-R1-5",
+   "cls": "5A",
+   "round": "R1",
+   "n": 5,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Orem High School",
+   "home": {
+    "seed": 2,
+    "school": "Orem"
+   },
+   "away": {
+    "seed": 15,
+    "school": "Timpview"
+   },
+   "status": "pending",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-R1-6",
+   "cls": "5A",
+   "round": "R1",
+   "n": 6,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Spanish Fork High School",
+   "home": {
+    "seed": 7,
+    "school": "Spanish Fork"
+   },
+   "away": {
+    "seed": 10,
+    "school": "Pleasant Grove"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-R1-7",
+   "cls": "5A",
+   "round": "R1",
+   "n": 7,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Box Elder High School",
+   "home": {
+    "seed": 3,
+    "school": "Box Elder"
+   },
+   "away": {
+    "seed": 14,
+    "school": "Woods Cross"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-R1-8",
+   "cls": "5A",
+   "round": "R1",
+   "n": 8,
+   "date": "2026-10-30",
+   "kickoff": null,
+   "site": "Alta High School",
+   "home": {
+    "seed": 6,
+    "school": "Alta"
+   },
+   "away": {
+    "seed": 11,
+    "school": "Hillcrest"
+   },
+   "status": "final",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-QF-1",
+   "cls": "5A",
+   "round": "QF",
+   "n": 1,
+   "date": "2026-11-06",
+   "kickoff": "18:00",
+   "site": "West High School (higher seed hosts)",
+   "home": {
+    "seed": 1,
+    "school": "West"
+   },
+   "away": {
+    "seed": 8,
+    "school": "Fremont"
+   },
+   "status": "scheduled",
+   "source": "KSL Sports Week 2 roundup https://sports.ksl.com/prep/playoffs-week-2-recap/578612; UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-QF-2",
+   "cls": "5A",
+   "round": "QF",
+   "n": 2,
+   "date": "2026-11-06",
+   "kickoff": null,
+   "site": "Bountiful High School (higher seed hosts)",
+   "home": {
+    "seed": 4,
+    "school": "Bountiful"
+   },
+   "away": {
+    "seed": 5,
+    "school": "Springville"
+   },
+   "status": "scheduled",
+   "source": "KSL Sports Week 2 roundup https://sports.ksl.com/prep/playoffs-week-2-recap/578612; UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-QF-3",
+   "cls": "5A",
+   "round": "QF",
+   "n": 3,
+   "date": "2026-11-06",
+   "kickoff": "18:00",
+   "site": "Orem High School (higher seed hosts)",
+   "home": {
+    "seed": 2,
+    "school": "Orem"
+   },
+   "away": {
+    "seed": 10,
+    "school": "Pleasant Grove"
+   },
+   "status": "scheduled",
+   "source": "KSL Sports Week 2 roundup https://sports.ksl.com/prep/playoffs-week-2-recap/578612; UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-QF-4",
+   "cls": "5A",
+   "round": "QF",
+   "n": 4,
+   "date": "2026-11-06",
+   "kickoff": "18:00",
+   "site": "Alta High School (higher seed hosts)",
+   "home": {
+    "seed": 6,
+    "school": "Alta"
+   },
+   "away": {
+    "seed": 14,
+    "school": "Woods Cross"
+   },
+   "status": "scheduled",
+   "source": "KSL Sports Week 2 roundup https://sports.ksl.com/prep/playoffs-week-2-recap/578612; UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-SF-1",
+   "cls": "5A",
+   "round": "SF",
+   "n": 1,
+   "date": "2026-11-13",
+   "kickoff": "11:00",
+   "site": "Rice-Eccles Stadium, University of Utah",
+   "home": null,
+   "away": null,
+   "feeds": [
+    "5A-QF-1",
+    "5A-QF-2"
+   ],
+   "status": "tba",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-SF-2",
+   "cls": "5A",
+   "round": "SF",
+   "n": 2,
+   "date": "2026-11-13",
+   "kickoff": "14:30",
+   "site": "Rice-Eccles Stadium, University of Utah",
+   "home": null,
+   "away": null,
+   "feeds": [
+    "5A-QF-3",
+    "5A-QF-4"
+   ],
+   "status": "tba",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  },
+  {
+   "id": "5A-F",
+   "cls": "5A",
+   "round": "F",
+   "n": 1,
+   "date": "2026-11-20",
+   "kickoff": "11:00",
+   "site": "Rice-Eccles Stadium, University of Utah",
+   "home": null,
+   "away": null,
+   "feeds": [
+    "5A-SF-1",
+    "5A-SF-2"
+   ],
+   "status": "tba",
+   "source": "UHSAA bracket PDFs (hs.json sources, verified Oct 20) https://uhsaa.org/football/"
+  }
+ ]
+}

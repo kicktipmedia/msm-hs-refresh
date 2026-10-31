@@ -1,0 +1,11 @@
+/* Ticker pill v2: CSS only. Load at the end of <head>, after header-stack.css. */
+/* 1. Gap fix: the tab starts at the ticker's left edge (square left corners), and a square-left white ring fills the ticker height so no scrolling text shows left of or around it. */
+html body .ticker::before{content:"UP NEXT";left:0;padding:4px 8px 3px 21px;border-radius:0 999px 999px 0;box-shadow:0 0 0 8px #fff;font-size:.6rem;letter-spacing:.1em;line-height:1}
+/* 3. Red dot beside the label. #CC0000 on navy = 3.26:1. Pulse is scale only, so the colour stays at full strength. */
+html body .ticker::after{content:"";position:absolute;z-index:3;left:9px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:#CC0000;animation:mgTpDot 2s ease-in-out infinite;pointer-events:none}
+@keyframes mgTpDot{0%,100%{transform:scale(1)}50%{transform:scale(.55)}}
+@media (prefers-reduced-motion:reduce){html body .ticker::after{animation:none;transform:none}}
+/* Content starts clear of the smaller tab. */
+html body .ticker>div{padding-left:84px}
+/* LIVE state keeps working: header-stack.css .ticker:has(.lv)::before{content:"LIVE"} still wins on content; restated here so this file is self-contained. */
+html body .ticker:has(.lv)::before{content:"LIVE"}
