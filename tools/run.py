@@ -97,7 +97,9 @@ if canon != state['live_id']:
 UA = {'User-Agent': 'Mozilla/5.0 MSM-HS-Refresh'}
 def fetch(u): return urllib.request.urlopen(urllib.request.Request(u + ('&' if '?' in u else '?') + 'cb=' + str(os.getpid()), headers=UA), timeout=60).read()
 NORM = re.compile(rb'<a href="(?:mailto:[^"]*|/cdn-cgi/l/email-protection[^"]*)">.*?</a>', re.S)
-def same(local, remote): return NORM.sub(b'@', open(local, 'rb').read()) == NORM.sub(b'@', remote)
+BEACON = re.compile(rb'<!-- Cloudflare Pages Analytics -->|<script[^>]*static\.cloudflareinsights\.com[^>]*>\s*</script>\n?(<!-- Cloudflare Pages Analytics -->)?', re.S)
+def norm(b): return NORM.sub(b'@', BEACON.sub(b'', b))
+def same(local, remote): return norm(open(local, 'rb').read()) == norm(remote)  # CF edge injects analytics beacon + email obfuscation
 for rel in ('high-school/index.html', 'high-school/standings/index.html', 'index.html'):
     if not same(os.path.join(R, 'site', rel), fetch('https://mtnsportsmedia.com/' + rel.replace('index.html', ''))):
         log('STALE BASE', rel); rep['issues'].append({'title': 'HS refresh: repo base differs from live', 'body': rel}); finish(13, 'fail-stale-base')
