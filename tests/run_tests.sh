@@ -27,7 +27,7 @@ run t4_conflict --fixture "$ROOT/tests/fixtures/conflict_a.html" --fixture "$ROO
 check "T4 conflict -> pending + issue, no score published" "python3 -c \"import json;r=json.load(open('$OUT/t4_conflict/report.json'));s=json.load(open('$OUT/t4_conflict/data/hs_scores.json'));assert any(i['title'].startswith('HS pending: 5A-QF-4') for i in r['issues']);assert any(p.get('game')==4 and p.get('rid')=='QF' for p in s['pending']);assert not any(f.get('rid')=='QF' for f in s['finals'])\""
 check "T4 no Alta score in output" "! diff -ru $ROOT/site $OUT/t4_conflict/out | grep -E '^\+.*(28|31)[^0-9].*Alta|Alta[^<]*(28|31)'"
 # --- B1/B2 (mocked Cloudflare/wrangler/fetch via HS_MOCK; never touches network deploy) ---
-L='664ce5e0-d481-4beb-9522-69c2dc049703'; FX="$ROOT/tests/fixtures/qf_final.html"; NOW=2026-11-07T07:05:00-07:00
+L=$(jq -r .live_id "$ROOT/state.json"); FX="$ROOT/tests/fixtures/qf_final.html"; NOW=2026-11-07T07:05:00-07:00
 gitinit(){ (cd "$OUT/$1" && git init -q && git add -A && git -c user.name=t -c user.email=t@t commit -qm base); }
 # workflow failure step, copied from hs-refresh.yml
 wf_fail(){ (cd "$OUT/$1" && git checkout -- data site && git clean -fdq data site && if jq -e .hold state.json >/dev/null && ! git diff --quiet -- state.json; then git add state.json && git -c user.name=t -c user.email=t@t commit -qm hold; else git checkout -- state.json; fi); }
