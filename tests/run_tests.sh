@@ -5,7 +5,11 @@ copy(){ rm -rf "$OUT/$1"; mkdir -p "$OUT/$1"; cp -a "$ROOT/site" "$ROOT/data" "$
 run(){ name=$1; shift; copy $name; python3 "$ROOT/tools/run.py" --root "$OUT/$name" "$@" > "$OUT/$name.log" 2>&1; echo $? > "$OUT/$name.rc"; }
 check(){ if eval "$2"; then echo "PASS $1"; else echo "FAIL $1"; fail=1; fi; }
 # T1 live KSL, today: no-op
-run t1_live_dry --now 2026-10-31T07:05:00-06:00 --event dispatch
+# Clear the recorded input_hash in the throwaway copy so T1 always exercises the full fetch->build->diff path
+# (otherwise any committed state from a prior live run makes it short-circuit to skip-unchanged).
+# Run manually (not via run()) so the reset applies; T1b below still tests the cheap input-hash skip.
+copy t1_live_dry; jq '.input_hash=null' "$OUT/t1_live_dry/state.json" > "$OUT/t1_state.tmp" && mv "$OUT/t1_state.tmp" "$OUT/t1_live_dry/state.json"
+python3 "$ROOT/tools/run.py" --root "$OUT/t1_live_dry" --now 2026-10-31T07:05:00-06:00 --event dispatch > "$OUT/t1_live_dry.log" 2>&1; echo $? > "$OUT/t1_live_dry.rc"
 check "T1 live dry run is no-op skip" "grep -q '\"status\": \"skip-nochange\"' $OUT/t1_live_dry/report.json && grep -q 'changed files \[\]' $OUT/t1_live_dry.log"
 # T1b second run with same inputs hits cheap skip
 python3 "$ROOT/tools/run.py" --root "$OUT/t1_live_dry" --now 2026-10-31T07:35:00-06:00 > "$OUT/t1b.log" 2>&1
