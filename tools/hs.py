@@ -203,19 +203,38 @@ def p_bracket(s, G, fin, pend):
             s = s[:i] + seg + s[j:]
     return s, changed
 
+def hub_aid(g):
+    """Anchor id for a hub card. QF uses home-school slug; SF/F use stable round ids."""
+    if g['round'] == 'QF' and g.get('home'):
+        return f'hs-{slug(g["home"]["school"])}'
+    if g['round'] == 'SF':
+        return f'hs-{g["cls"].lower()}-sf-{g["n"]}'
+    if g['round'] == 'F':
+        return f'hs-{g["cls"].lower()}-final'
+    if g['round'] == 'R1' and g.get('home'):
+        return f'hs-{slug(g["home"]["school"])}'
+    return None
+
 def p_hub(s, G, fin, pend):
-    """First-round hub cards (only round with cards on the hub)."""
+    """Patch hub cards for any round that has an article on the page (R1/QF/SF/F)."""
     n = 0
     for gid, g in G.items():
-        if g['round'] != 'R1': continue
-        aid = f'hs-{slug(g["home"]["school"])}'; i = s.find(f'<article id="{aid}"')
+        aid = hub_aid(g)
+        if not aid: continue
+        i = s.find(f'<article id="{aid}"')
         if i < 0: continue
         j = s.find('</article>', i) + 10; a = s[i:j]
         if 'data-game-state="final"' in a: continue
         f = fin.get(gid); p = pend.get(gid)
         if not f and not (p and p.get('winner')): continue
+        # TBD cards have no real school abbreviations mapped; skip until both sides known
         ab = {html.unescape(v): k for k, v in re.findall(r'<span class="tb"[^>]*>(.*?)</span><span class="nm">(.*?)</span>', a)}
-        a = a.replace(' data-kickoff=', ' data-game-state="final" data-kickoff=', 1)
+        if f and (f['home'] not in ab or f['away'] not in ab):
+            continue
+        if 'data-game-state="upcoming"' in a:
+            a = a.replace('data-game-state="upcoming"', 'data-game-state="final"', 1)
+        else:
+            a = a.replace(' data-kickoff=', ' data-game-state="final" data-kickoff=', 1)
         a = re.sub(r'<span class="kt">[^<]*</span>', '<span class="kt">FINAL · ' + dfmt(g['date']).upper() + '</span>', a, count=1)
         if f:
             hs, as_ = f['home_score'], f['away_score']; w = f['home'] if hs > as_ else f['away']
@@ -223,9 +242,10 @@ def p_hub(s, G, fin, pend):
             note = f'<p class="hsn">Final: {html.escape(w)} {max(hs, as_)}, {html.escape(f["away"] if w == f["home"] else f["home"])} {min(hs, as_)}. Source: <a href="{html.escape(f["source_url"])}" rel="noopener">{html.escape(f["source"].split(" (")[0].split(",")[0])}</a>.</p>'
         else:
             w = p['winner']
+            if w not in ab: continue
             cd = f'<div class="cd" aria-label="{html.escape(w)} advanced; final score pending"><div class="lbl"><i>FINAL</i></div><div><b>{ab[w]}</b><i>ADVANCES</i></div><div><b>&ndash;</b><i>SCORE</i></div><div><b>&ndash;</b><i>PENDING</i></div></div>'
             note = f'<p class="hsn">{html.escape(w)} advanced. We post the final score once sources agree.</p>'
-        a = re.sub(r'<div class="cd".*?</div></div></div>', cd + '</div>', a, count=1)
+        a = re.sub(r'<div class="cd".*?</div>(?=</div>)', cd, a, count=1)
         a = re.sub(r'<div class="tix".*?</div><p class="hsw">.*?</p>', '', a, count=1)
         a = re.sub(r'<p class="hsn">.*?</p>', note, a, count=1)
         s = s[:i] + a + s[j:]; n += 1
