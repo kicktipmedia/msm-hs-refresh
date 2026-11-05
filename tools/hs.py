@@ -1,6 +1,6 @@
 """MSM high school refresh library: allowed-source fetch, parse, merge, live-HTML patch.
 Allowed: KSL only (sports.ksl.com, ksl.com/www.ksl.com for KSL redirects). Re-checked after redirects. Blocked: MaxPreps, Deseret News, Yahoo, NFHS Network."""
-import re, json, html, hashlib, datetime, urllib.request
+import re, json, html, hashlib, datetime, urllib.request, os
 from zoneinfo import ZoneInfo
 MT = ZoneInfo('America/Denver')
 BLOCK = ('maxpreps.', 'deseret.', 'yahoo.', 'nfhsnetwork.', 'nfhs.org')
@@ -203,8 +203,37 @@ def p_bracket(s, G, fin, pend):
             s = s[:i] + seg + s[j:]
     return s, changed
 
-def hub_aid(g):
-    """Anchor id for a hub card. QF uses home-school slug; SF/F use stable round ids."""
+# Creative 2026-11-05: hub shows current round only by default.
+# Set HUB_INCLUDE_LATER_ROUNDS=1 to also patch SF/Final cards if present in HTML.
+HUB_INCLUDE_LATER_ROUNDS = os.environ.get('HUB_INCLUDE_LATER_ROUNDS', '0') in ('1', 'true', 'True', 'yes')
+HUB_ROUNDS = ('R1', 'QF', 'SF', 'F')
+
+def current_hub_round(G, fin, pend, today):
+    """Calendar + entered finals → current hub round (SPEC). Defaults to QF in Nov 2026 QF window."""
+    # Advance when every game of a round has a final (or pending winner)
+    for rnd in ('R1', 'QF', 'SF'):
+        games = [g for g in G.values() if g['round'] == rnd]
+        if not games:
+            continue
+        done = all(g['id'] in fin or (g['id'] in pend and pend[g['id']].get('winner')) for g in games)
+        if not done:
+            return rnd
+    return 'F'
+
+def strip_tbd_home_away(article_html):
+    """Soft QA: TBD sides (unknown home/away) should not show HOME/AWAY chrome."""
+    return re.sub(
+        r'(<div class="team (?:away|home) tbd"[^>]*>)<span class="ha">(?:AWAY|HOME)</span>',
+        r'\1',
+        article_html,
+    )
+
+
+def hub_aid(g, current=None):
+    """Anchor id for a hub card. QF uses home-school slug; SF/F use stable round ids.
+    When current is set and HUB_INCLUDE_LATER_ROUNDS is off, only that round is addressable."""
+    if current and not HUB_INCLUDE_LATER_ROUNDS and g.get('round') != current:
+        return None
     if g['round'] == 'QF' and g.get('home'):
         return f'hs-{slug(g["home"]["school"])}'
     if g['round'] == 'SF':
@@ -215,16 +244,21 @@ def hub_aid(g):
         return f'hs-{slug(g["home"]["school"])}'
     return None
 
-def p_hub(s, G, fin, pend):
-    """Patch hub cards for any round that has an article on the page (R1/QF/SF/F)."""
+def p_hub(s, G, fin, pend, today=None):
+    """Patch hub cards. Default: current round only (Creative). HUB_INCLUDE_LATER_ROUNDS=1 patches all present."""
     n = 0
+    cur = None if HUB_INCLUDE_LATER_ROUNDS else current_hub_round(G, fin, pend, today)
     for gid, g in G.items():
-        aid = hub_aid(g)
+        aid = hub_aid(g, current=cur)
         if not aid: continue
         i = s.find(f'<article id="{aid}"')
         if i < 0: continue
         j = s.find('</article>', i) + 10; a = s[i:j]
         if 'data-game-state="final"' in a: continue
+        if 'team away tbd' in a or 'team home tbd' in a:
+            a2 = strip_tbd_home_away(a)
+            if a2 != a:
+                s = s[:i] + a2 + s[j:]; a = a2; j = i + len(a)
         f = fin.get(gid); p = pend.get(gid)
         if not f and not (p and p.get('winner')): continue
         # TBD cards have no real school abbreviations mapped; skip until both sides known
@@ -257,7 +291,7 @@ def patch_site(root, sched, scores, today):
     for f in PAGES:
         p = f'{root}/{f}'; s0 = s = open(p, encoding='utf-8').read()
         s = p_ticker(s, G, fin, pend, winner, today)
-        if f == PAGES[0]: s, rep['hub'] = p_hub(s, G, fin, pend)
+        if f == PAGES[0]: s, rep['hub'] = p_hub(s, G, fin, pend, today)
         if f == PAGES[1]: s, rep['bracket'] = p_bracket(s, G, fin, pend)
         if s != s0: open(p, 'w', encoding='utf-8').write(s)
         rep[f] = s != s0
