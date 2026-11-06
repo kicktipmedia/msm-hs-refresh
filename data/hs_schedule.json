@@ -159,7 +159,7 @@
    "round": "QF",
    "n": 1,
    "date": "2026-11-06",
-   "kickoff": null,
+   "kickoff": "18:00",
    "site": "Skyridge High School (higher seed hosts)",
    "home": {
     "seed": 1,
@@ -178,7 +178,7 @@
    "round": "QF",
    "n": 2,
    "date": "2026-11-06",
-   "kickoff": "18:00",
+   "kickoff": "16:00",
    "site": "Herriman High School (higher seed hosts)",
    "home": {
     "seed": 4,
@@ -216,7 +216,7 @@
    "round": "QF",
    "n": 4,
    "date": "2026-11-06",
-   "kickoff": "18:00",
+   "kickoff": "17:00",
    "site": "Corner Canyon High School (higher seed hosts)",
    "home": {
     "seed": 3,
@@ -438,7 +438,7 @@
    "round": "QF",
    "n": 1,
    "date": "2026-11-06",
-   "kickoff": "18:00",
+   "kickoff": "16:00",
    "site": "West High School (higher seed hosts)",
    "home": {
     "seed": 1,
@@ -457,7 +457,7 @@
    "round": "QF",
    "n": 2,
    "date": "2026-11-06",
-   "kickoff": null,
+   "kickoff": "17:00",
    "site": "Bountiful High School (higher seed hosts)",
    "home": {
     "seed": 4,
@@ -476,7 +476,7 @@
    "round": "QF",
    "n": 3,
    "date": "2026-11-06",
-   "kickoff": "18:00",
+   "kickoff": "19:00",
    "site": "Orem High School (higher seed hosts)",
    "home": {
     "seed": 2,
