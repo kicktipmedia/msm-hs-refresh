@@ -9,7 +9,7 @@ Auto-refresh of mtnsportsmedia.com `/high-school/*` (Utah 6A/5A playoffs) on Clo
 Flow (`tools/run.py`): window gate -> fetch KSL -> input-hash skip -> merge (new finals / conflicts -> pending + `hs-pending` issue) -> patch copy -> diff must be `high-school/*` only -> guard (CF canonical == state.live_id, base HTML == live) -> wrangler deploy -> bytecmp + Playwright smoke -> auto-rollback on failure (production) -> commit lineage.
 
 Enable the cron: `gh variable set HS_SCHEDULE --body on -R kicktipmedia/msm-hs-refresh` (off = gated). Manual: Actions -> hs-refresh -> Run workflow (deploy_target none|preview|production).
-Tests: `tests/run_tests.sh` (fixtures are fake and never deployed). The skip-nochange / input-hash checks read `tests/fixtures/posted_r1.html`, not live KSL, so a new final cannot fail the pre-publish job.
+Tests: `tests/run_tests.sh` (fixtures are fake and never deployed). The skip-nochange / input-hash checks read `tests/fixtures/posted_r1.html` and overlay frozen first-round hub/standings HTML, not live KSL or the current `site/` snapshot, so a new final or later-round sync cannot fail the pre-publish job.
 
 ## Production hold (exit 16/17/15-with-rollback)
 A failed production verify, a failed/unconfirmed rollback, or a wrangler failure that still moved canonical sets `hold` in `state.json` (committed alone; data/site changes from that run are discarded). While `hold` is set every production run exits 18 (`fail-hold`) and opens "HS refresh: production on HOLD". Preview runs still work.

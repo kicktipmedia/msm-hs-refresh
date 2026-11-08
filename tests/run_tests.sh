@@ -12,6 +12,11 @@ check(){ if eval "$2"; then echo "PASS $1"; else echo "FAIL $1"; fail=1; fi; }
 # Run manually (not via run()) so the reset applies; T1b repeats the same fixture.
 FX1="$ROOT/tests/fixtures/posted_r1.html"
 copy t1_dry; jq '.input_hash=null' "$OUT/t1_dry/state.json" > "$OUT/t1_state.tmp" && mv "$OUT/t1_state.tmp" "$OUT/t1_dry/state.json"
+# Overlay frozen R1-era hub/standings HTML. T1 --now is Oct 31 (QF still upcoming
+# in the ticker). After site/ is synced to a later live snapshot (QF scores, SF
+# ticker), the Oct 31 patcher would rewrite those pages and fail-close this check.
+cp "$ROOT/tests/fixtures/posted_r1_hs_index.html" "$OUT/t1_dry/site/high-school/index.html"
+cp "$ROOT/tests/fixtures/posted_r1_hs_standings.html" "$OUT/t1_dry/site/high-school/standings/index.html"
 python3 "$ROOT/tools/run.py" --root "$OUT/t1_dry" --fixture "$FX1" --now 2026-10-31T07:05:00-06:00 --event dispatch > "$OUT/t1_dry.log" 2>&1; echo $? > "$OUT/t1_dry.rc"
 check "T1 fixture dry run is no-op skip" "grep -q '\"status\": \"skip-nochange\"' $OUT/t1_dry/report.json && grep -q 'changed files \[\]' $OUT/t1_dry.log && grep -q 'sources: 1 pages, 16 score lines' $OUT/t1_dry.log"
 # T1b second run with the same fixture hits cheap skip (hash, not a second live fetch)
