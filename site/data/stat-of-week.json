@@ -1,89 +1,97 @@
 {
- "week": "2026-10-31",
- "through": "2026-10-24",
- "note": "Factual stats only, each from an official athletics site. No projections.",
+ "week": "2026-11-14",
+ "through": "2026-11-07",
+ "note": "Factual stats only, each from an official athletics site. No projections. Weber State was off Nov 7, so its stat is from Oct 31.",
  "stats": [
   {
    "team": "byu",
    "name": "BYU",
-   "num": "129",
-   "label": "Receiving yards by Kyler Kasper",
-   "line": "Kyler Kasper caught six passes for 129 yards and a touchdown, the Cougars' top receiving total, in BYU's 39-31 double-overtime loss at UCF. BYU is 6-1 overall and 3-1 in Big 12 play.",
-   "game": "UCF 39, BYU 31 (2OT) — Sat Oct 24, Orlando",
+   "num": "118",
+   "label": "Receiving yards by Legend Glasker",
+   "line": "Legend Glasker led BYU with 118 receiving yards, including a 75-yard touchdown catch from Bear Bachmeier, in the 28-20 loss at Utah. Walker Lyons added 97 yards on seven catches. BYU is 7-2 overall and 4-2 in Big 12 play.",
+   "game": "Utah 28, BYU 20 \u2014 Sat Nov 7, Salt Lake City",
    "sources": [
     {
      "name": "BYU Athletics",
-     "url": "https://byucougars.com/news/2026/10/24/byu-vs-ucf-2026"
+     "url": "https://byucougars.com/news/2026/11/7/byu-vs-utah-110726"
+    },
+    {
+     "name": "ESPN game data (records)",
+     "url": "https://www.espn.com/college-football/recap/_/gameId/401856849"
     }
    ]
   },
   {
    "team": "utah",
    "name": "Utah",
-   "num": "150",
-   "label": "Rushing yards by Devon Dampier",
-   "line": "Devon Dampier ran for a season-high 150 yards and two touchdowns and completed 18 of 26 passes for 204 yards in No. 10 Utah's 21-13 win over No. 14 Houston. His 1,183 rushing yards in two seasons at Utah trail only Travis Wilson (1,225, 2012-15) among quarterbacks in recorded program history.",
-   "game": "No. 10 Utah 21, No. 14 Houston 13 — Sat Oct 24, Salt Lake City",
+   "num": "4",
+   "label": "Interceptions of Bear Bachmeier",
+   "line": "Utah intercepted Bear Bachmeier four times, its most in a game since Oct. 1, 2022 and the most Bachmeier has thrown in his career. Trey Reynolds ended a BYU drive in the red zone with 4:39 left, and Nate Ritchie intercepted BYU's last pass in the closing seconds of the 28-20 win. Utah is 9-0 overall and 6-0 in Big 12 play with a nation's-best 15 straight wins.",
+   "game": "Utah 28, BYU 20 \u2014 Sat Nov 7, Salt Lake City",
    "sources": [
     {
      "name": "Utah Athletics",
-     "url": "https://utahutes.com/news/2026/10/25/football-dampier-defense-lead-no-10-utah-past-no-14-houston"
+     "url": "https://utahutes.com/news/2026/11/7/football-no-3-utah-moves-to-9-0-with-rivalry-win-over-no-9-byu"
     }
    ]
   },
   {
    "team": "usu",
    "name": "Utah State",
-   "num": "8",
-   "label": "Catches by Anthony Garcia, a career high",
-   "line": "Graduate receiver Anthony Garcia posted a career-high eight receptions for 87 yards and also threw his first pass attempt of the season, a 6-yard touchdown to Kaina Watson on a trick play, in Utah State's 20-17 loss at Texas State.",
-   "game": "Texas State 20, Utah State 17 — Sat Oct 24, San Marcos",
+   "num": "16",
+   "label": "Rushing yards allowed to Fresno State",
+   "line": "Utah State held Fresno State to 16 rushing yards, the fewest the Aggies have allowed since 12 against San Jose State in 2021, and recorded 10 tackles for loss in the 17-10 win. Ronnie Mageo had a career-high 3.5 of them. Utah State is 4-5 overall and 3-2 in Pac-12 play.",
+   "game": "Utah State 17, Fresno State 10 \u2014 Sat Nov 7, Logan",
    "sources": [
     {
      "name": "Utah State Athletics",
-     "url": "https://utahstateaggies.com/news/2026/10/24/aggie-football-drops-20-17-heartbreaker-at-texas-state.aspx"
+     "url": "https://utahstateaggies.com/news/2026/11/8/aggie-football-staves-off-fresno-state-for-17-10-victory.aspx"
     }
    ]
   },
   {
    "team": "weber",
    "name": "Weber State",
-   "num": "124",
-   "label": "Receiving yards by Noah Kjar",
-   "line": "Noah Kjar led Weber State with eight receptions for 124 yards, including a 68-yard reception early in the game, in the 38-33 loss at No. 3 Montana State. Nate Dahle threw for 240 yards and two touchdowns without an interception.",
-   "game": "No. 3 Montana State 38, No. 22 Weber State 33 — Sat Oct 24, Bozeman",
+   "num": "388",
+   "label": "Total yards by Nate Dahle",
+   "line": "Freshman quarterback Nate Dahle threw for 309 yards and three touchdowns and ran for 79 yards and another score, totaling 388 yards of offense in Weber State's 38-14 win over UC Davis. Weber State was off last week and is 6-4 overall and 5-2 in Big Sky play.",
+   "game": "Weber State 38, UC Davis 14 \u2014 Sat Oct 31, Ogden",
    "sources": [
     {
      "name": "Weber State Athletics",
-     "url": "https://weberstatesports.com/news/2026/10/24/football-no-22-wildcats-fall-to-no-3-bobcats-in-bozeman"
+     "url": "https://weberstatesports.com/news/2026/10/31/football-weber-state-rolls-past-uc-davis-28-14-for-sixth-win-of-the-season"
     }
    ]
   },
   {
    "team": "suu",
    "name": "Southern Utah",
-   "num": "392",
-   "label": "Total yards by Will Burns",
-   "line": "Will Burns finished with 392 yards of total offense, 205 passing and 187 rushing, and threw a 57-yard touchdown pass to Mark Bails on fourth-and-10 with 42 seconds left to tie it at 28 in the 31-28 loss at Idaho. His rushing total extended Southern Utah's run of having a 100-yard rusher in every game dating back to homecoming in 2025.",
-   "game": "Idaho 31, Southern Utah 28 — Sat Oct 24, Moscow",
+   "num": "1,289",
+   "label": "Rushing yards by Floyd Chalk this season",
+   "line": "Floyd Chalk ran for 66 yards in the 31-24 win over Northern Colorado, pushing his season total to 1,289 yards, past Joe Dupaix (1,246 in 1996) for eighth on Southern Utah's single-season list. Southern Utah is 4-6 overall and 3-4 in Big Sky play.",
+   "game": "Southern Utah 31, Northern Colorado 24 \u2014 Sat Nov 7, Cedar City",
    "sources": [
     {
      "name": "Southern Utah Athletics",
-     "url": "https://suutbirds.com/news/2026/10/24/football-thunderbirds-erase-10-point-deficit-late-fall-31-28-on-final-play-field-goal-at-idaho.aspx"
+     "url": "https://suutbirds.com/news/2026/11/7/football-thunderbirds-turn-back-bears-in-big-sky-battle.aspx"
+    },
+    {
+     "name": "Southern Utah Athletics season stats",
+     "url": "https://suutbirds.com/sports/football/stats/2026"
     }
    ]
   },
   {
    "team": "utech",
    "name": "Utah Tech",
-   "num": "46.6",
-   "label": "Yards per punt by Ryan Marks",
-   "line": "Ryan Marks is averaging 46.6 yards on 32 punts through eight games, with ten punts of 50 yards or more and a long of 70 against Northern Arizona.",
-   "game": "Season stats through Oct 24 — Utah Tech 43, Cal Poly 26",
+   "num": "267",
+   "label": "Total yards allowed to UC Davis",
+   "line": "Utah Tech's defense limited UC Davis to 267 total yards, with two sacks and four tackles for loss, and Will Alovao returned his first career interception to the UC Davis 15 to set up the opening touchdown in the 24-17 loss. Utah Tech is 1-9 overall and 1-6 in Big Sky play.",
+   "game": "UC Davis 24, Utah Tech 17 \u2014 Sat Nov 7, Davis, Calif.",
    "sources": [
     {
-     "name": "Utah Tech Athletics season stats",
-     "url": "https://utahtechtrailblazers.com/sports/football/stats/2026"
+     "name": "Utah Tech Athletics",
+     "url": "https://utahtechtrailblazers.com/news/2026/11/8/football-trailblazers-come-up-just-short-in-defensive-battle-at-uc-davis-on-saturday-night.aspx"
     }
    ]
   }
