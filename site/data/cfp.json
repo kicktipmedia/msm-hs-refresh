@@ -1,0 +1,191 @@
+{
+ "poll": "College Football Playoff Selection Committee rankings",
+ "label": "CFP",
+ "release_date": "2026-11-10",
+ "release_label": "Nov 10",
+ "as_of": "games played through Saturday, Nov 7, 2026",
+ "edition": "second rankings of 2026 (74th CFP committee edition)",
+ "source_url": "https://collegefootballplayoff.com/news/2026/11/10/rankings",
+ "source": "official CFP release, fetched 2026-11-11",
+ "next_release": "2026-11-17",
+ "dropped_out": [
+  "Florida (24)"
+ ],
+ "entries": [
+  {
+   "rank": 1,
+   "team": "Georgia",
+   "record": "8-1",
+   "prev_rank": 2,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 2,
+   "team": "Utah",
+   "record": "9-0",
+   "prev_rank": 3,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 3,
+   "team": "Alabama",
+   "record": "7-2",
+   "prev_rank": 5,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 4,
+   "team": "UCLA",
+   "record": "9-0",
+   "prev_rank": 8,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 5,
+   "team": "Notre Dame",
+   "record": "8-1",
+   "prev_rank": 11,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 6,
+   "team": "Texas",
+   "record": "7-2",
+   "prev_rank": 7,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 7,
+   "team": "Miami",
+   "record": "8-1",
+   "prev_rank": 1,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 8,
+   "team": "Tennessee",
+   "record": "7-2",
+   "prev_rank": 13,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 9,
+   "team": "Indiana",
+   "record": "8-1",
+   "prev_rank": 4,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 10,
+   "team": "BYU",
+   "record": "7-2",
+   "prev_rank": 9,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 11,
+   "team": "Kentucky",
+   "record": "7-2",
+   "prev_rank": 6,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 12,
+   "team": "Texas Tech",
+   "record": "8-1",
+   "prev_rank": 15,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 13,
+   "team": "Wake Forest",
+   "record": "8-1",
+   "prev_rank": 16,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 14,
+   "team": "Houston",
+   "record": "7-2",
+   "prev_rank": 17,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 15,
+   "team": "Iowa",
+   "record": "7-2",
+   "prev_rank": 19,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 16,
+   "team": "Oregon",
+   "record": "6-3",
+   "prev_rank": 23,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 17,
+   "team": "South Carolina",
+   "record": "6-3",
+   "prev_rank": 21,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 18,
+   "team": "USC",
+   "record": "7-2",
+   "prev_rank": 20,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 19,
+   "team": "Ole Miss",
+   "record": "6-3",
+   "prev_rank": 10,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 20,
+   "team": "Ohio State",
+   "record": "6-3",
+   "prev_rank": 12,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 21,
+   "team": "LSU",
+   "record": "6-3",
+   "prev_rank": 14,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 22,
+   "team": "Missouri",
+   "record": "6-3",
+   "prev_rank": 18,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 23,
+   "team": "Arizona",
+   "record": "7-2",
+   "prev_rank": 22,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 24,
+   "team": "Boise State",
+   "record": "8-1",
+   "prev_rank": 25,
+   "source": "collegefootballplayoff.com"
+  },
+  {
+   "rank": 25,
+   "team": "Oklahoma State",
+   "record": "6-3",
+   "prev_rank": null,
+   "source": "collegefootballplayoff.com"
+  }
+ ]
+}
