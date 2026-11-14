@@ -30,6 +30,9 @@ jobs:
           pip install -q playwright && python -m playwright install --with-deps chromium >/dev/null
       - name: Offline tests (fixtures, no deploy)
         run: tests/run_tests.sh /tmp/hs-tests
+      - name: Check Cloudflare API token
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.deploy_target != 'none')
+        run: python3 tools/check_cf_token.py
       - name: Refresh
         id: run
         run: |
@@ -76,5 +79,5 @@ jobs:
         if: always()
         with: {name: hs-refresh-report, path: "report.json\n/tmp/hs-tests\n"}
       - name: Fail on nonzero
-        if: steps.run.outputs.rc != '0'
+        if: steps.run.outputs.rc != '' && steps.run.outputs.rc != '0'
         run: exit ${{ steps.run.outputs.rc }}

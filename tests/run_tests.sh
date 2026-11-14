@@ -1,7 +1,10 @@
 #!/bin/bash
 # Offline-safe test suite; each test runs on a throwaway copy of the repo (no deploy).
 set -u; ROOT=$(cd "$(dirname "$0")/.." && pwd); OUT=${1:-/tmp/hs-tests}; rm -rf "$OUT"; mkdir -p "$OUT"; fail=0
-copy(){ rm -rf "$OUT/$1"; mkdir -p "$OUT/$1"; cp -a "$ROOT/site" "$ROOT/data" "$ROOT/state.json" "$OUT/$1/"; }
+# Drop a committed production hold. Offline tests must not inherit one; production
+# still refuses to deploy when the root they are given actually has hold set.
+fresh_state(){ jq 'del(.hold)' "$1" > "$2"; }
+copy(){ rm -rf "$OUT/$1"; mkdir -p "$OUT/$1"; cp -a "$ROOT/site" "$ROOT/data" "$OUT/$1/"; fresh_state "$ROOT/state.json" "$OUT/$1/state.json"; }
 run(){ name=$1; shift; copy $name; python3 "$ROOT/tools/run.py" --root "$OUT/$name" "$@" > "$OUT/$name.log" 2>&1; echo $? > "$OUT/$name.rc"; }
 check(){ if eval "$2"; then echo "PASS $1"; else echo "FAIL $1"; fail=1; fi; }
 # T1 frozen fixture of finals already in data/hs_scores.json: full path is a no-op.
@@ -29,16 +32,16 @@ check "T1b repeat run hits input-hash skip" "grep -q skip-unchanged $OUT/t1_dry/
 # T2 scheduled run outside window
 run t2_window --event schedule --now 2026-10-31T12:00:00-06:00
 check "T2 schedule outside window skips before fetch" "grep -q skip-window $OUT/t2_window/report.json"
-# T3 new final: synthetic unrecorded score (not a posted QF). After Friday QF
-# rows are in data/hs_scores.json, a QF fixture would conflict instead of patch.
+# T3 new final: synthetic unrecorded state final. Semifinals are already in
+# data/hs_scores.json, so an SF fixture would conflict instead of patch.
 run t3_newfinal --fixture "$ROOT/tests/fixtures/sf_final.html" --now 2026-11-07T07:05:00-07:00
 check "T3 new final patches only high-school/*" "python3 -c \"import json;r=json.load(open('$OUT/t3_newfinal/report.json'));c=r['changed'];assert r['status']=='dry-run' and c and all(x.startswith('high-school/') for x in c),r\""
 diff -ru "$ROOT/site" "$OUT/t3_newfinal/out" > "$OUT/t3_newfinal.diff"
-check "T3 Skyridge 35-14 in bracket + ticker" "grep -q 'Skyridge' $OUT/t3_newfinal.diff && grep -q '35' $OUT/t3_newfinal.diff"
+check "T3 synthetic 6A final Skyridge 21-17 in bracket + ticker" "grep -q 'Skyridge 21' $OUT/t3_newfinal.diff && grep -q 'Corner Canyon 17' $OUT/t3_newfinal.diff"
 # T4 conflict fixture
 run t4_conflict --fixture "$ROOT/tests/fixtures/conflict_a.html" --fixture "$ROOT/tests/fixtures/conflict_b.html" --now 2026-11-07T07:05:00-07:00
-check "T4 conflict -> pending + issue, no score published" "python3 -c \"import json;r=json.load(open('$OUT/t4_conflict/report.json'));s=json.load(open('$OUT/t4_conflict/data/hs_scores.json'));assert any(i['title'].startswith('HS pending: 5A-SF-2') for i in r['issues']);assert any(p.get('game')==2 and p.get('rid')=='SF' for p in s['pending']);assert not any(f.get('rid')=='SF' and int(f.get('game'))==2 for f in s['finals'])\""
-check "T4 no conflict SF score in output" "! diff -ru $ROOT/site $OUT/t4_conflict/out | grep -E '^\+.*(Woods Cross 21|Orem 28|Orem 31)'"
+check "T4 conflict -> pending + issue, no score published" "python3 -c \"import json;r=json.load(open('$OUT/t4_conflict/report.json'));s=json.load(open('$OUT/t4_conflict/data/hs_scores.json'));assert any(i['title'].startswith('HS pending: 5A-F') for i in r['issues']);assert any(p.get('class')=='5A' and p.get('rid')=='F' for p in s['pending']);assert not any(f.get('rid')=='F' for f in s['finals'])\""
+check "T4 no conflict final score in output" "! diff -ru $ROOT/site $OUT/t4_conflict/out | grep -E '^\+.*(West 24|Orem 21|Orem 27)'"
 # --- B1/B2 (mocked Cloudflare/wrangler/fetch via HS_MOCK; never touches network deploy) ---
 L=$(jq -r .live_id "$ROOT/state.json"); FX="$ROOT/tests/fixtures/sf_final.html"; NOW=2026-11-07T07:05:00-07:00
 gitinit(){ (cd "$OUT/$1" && git init -q && git add -A && git -c user.name=t -c user.email=t@t commit -qm base); }
@@ -74,4 +77,93 @@ HS_MOCK="$OUT/m_del.json" python3 "$ROOT/tools/run.py" --root "$OUT/t8_del" --fi
 check "path guard: file missing from output (deletion) -> exit 14" "[ \$(cat $OUT/t8_del.rc) = 14 ] && grep -q 'DELETED robots.txt' $OUT/t8_del.log"
 # allowlist
 check "allowlist KSL-only + https" "python3 -c \"import sys;sys.path.insert(0,'$ROOT/tools');import hs;a=hs.allowed;assert a('https://sports.ksl.com/prep/x') and a('https://www.ksl.com/a');assert not any(a(u) for u in ['https://uhsaa.org/x','https://evilksl.com','https://ksl.com.evil.io','https://www.maxpreps.com','http://sports.ksl.com/','https://x.k12.ut.us'])\""
+# Committed state.json may carry a production hold. The suite copy must not.
+copy t0_clean
+printf '%s\n' '{"hold":{"code":16,"reason":"planted"},"live_id":"x"}' > "$OUT/planted-hold.json"
+fresh_state "$OUT/planted-hold.json" "$OUT/planted-clean.json"
+check "offline copy does not inherit a committed hold" "! jq -e .hold $OUT/t0_clean/state.json >/dev/null && ! jq -e .hold $OUT/planted-clean.json >/dev/null"
+# production hold behavior itself stays: a root that actually has hold exits 18
+copy t0_hold
+jq '.hold={"code":16,"reason":"planted","at":"2026-11-13T18:55-07:00","live_id_expected":"x"}' "$OUT/t0_hold/state.json" > "$OUT/t0_hold/s" && mv "$OUT/t0_hold/s" "$OUT/t0_hold/state.json"
+python3 "$ROOT/tools/run.py" --root "$OUT/t0_hold" --target production --fixture "$FX" --now $NOW > "$OUT/t0_hold.log" 2>&1; echo $? > "$OUT/t0_hold.rc"
+check "planted production hold still blocks deploy (exit 18)" "[ \$(cat $OUT/t0_hold.rc) = 18 ] && grep -q 'production on HOLD' $OUT/t0_hold/report.json && ! grep -q deployed $OUT/t0_hold.log"
+# Frozen KSL semifinal pages (no live fetch) plus a finals-style line and bytecmp/token checks.
+python3 - << PY > "$OUT/ksl_parse.out" 2> "$OUT/ksl_parse.err"; echo $? > "$OUT/ksl_parse.rc"
+import json, os, subprocess, sys
+sys.path.insert(0, "$ROOT/tools")
+import hs
+from check_cf_token import classify
+sched = json.load(open("$ROOT/data/hs_schedule.json"))
+scores = json.load(open("$ROOT/data/hs_scores.json"))
+pages = [
+    ("$ROOT/tests/fixtures/ksl_578933_6a_sf.html", "https://sports.ksl.com/prep/6a-4a-semifinals-recap/578933"),
+    ("$ROOT/tests/fixtures/ksl_578934_5a_sf.html", "https://sports.ksl.com/prep/uhsaa-playoffs-4a-5a-recap/578934"),
+]
+cands = []
+for p, u in pages:
+    cands += hs.parse_ksl(open(p, encoding="utf-8").read(), u)
+assert not any(c["cls"] == "4A" for c in cands), cands
+def pair(c):
+    names = tuple(sorted([c["a"], c["b"]]))
+    return (c["cls"], c["round"], tuple(sorted([c["a_score"], c["b_score"]])), names)
+got = sorted(pair(c) for c in cands)
+# Names may carry a single trailing mascot; scores and schools must be these four.
+def schoolish(names, a, b):
+    def hit(want):
+        return any(n == want or n.endswith(" " + want) or n.startswith(want + " ") for n in names)
+    return hit(a) and hit(b)
+expect_scores = {("6A", "SF", (34, 35)), ("6A", "SF", (28, 34)), ("5A", "SF", (12, 29)), ("5A", "SF", (10, 56))}
+assert {g[:3] for g in got} == expect_scores, got
+by_score = {g[2]: g[3] for g in got}
+assert schoolish(by_score[(34, 35)], "Skyridge", "Herriman")
+assert schoolish(by_score[(28, 34)], "Corner Canyon", "Mountain Ridge")
+assert schoolish(by_score[(12, 29)], "West", "Bountiful")
+assert schoolish(by_score[(10, 56)], "Orem", "Woods Cross")
+new, conflicts, unmatched = hs.merge(sched, scores, cands, "2026-11-14")
+assert new == [] and conflicts == [] and unmatched == [], (new, conflicts, unmatched)
+posted = {(f["class"], f["rid"], f["home"], f["home_score"], f["away"], f["away_score"]) for f in scores["finals"] if f.get("rid") == "SF"}
+assert posted == {
+    ("6A", "SF", "Skyridge", 35, "Herriman", 34),
+    ("6A", "SF", "Mountain Ridge", 28, "Corner Canyon", 34),
+    ("5A", "SF", "West", 29, "Bountiful", 12),
+    ("5A", "SF", "Orem", 56, "Woods Cross", 10),
+}
+prot = {"field", "ridge", "cross"}
+assert hs._label_hits("West Panthers", "West", prot)
+assert not hs._label_hits("West Field", "West", prot)
+assert hs._label_hits("West Field", "West Field", prot)
+assert hs._label_hits("Woods Cross Wildcats", "Woods Cross", prot)
+bad = "<h2>Class 6A semifinals</h2><h3>Skyridge beat Herriman</h3><p><strong>maybe 35-34</strong></p>"
+assert hs.parse_ksl(bad, "fixture://unparseable") == []
+fin = """<h2>Class 6A finals</h2><h3>No. 1 Skyridge 21, No. 3 Corner Canyon 17</h3>
+<h3>Class 5A — Championship</h3>
+<p><strong>No. 1 West Panthers 14, </strong><strong>No. 2 Orem Tigers 10 </strong></p>
+<h2>Notes</h2><p><strong>No. 9 Nobody 1, No. 8 Else 2</strong></p>"""
+rows = hs.parse_ksl(fin, "fixture://finals-style")
+assert len(rows) == 2 and all(r["round"] == "F" for r in rows), rows
+newF, confF, unF = hs.merge(sched, scores, rows, "2026-11-21")
+assert confF == [] and unF == [] and len(newF) == 2, (newF, confF, unF)
+assert {(n["class"], n["home"], n["home_score"], n["away"], n["away_score"]) for n in newF} == {
+    ("6A", "Skyridge", 21, "Corner Canyon", 17),
+    ("5A", "West", 14, "Orem", 10),
+}
+local = b'<p>Email <a href="mailto:huddle@mtnsportsmedia.com">huddle@mtnsportsmedia.com</a> thanks.</p>'
+remote = b'<p>Email <a href="/cdn-cgi/l/email-protection#abc" class="__cf_email__" data-cfemail="abc">[email&#160;protected]</a><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> thanks.</p>'
+remote2 = b'<p>Email <a class="__cf_email__" data-cfemail="abc" href="/cdn-cgi/l/email-protection">[email&#160;protected]</a> thanks.</p>'
+assert hs.strip_cf_email(local) == hs.strip_cf_email(remote) == hs.strip_cf_email(remote2)
+assert hs.strip_cf_email(local) != hs.strip_cf_email(local.replace(b"thanks", b"thank you"))
+kept = b'<script src="/cdn-cgi/scripts/other.js"></script><a href="/high-school/">HS</a>'
+assert hs.strip_cf_email(kept) == kept
+code, msg = classify(401, '{"success":false,"errors":[{"code":9109,"message":"Invalid access token"}]}')
+assert code == 1 and "CLOUDFLARE_API_TOKEN is invalid" in msg and "9109" in msg and "Bearer" not in msg
+code, msg = classify(200, '{"success":true,"result":{"status":"active"},"errors":[]}')
+assert code == 0 and "active" in msg
+code, msg = classify(None, "", "URLError: <urlopen error [Errno -2] Name or service not known>")
+assert code == 0 and "transient" in msg
+env = {k: v for k, v in os.environ.items() if k != "CLOUDFLARE_API_TOKEN"}
+r = subprocess.run([sys.executable, "$ROOT/tools/check_cf_token.py"], env=env, capture_output=True, text=True)
+assert r.returncode == 1 and "missing or empty" in r.stderr and "Bearer" not in r.stderr + r.stdout
+print("parser, bytecmp, token classify ok")
+PY
+check "frozen KSL semis match the four posted rows; finals style parses; email norm is exact; bad token message" "[ \$(cat $OUT/ksl_parse.rc) = 0 ] && grep -q 'parser, bytecmp, token classify ok' $OUT/ksl_parse.out"
 exit $fail
