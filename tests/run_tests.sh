@@ -75,6 +75,15 @@ check "wrangler fail + canonical moved -> rollback confirmed, exit 15, hold" "[ 
 copy t8_del; echo '{"delete":["robots.txt"]}' > "$OUT/m_del.json"
 HS_MOCK="$OUT/m_del.json" python3 "$ROOT/tools/run.py" --root "$OUT/t8_del" --fixture "$FX" --now $NOW > "$OUT/t8_del.log" 2>&1; echo $? > "$OUT/t8_del.rc"
 check "path guard: file missing from output (deletion) -> exit 14" "[ \$(cat $OUT/t8_del.rc) = 14 ] && grep -q 'DELETED robots.txt' $OUT/t8_del.log"
+# Post-deploy fetch error and post-verify canonical read must roll back and hold (exit 16), not crash as rc 1.
+echo "{\"canon\":[\"$L\",\"$L\"],\"verify_raises\":true}" > "$OUT/m_vr.json"
+copy t_vr
+HS_MOCK="$OUT/m_vr.json" python3 "$ROOT/tools/run.py" --root "$OUT/t_vr" --target production --fixture "$FX" --now $NOW > "$OUT/t_vr.log" 2>&1; echo $? > "$OUT/t_vr.rc"
+check "verify fetch timeout -> rollback confirmed, hold, exit 16" "[ \$(cat $OUT/t_vr.rc) = 16 ] && grep -q 'verify fetch failed' $OUT/t_vr.log && grep -q 'ROLLED BACK to .* confirmed' $OUT/t_vr.log && jq -e '.hold.code==16' $OUT/t_vr/state.json >/dev/null"
+echo "{\"canon\":[\"$L\",\"$L\"],\"canon_raises\":true,\"verify_match_out\":true}" > "$OUT/m_cr.json"
+copy t_cr
+HS_MOCK="$OUT/m_cr.json" python3 "$ROOT/tools/run.py" --root "$OUT/t_cr" --target production --fixture "$FX" --now $NOW > "$OUT/t_cr.log" 2>&1; echo $? > "$OUT/t_cr.rc"
+check "post-verify canonical read timeout -> rollback confirmed, hold, exit 16" "[ \$(cat $OUT/t_cr.rc) = 16 ] && grep -q 'canonical read failed' $OUT/t_cr.log && grep -q 'ROLLED BACK to .* confirmed' $OUT/t_cr.log && jq -e '.hold.code==16' $OUT/t_cr/state.json >/dev/null"
 # allowlist
 check "allowlist KSL-only + https" "python3 -c \"import sys;sys.path.insert(0,'$ROOT/tools');import hs;a=hs.allowed;assert a('https://sports.ksl.com/prep/x') and a('https://www.ksl.com/a');assert not any(a(u) for u in ['https://uhsaa.org/x','https://evilksl.com','https://ksl.com.evil.io','https://www.maxpreps.com','http://sports.ksl.com/','https://x.k12.ut.us'])\""
 # Committed state.json may carry a production hold. The suite copy must not.
@@ -92,7 +101,7 @@ python3 - << PY > "$OUT/ksl_parse.out" 2> "$OUT/ksl_parse.err"; echo $? > "$OUT/
 import json, os, subprocess, sys
 sys.path.insert(0, "$ROOT/tools")
 import hs
-from check_cf_token import classify
+from check_cf_token import classify, decide, judge, verify_urls
 sched = json.load(open("$ROOT/data/hs_schedule.json"))
 scores = json.load(open("$ROOT/data/hs_scores.json"))
 pages = [
@@ -151,15 +160,52 @@ local = b'<p>Email <a href="mailto:huddle@mtnsportsmedia.com">huddle@mtnsportsme
 remote = b'<p>Email <a href="/cdn-cgi/l/email-protection#abc" class="__cf_email__" data-cfemail="abc">[email&#160;protected]</a><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> thanks.</p>'
 remote2 = b'<p>Email <a class="__cf_email__" data-cfemail="abc" href="/cdn-cgi/l/email-protection">[email&#160;protected]</a> thanks.</p>'
 assert hs.strip_cf_email(local) == hs.strip_cf_email(remote) == hs.strip_cf_email(remote2)
+wrapped = b'<a href="/cdn-cgi/l/email-protection#abc"><span class="__cf_email__" data-cfemail="abc">[email&#160;protected]</span></a>'
+assert hs.strip_cf_email(wrapped) == b'@'
 assert hs.strip_cf_email(local) != hs.strip_cf_email(local.replace(b"thanks", b"thank you"))
 kept = b'<script src="/cdn-cgi/scripts/other.js"></script><a href="/high-school/">HS</a>'
 assert hs.strip_cf_email(kept) == kept
+unclosed = b'<a href="mailto:huddle@mtnsportsmedia.com">email Skyridge 35 <a href="/high-school/">link</a>'
+masked = hs.strip_cf_email(unclosed)
+assert b'Skyridge 35' in masked and b'href="/high-school/"' in masked, masked
+ot_line = {
+    "(OT)": "No. 1 Skyridge 21, No. 3 Corner Canyon 17 (OT)",
+    "(2OT)": "No. 1 Skyridge 21, No. 3 Corner Canyon 17 (2OT)",
+    ", OT": "No. 1 Skyridge 21, No. 3 Corner Canyon 17, OT",
+    "OT": "No. 1 Skyridge 21, No. 3 Corner Canyon 17 OT",
+    "period": "No. 1 Skyridge 21, No. 3 Corner Canyon 17.",
+}
+for label, line in ot_line.items():
+    got = hs.parse_ksl(f'<h3>Class 6A — Final</h3><p><strong>{line}</strong></p>', "fixture://ot")
+    assert len(got) == 1 and (got[0]["a"], got[0]["a_score"], got[0]["b"], got[0]["b_score"]) == ("Skyridge", 21, "Corner Canyon", 17), (label, got)
+assert hs.parse_ksl("<h3>Class 6A — Final</h3><h3>maybe 35-34</h3>", "fixture://nope") == []
+kept_class = """<h2>Class 6A finals</h2>
+<h3>maybe 35-34</h3>
+<h3>No. 1 Skyridge 21, No. 3 Corner Canyon 17 (OT)</h3>
+<p><strong>No. 3 Corner Canyon 10, No. 1 Skyridge 14.</strong></p>"""
+kept_rows = hs.parse_ksl(kept_class, "fixture://keep-class")
+assert [(r["a_score"], r["b_score"]) for r in kept_rows] == [(21, 17), (10, 14)], kept_rows
 code, msg = classify(401, '{"success":false,"errors":[{"code":9109,"message":"Invalid access token"}]}')
 assert code == 1 and "CLOUDFLARE_API_TOKEN is invalid" in msg and "9109" in msg and "Bearer" not in msg
-code, msg = classify(200, '{"success":true,"result":{"status":"active"},"errors":[]}')
+active = '{"success":true,"result":{"status":"active"},"errors":[]}'
+code, msg = classify(200, active)
 assert code == 0 and "active" in msg
 code, msg = classify(None, "", "URLError: <urlopen error [Errno -2] Name or service not known>")
 assert code == 0 and "transient" in msg
+assert judge(429, '{"success":false,"errors":[{"code":971,"message":"Rate limited"}]}')[0] == "transient"
+assert judge(200, "<html>not json</html>")[0] == "transient"
+urls = verify_urls("acct123")
+assert urls[0].endswith("/accounts/acct123/tokens/verify") and urls[1].endswith("/user/tokens/verify")
+assert verify_urls("") == [urls[1]]
+acct_401 = judge(401, '{"success":false,"errors":[{"code":1000,"message":"Invalid API Token"}]}')
+user_active = judge(200, active)
+assert acct_401[0] == "invalid" and user_active[0] == "active"
+assert decide([user_active])[0] == 0
+assert decide([acct_401, user_active])[0] == 0
+bad_both = decide([acct_401, judge(401, '{"success":false,"errors":[{"code":9109,"message":"Invalid access token"}]}')])
+assert bad_both[0] == 1 and "9109" in bad_both[1]
+assert decide([judge(429, "")])[0] == 0
+assert decide([judge(200, "not-json")])[0] == 0
 env = {k: v for k, v in os.environ.items() if k != "CLOUDFLARE_API_TOKEN"}
 r = subprocess.run([sys.executable, "$ROOT/tools/check_cf_token.py"], env=env, capture_output=True, text=True)
 assert r.returncode == 1 and "missing or empty" in r.stderr and "Bearer" not in r.stderr + r.stdout

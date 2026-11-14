@@ -110,6 +110,9 @@ def cf(path, method='GET'):
         if path.endswith('/rollback'):
             if MOCK.get('rollback_raises'): raise RuntimeError('mock rollback error')
             return {}
+        if path == '' and MOCK.get('canon_raises') and MOCK.get('_deployed') and not MOCK.get('_canon_raised'):
+            MOCK['_canon_raised'] = True  # one shot, so the rollback re-read can succeed
+            raise TimeoutError('mock canonical read timeout')
         return {'canonical_deployment': {'id': _cseq.pop(0) if len(_cseq) > 1 else _cseq[0]}}
     return _cf(path, method)
 def _cf(path, method='GET'):
@@ -122,9 +125,11 @@ if canon != state['live_id']:
 UA = {'User-Agent': 'Mozilla/5.0 MSM-HS-Refresh'}
 def fetch(u):
     if MOCK is not None:
+        if MOCK.get('verify_raises') and MOCK.get('_deployed'): raise TimeoutError('mock verify fetch timeout')
         rel = u.split('://', 1)[1].split('/', 1)[1].split('?')[0]; rel = (rel + 'index.html') if (rel == '' or rel.endswith('/')) else rel
         if MOCK.get('verify_bad') and MOCK.get('_deployed'): return b'BAD'
-        return open(os.path.join(R, 'site', rel), 'rb').read()
+        root = 'out' if (MOCK.get('verify_match_out') and MOCK.get('_deployed')) else 'site'
+        return open(os.path.join(R, root, rel), 'rb').read()
     return _fetch(u)
 def _fetch(u): return urllib.request.urlopen(urllib.request.Request(u + ('&' if '?' in u else '?') + 'cb=' + str(os.getpid()), headers=UA), timeout=60).read()
 BEACON = re.compile(rb'<!-- Cloudflare Pages Analytics -->|<script[^>]*static\.cloudflareinsights\.com[^>]*>\s*</script>\n?(<!-- Cloudflare Pages Analytics -->)?', re.S)
@@ -176,7 +181,13 @@ import time; time.sleep(8); bad = []
 for h in hosts:
     for rel in sorted(set(changed) | {'index.html'}):
         if not rel.endswith('.html'): continue
-        if not same(os.path.join(out, rel), fetch(h + '/' + rel.replace('index.html', ''))): bad.append(h + '/' + rel)
+        url = h + '/' + rel
+        try:
+            remote = fetch(h + '/' + rel.replace('index.html', ''))
+        except Exception as e:
+            log('verify fetch failed', url, type(e).__name__, e)
+            bad.append(url); continue
+        if not same(os.path.join(out, rel), remote): bad.append(url)
 log('bytecmp', 'ok' if not bad else bad)
 sm = subprocess.CompletedProcess([], MOCK.get('smoke_rc', 0), 'mock smoke', '') if MOCK is not None else subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'smoke.py'), hosts[0]], capture_output=True, text=True)
 print(sm.stdout[-3000:], sm.stderr[-1500:]); log('smoke', 'ok' if sm.returncode == 0 else 'FAIL')
@@ -187,7 +198,15 @@ if bad or sm.returncode:
         rep['issues'].append({'title': 'HS refresh: production verify failed, rolled back', 'body': json.dumps({'bad': bad, 'smoke': sm.stdout[-1500:]}, indent=1)})
     finish(16, 'fail-verify')
 if A.target == 'production':
-    state['live_id'] = cf('')['canonical_deployment']['id']; shutil.rmtree(os.path.join(R, 'site')); shutil.copytree(out, os.path.join(R, 'site'))
+    try:
+        state['live_id'] = cf('')['canonical_deployment']['id']
+    except Exception as e:
+        log('canonical read failed', type(e).__name__, e)
+        rollback_confirm('production verify failed')
+        set_hold(16, 'production verify failed, rolled back')
+        rep['issues'].append({'title': 'HS refresh: production verify failed, rolled back', 'body': f'canonical read after verify failed: {type(e).__name__}: {e}'})
+        finish(16, 'fail-verify')
+    shutil.rmtree(os.path.join(R, 'site')); shutil.copytree(out, os.path.join(R, 'site'))
     log('new live', state['live_id'], 'base updated')
     save_state()
 finish(0, 'deployed-' + A.target)

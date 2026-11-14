@@ -33,7 +33,7 @@ def norm(s): return re.sub(r'[^a-z]', '', html.unescape(s).lower())
 ROUNDMAP = {'firstround': 'R1', 'quarterfinals': 'QF', 'quarterfinal': 'QF', 'semifinals': 'SF', 'semifinal': 'SF', 'final': 'F', 'finals': 'F', 'championship': 'F', 'statechampionship': 'F', 'statefinal': 'F', 'statefinals': 'F'}
 COVERED = {'5A', '6A'}  # 4A and other classifications are not on this site
 _CLASS = re.compile(r'^Class\s+(\dA)\b(?:\s*[—–\-]\s*|\s+)(.+)$', re.I)
-_SCORE = re.compile(r'^No\.\s*(\d+)\s+(.+?)\s+(\d+)\s*,\s*No\.\s*(\d+)\s+(.+?)\s+(\d+)$')
+_SCORE = re.compile(r'^No\.\s*(\d+)\s+(.+?)\s+(\d+)\s*,\s*No\.\s*(\d+)\s+(.+?)\s+(\d+)(?:\s*,?\s*\(?\d?OT\)?)?\s*\.?$')
 def _plain(fragment):
     t = html.unescape(re.sub(r'<[^>]+>', '', fragment)).replace('\xa0', ' ').replace('\u200b', '')
     return re.sub(r'\s+', ' ', t).strip()
@@ -51,6 +51,7 @@ def parse_ksl(page, url):
     for m in re.finditer(r'<h[23][^>]*>(.*?)</h[23]>|<strong>(.*?)</strong>', page, re.S | re.I):
         t = _plain(m.group(1) if m.group(1) is not None else m.group(2))
         if m.group(1) is not None:
+            is_h2 = m.group(0)[1:3].lower() == 'h2'
             h = _CLASS.match(t)
             if h:
                 c, r = h.group(1).upper(), ROUNDMAP.get(norm(h.group(2)))
@@ -60,7 +61,10 @@ def parse_ksl(page, url):
             if s:
                 out.append(_score_row(cls, rnd, s, url))
                 continue
-            cls = rnd = None  # unrelated heading; do not keep attaching later lines
+            # A bad h3 inside the current class must not drop the scores that follow.
+            # A new h2 that is not a class heading ends the section.
+            if is_h2:
+                cls = rnd = None
             continue
         if not cls or not rnd:
             continue
@@ -105,8 +109,8 @@ _CF_EMAIL_EL = re.compile(
     br'href\s*=\s*["\'](?:mailto:[^"\']*|/cdn-cgi/l/email-protection[^"\']*)["\']'
     br'|__cf_email__'
     br'|data-cfemail\s*=\s*["\'][^"\']+["\']'
-    br')[^>]*>.*?</\1>',
-    re.I | re.S)
+    br')[^>]*>(?:[^<]|<span\b[^>]*>[^<]*</span>)*</\1>',
+    re.I)
 def strip_cf_email(b):
     """Drop only Cloudflare email obfuscation so a live body can equal the repo file.
     That is the email-decode.min.js injector and mailto / __cf_email__ / data-cfemail links.
