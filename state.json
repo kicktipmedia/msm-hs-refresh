@@ -3,5 +3,11 @@
  "live_id": "5d8f41f9-3376-4568-942a-d42557d7bfac",
  "base_zip_sha256": "be0a3d57a03e1f6ad00b09bfdc69335980588af1969167df1cfcaef58367065e",
  "input_hash": "1ef67ef5d1d37abc1d5e3fcec4257df8d2928d042fe54f187e9fd26c5dab1ea6",
- "last_run": "2026-11-12T22:54-07:00"
+ "last_run": "2026-11-12T22:54-07:00",
+ "hold": {
+  "code": 16,
+  "reason": "production verify failed, rolled back",
+  "at": "2026-11-13T18:55-07:00",
+  "live_id_expected": "5d8f41f9-3376-4568-942a-d42557d7bfac"
+ }
 }
