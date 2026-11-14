@@ -48,10 +48,10 @@ def parse_ksl(page, url):
     A line that is not a complete seeded score is skipped. 4A is ignored."""
     page = re.sub(r'</strong>\s*<strong>', ' ', page, flags=re.I)
     out = []; cls = rnd = None; cls_level = None
-    for m in re.finditer(r'<h[23][^>]*>(.*?)</h[23]>|<strong>(.*?)</strong>', page, re.S | re.I):
-        t = _plain(m.group(1) if m.group(1) is not None else m.group(2))
+    for m in re.finditer(r'<h([1-6])[^>]*>(.*?)</h\1>|<strong>(.*?)</strong>', page, re.S | re.I):
         if m.group(1) is not None:
-            level = int(m.group(0)[2])  # h2 -> 2, h3 -> 3; a lower number outranks
+            level = int(m.group(1))  # h1 outranks h6; a lower number is higher
+            t = _plain(m.group(2))
             h = _CLASS.match(t)
             if h:
                 c, r = h.group(1).upper(), ROUNDMAP.get(norm(h.group(2)))
@@ -64,12 +64,14 @@ def parse_ksl(page, url):
             if s:
                 out.append(_score_row(cls, rnd, s, url))
                 continue
-            # A heading that is not a class and not a score ends the section when it is
-            # at the class heading's level or higher. A lower heading (h3 under an h2
-            # class) does not, so one bad h3 does not drop the rest of that class.
-            if cls_level is not None and level <= cls_level:
+            # Neither a class nor a parsed score. A heading with no digits ends the
+            # section at any level. A heading that still contains digits ends it only
+            # when it is at the class level or higher; a lower heading (higher number)
+            # leaves the class in place.
+            if not re.search(r'\d', t) or cls_level is None or level <= cls_level:
                 cls = rnd = cls_level = None
             continue
+        t = _plain(m.group(3) or '')
         if not cls or not rnd:
             continue
         s = _SCORE.match(t)

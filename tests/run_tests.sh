@@ -198,6 +198,9 @@ for page in digit_pages:
     assert newD == [] and confD == [] and len(unD) == 1, (page, newD, confD, unD)
 assert hs.parse_ksl(digit_pages[0], "fixture://digit-mascot")[0]["a_score"] == 5
 assert hs.parse_ksl(digit_pages[1], "fixture://digit-mascot")[0]["b_score"] == 7
+for school in ("St. Joseph", "Juan Diego", "Mid-Valley", "O'Hara"):
+    assert hs._label_hits(school, school, set()), school
+    assert hs._label_hits(school + " Knights", school, set()), school
 code, msg = classify(401, '{"success":false,"errors":[{"code":9109,"message":"Invalid access token"}]}')
 assert code == 1 and "CLOUDFLARE_API_TOKEN is invalid" in msg and "9109" in msg and "Bearer" not in msg
 active = '{"success":true,"result":{"status":"active"},"errors":[]}'
@@ -225,4 +228,58 @@ assert r.returncode == 1 and "missing or empty" in r.stderr and "Bearer" not in 
 print("parser, bytecmp, token classify ok")
 PY
 check "frozen KSL semis match the four posted rows; finals style parses; email norm is exact; bad token message" "[ \$(cat $OUT/ksl_parse.rc) = 0 ] && grep -q 'parser, bytecmp, token classify ok' $OUT/ksl_parse.out"
+STALE='No. 1 Skyridge 28, No. 3 Corner Canyon 14'
+# (a) h4 under an h3 class is invisible to an h2/h3-only scan
+python3 - << PY > "$OUT/d1a.out" 2> "$OUT/d1a.err"; echo $? > "$OUT/d1a.rc"
+import json, sys
+sys.path.insert(0, "$ROOT/tools")
+import hs
+page = "<h3>Class 6A — Final</h3><h4>Season series</h4><strong>$STALE</strong>"
+rows = hs.parse_ksl(page, "fixture://d1a")
+sched = json.load(open("$ROOT/data/hs_schedule.json"))
+scores = json.load(open("$ROOT/data/hs_scores.json"))
+new, conf, un = hs.merge(sched, scores, rows, "2026-11-21")
+assert rows == [] and new == [], (rows, new)
+print("ok")
+PY
+check "h4 Season series under an h3 class posts no final" "[ \$(cat $OUT/d1a.rc) = 0 ]"
+# (b) a digit-free h3 clears an h2 class before a bolded score
+python3 - << PY > "$OUT/d1b.out" 2> "$OUT/d1b.err"; echo $? > "$OUT/d1b.rc"
+import json, sys
+sys.path.insert(0, "$ROOT/tools")
+import hs
+page = "<h2>Class 6A — Final</h2><h3>Last meeting</h3><strong>$STALE</strong>"
+rows = hs.parse_ksl(page, "fixture://d1b")
+sched = json.load(open("$ROOT/data/hs_schedule.json"))
+scores = json.load(open("$ROOT/data/hs_scores.json"))
+new, conf, un = hs.merge(sched, scores, rows, "2026-11-21")
+assert rows == [] and new == [], (rows, new)
+print("ok")
+PY
+check "h3 Last meeting under an h2 class posts no final" "[ \$(cat $OUT/d1b.rc) = 0 ]"
+# (c) same break, with the stale score itself in an h3
+python3 - << PY > "$OUT/d1c.out" 2> "$OUT/d1c.err"; echo $? > "$OUT/d1c.rc"
+import json, sys
+sys.path.insert(0, "$ROOT/tools")
+import hs
+page = "<h2>Class 6A — Final</h2><h3>Last meeting</h3><h3>$STALE</h3>"
+rows = hs.parse_ksl(page, "fixture://d1c")
+sched = json.load(open("$ROOT/data/hs_schedule.json"))
+scores = json.load(open("$ROOT/data/hs_scores.json"))
+new, conf, un = hs.merge(sched, scores, rows, "2026-11-21")
+assert rows == [] and new == [], (rows, new)
+print("ok")
+PY
+check "h3 Last meeting under an h2 class posts no final when the score is an h3" "[ \$(cat $OUT/d1c.rc) = 0 ]"
+# (d) an unparsed score heading at the class level drops the following bolded line
+python3 - << PY > "$OUT/d1d.out" 2> "$OUT/d1d.err"; echo $? > "$OUT/d1d.rc"
+import sys
+sys.path.insert(0, "$ROOT/tools")
+import hs
+page = "<h3>Class 6A — Final</h3><h3>Skyridge wins: $STALE</h3><strong>$STALE</strong>"
+rows = hs.parse_ksl(page, "fixture://d1d")
+assert rows == [], rows
+print("ok")
+PY
+check "unparsed score heading at the class level yields no rows" "[ \$(cat $OUT/d1d.rc) = 0 ]"
 exit $fail
