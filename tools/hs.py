@@ -30,23 +30,104 @@ def ksl_discover(index_html, limit=4):
 
 def norm(s): return re.sub(r'[^a-z]', '', html.unescape(s).lower())
 
-ROUNDMAP = {'firstround': 'R1', 'quarterfinals': 'QF', 'quarterfinal': 'QF', 'semifinals': 'SF', 'semifinal': 'SF', 'final': 'F', 'championship': 'F', 'statechampionship': 'F'}
+ROUNDMAP = {'firstround': 'R1', 'quarterfinals': 'QF', 'quarterfinal': 'QF', 'semifinals': 'SF', 'semifinal': 'SF', 'final': 'F', 'finals': 'F', 'championship': 'F', 'statechampionship': 'F', 'statefinal': 'F', 'statefinals': 'F'}
+COVERED = {'5A', '6A'}  # 4A and other classifications are not on this site
+_CLASS = re.compile(r'^Class\s+(\dA)\b(?:\s*[—–\-]\s*|\s+)(.+)$', re.I)
+_SCORE = re.compile(r'^No\.\s*(\d+)\s+(.+?)\s+(\d+)\s*,\s*No\.\s*(\d+)\s+(.+?)\s+(\d+)(?:\s*,?\s*\(?\d?OT\)?)?\s*\.?$')
+def _plain(fragment):
+    t = html.unescape(re.sub(r'<[^>]+>', '', fragment)).replace('\xa0', ' ').replace('\u200b', '')
+    return re.sub(r'\s+', ' ', t).strip()
+def _score_row(cls, rnd, s, url):
+    return dict(cls=cls, round=rnd, a_seed=int(s.group(1)), a=s.group(2).strip(), a_score=int(s.group(3)),
+                b_seed=int(s.group(4)), b=s.group(5).strip(), b_score=int(s.group(6)), source='KSL Sports', source_url=url)
 def parse_ksl(page, url):
-    """KSL roundup: <h3>Class 5A — First round</h3> then <strong>No. 16 Roy 0, No. 1 West 63</strong>."""
-    out = []; cls = rnd = None
-    for m in re.finditer(r'<h[23][^>]*>(.*?)</h[23]>|<strong>(.*?)</strong>', page, re.S):
+    """KSL roundup. Accepts both shapes, and does not guess:
+    <h3>Class 5A — First round</h3><strong>No. 16 Roy 0, No. 1 West 63</strong>
+    <h2>Class 6A semifinals</h2><h3>No. 1 Skyridge 35, No. 4 Herriman 34</h3>
+    A score split across two adjacent <strong> tags, with a trailing mascot, is one line.
+    A line that is not a complete seeded score is skipped. 4A is ignored."""
+    page = re.sub(r'</strong>\s*<strong>', ' ', page, flags=re.I)
+    out = []; cls = rnd = None; cls_level = None
+    for m in re.finditer(r'<h([1-6])[^>]*>(.*?)</h\1>|<strong>(.*?)</strong>', page, re.S | re.I):
         if m.group(1) is not None:
-            t = html.unescape(re.sub('<[^>]+>', '', m.group(1)))
-            h = re.match(r'\s*Class\s+(\dA)\s*[—–-]\s*(.+?)\s*$', t)
-            cls, rnd = (h.group(1), ROUNDMAP.get(norm(h.group(2)))) if h else (None, None)
+            level = int(m.group(1))  # h1 outranks h6; a lower number is higher
+            t = _plain(m.group(2))
+            h = _CLASS.match(t)
+            if h:
+                c, r = h.group(1).upper(), ROUNDMAP.get(norm(h.group(2)))
+                if c in COVERED and r:
+                    cls, rnd, cls_level = c, r, level
+                else:
+                    cls = rnd = cls_level = None
+                continue
+            s = _SCORE.match(t) if cls and rnd else None
+            if s:
+                out.append(_score_row(cls, rnd, s, url))
+                continue
+            # Neither a class nor a parsed score. A heading with no digits ends the
+            # section at any level. A heading that still contains digits ends it only
+            # when it is at the class level or higher; a lower heading (higher number)
+            # leaves the class in place.
+            if not re.search(r'\d', t) or cls_level is None or level <= cls_level:
+                cls = rnd = cls_level = None
             continue
-        if not cls or not rnd: continue
-        t = html.unescape(re.sub('<[^>]+>', '', m.group(2))).replace('\xa0', ' ')
-        s = re.match(r'\s*No\.\s*(\d+)\s+(.+?)\s+(\d+)\s*,\s*No\.\s*(\d+)\s+(.+?)\s+(\d+)\b', t)
+        t = _plain(m.group(3) or '')
+        if not cls or not rnd:
+            continue
+        s = _SCORE.match(t)
         if s:
-            out.append(dict(cls=cls, round=rnd, a_seed=int(s.group(1)), a=s.group(2).strip(), a_score=int(s.group(3)),
-                            b_seed=int(s.group(4)), b=s.group(5).strip(), b_score=int(s.group(6)), source='KSL Sports', source_url=url))
+            out.append(_score_row(cls, rnd, s, url))
     return out
+
+def _catalog(sched):
+    names = []
+    for g in sched['games']:
+        for side in ('home', 'away'):
+            t = g.get(side)
+            if t and t.get('school'):
+                names.append(t['school'])
+    return names
+def _label_hits(label, school, protected):
+    """Exact school, or school plus one trailing mascot word. Never a prefix guess.
+    norm() drops digits, so a trailing number is rejected before that comparison."""
+    label = ' '.join(str(label).split())
+    parts = label.split()
+    if len(parts) >= 2 and re.fullmatch(r"[A-Za-z][A-Za-z'’.\-]*", parts[-1]) is None:
+        return [p.lower() for p in parts] == [p.lower() for p in str(school).split()]
+    if norm(label) == norm(school):
+        return True
+    if len(parts) < 2 or parts[-1].lower() in protected:
+        return False
+    return norm(' '.join(parts[:-1])) == norm(school)
+def _bind(c, g, protected):
+    if not g.get('home') or not g.get('away'):
+        return None
+    schools = (g['home']['school'], g['away']['school'])
+    def hits(label):
+        return [s for s in schools if _label_hits(label, s, protected)]
+    A, B = hits(c['a']), hits(c['b'])
+    if len(A) != 1 or len(B) != 1 or A[0] == B[0]:
+        return None
+    return {norm(A[0]): c['a_score'], norm(B[0]): c['b_score']}
+
+_CF_EMAIL_JS = re.compile(
+    br'<script\b[^>]*\bsrc\s*=\s*["\'][^"\']*?/cdn-cgi/scripts/[^"\']*email-decode\.min\.js[^"\']*["\'][^>]*>\s*</script>',
+    re.I)
+_CF_EMAIL_EL = re.compile(
+    br'<(a|span)\b[^>]*?(?:'
+    br'href\s*=\s*["\'](?:mailto:[^"\']*|/cdn-cgi/l/email-protection[^"\']*)["\']'
+    br'|__cf_email__'
+    br'|data-cfemail\s*=\s*["\'][^"\']+["\']'
+    br')[^>]*>(?:[^<]|<span\b[^>]*>[^<]*</span>)*</\1>',
+    re.I)
+def strip_cf_email(b):
+    """Drop only Cloudflare email obfuscation so a live body can equal the repo file.
+    That is the email-decode.min.js injector and mailto / __cf_email__ / data-cfemail links.
+    Anything else is left byte for byte."""
+    if isinstance(b, str):
+        b = b.encode('utf-8')
+    b = _CF_EMAIL_JS.sub(b'', b)
+    return _CF_EMAIL_EL.sub(b'@', b)
 
 def resolve(sched, scores):
     """Fill TBA teams from finals (winner of feed game). Returns games by id."""
@@ -70,12 +151,19 @@ def resolve(sched, scores):
 def merge(sched, scores, cands, today):
     """Returns (new_finals, conflicts, unmatched). Never overwrites; disagreement -> conflict (pending + issue)."""
     G, fin, pend, _ = resolve(sched, scores)
+    protected = {n.split()[-1].lower() for n in _catalog(sched) if n.split()}
     by = {}; unmatched = []
     for c in cands:
-        g = next((g for g in G.values() if g['cls'] == c['cls'] and g['round'] == c['round'] and g.get('home') and
-                  {norm(g['home']['school']), norm(g['away']['school'])} == {norm(c['a']), norm(c['b'])}), None)
-        if not g: unmatched.append(c); continue
-        sc = {norm(c['a']): c['a_score'], norm(c['b']): c['b_score']}
+        hits = []
+        for g in G.values():
+            if g['cls'] != c['cls'] or g['round'] != c['round']:
+                continue
+            sc = _bind(c, g, protected)
+            if sc:
+                hits.append((g, sc))
+        if len(hits) != 1:
+            unmatched.append(c); continue  # none or ambiguous: skip, do not guess
+        g, sc = hits[0]
         by.setdefault(g['id'], []).append((sc[norm(g['home']['school'])], sc[norm(g['away']['school'])], c))
     new, conflicts = [], []
     for gid, L in by.items():
