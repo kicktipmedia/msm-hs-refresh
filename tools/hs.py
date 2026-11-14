@@ -47,24 +47,28 @@ def parse_ksl(page, url):
     A score split across two adjacent <strong> tags, with a trailing mascot, is one line.
     A line that is not a complete seeded score is skipped. 4A is ignored."""
     page = re.sub(r'</strong>\s*<strong>', ' ', page, flags=re.I)
-    out = []; cls = rnd = None
+    out = []; cls = rnd = None; cls_level = None
     for m in re.finditer(r'<h[23][^>]*>(.*?)</h[23]>|<strong>(.*?)</strong>', page, re.S | re.I):
         t = _plain(m.group(1) if m.group(1) is not None else m.group(2))
         if m.group(1) is not None:
-            is_h2 = m.group(0)[1:3].lower() == 'h2'
+            level = int(m.group(0)[2])  # h2 -> 2, h3 -> 3; a lower number outranks
             h = _CLASS.match(t)
             if h:
                 c, r = h.group(1).upper(), ROUNDMAP.get(norm(h.group(2)))
-                cls, rnd = (c, r) if c in COVERED and r else (None, None)
+                if c in COVERED and r:
+                    cls, rnd, cls_level = c, r, level
+                else:
+                    cls = rnd = cls_level = None
                 continue
             s = _SCORE.match(t) if cls and rnd else None
             if s:
                 out.append(_score_row(cls, rnd, s, url))
                 continue
-            # A bad h3 inside the current class must not drop the scores that follow.
-            # A new h2 that is not a class heading ends the section.
-            if is_h2:
-                cls = rnd = None
+            # A heading that is not a class and not a score ends the section when it is
+            # at the class heading's level or higher. A lower heading (h3 under an h2
+            # class) does not, so one bad h3 does not drop the rest of that class.
+            if cls_level is not None and level <= cls_level:
+                cls = rnd = cls_level = None
             continue
         if not cls or not rnd:
             continue
@@ -82,11 +86,14 @@ def _catalog(sched):
                 names.append(t['school'])
     return names
 def _label_hits(label, school, protected):
-    """Exact school, or school plus one trailing mascot word. Never a prefix guess."""
+    """Exact school, or school plus one trailing mascot word. Never a prefix guess.
+    norm() drops digits, so a trailing number is rejected before that comparison."""
     label = ' '.join(str(label).split())
+    parts = label.split()
+    if len(parts) >= 2 and re.fullmatch(r"[A-Za-z][A-Za-z'’.\-]*", parts[-1]) is None:
+        return [p.lower() for p in parts] == [p.lower() for p in str(school).split()]
     if norm(label) == norm(school):
         return True
-    parts = label.split()
     if len(parts) < 2 or parts[-1].lower() in protected:
         return False
     return norm(' '.join(parts[:-1])) == norm(school)

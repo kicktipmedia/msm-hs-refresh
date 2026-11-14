@@ -185,6 +185,19 @@ kept_class = """<h2>Class 6A finals</h2>
 <p><strong>No. 3 Corner Canyon 10, No. 1 Skyridge 14.</strong></p>"""
 kept_rows = hs.parse_ksl(kept_class, "fixture://keep-class")
 assert [(r["a_score"], r["b_score"]) for r in kept_rows] == [(21, 17), (10, 14)], kept_rows
+stale = "<h3>Class 6A — Final</h3><h3>Season series</h3><strong>No. 1 Skyridge 28, No. 3 Corner Canyon 14</strong>"
+assert hs.parse_ksl(stale, "fixture://season-series") == []
+digit_pages = [
+    "<h3>Class 6A — Final</h3><p><strong>No. 1 Skyridge 3 5, No. 3 Corner Canyon 34</strong></p>",
+    "<h3>Class 6A — Final</h3><p><strong>No. 1 Skyridge 21, No. 3 Corner Canyon 1 7</strong></p>",
+]
+for page in digit_pages:
+    rows = hs.parse_ksl(page, "fixture://digit-mascot")
+    assert len(rows) == 1, rows
+    newD, confD, unD = hs.merge(sched, scores, rows, "2026-11-21")
+    assert newD == [] and confD == [] and len(unD) == 1, (page, newD, confD, unD)
+assert hs.parse_ksl(digit_pages[0], "fixture://digit-mascot")[0]["a_score"] == 5
+assert hs.parse_ksl(digit_pages[1], "fixture://digit-mascot")[0]["b_score"] == 7
 code, msg = classify(401, '{"success":false,"errors":[{"code":9109,"message":"Invalid access token"}]}')
 assert code == 1 and "CLOUDFLARE_API_TOKEN is invalid" in msg and "9109" in msg and "Bearer" not in msg
 active = '{"success":true,"result":{"status":"active"},"errors":[]}'
