@@ -332,6 +332,12 @@ def hub_aid(g, current=None):
         return f'hs-{slug(g["home"]["school"])}'
     return None
 
+CD_BLOCK = re.compile(r'<div class="cd"[^>]*>(?:<div\b[^>]*>(?:(?!</?div\b).)*</div>)*</div>', re.S)
+
+def div_balance(s):
+    """Open <div> count minus </div> count; 0 for a well-formed card."""
+    return len(re.findall(r'<div\b', s)) - s.count('</div>')
+
 def p_hub(s, G, fin, pend, today=None):
     """Patch hub cards. Default: current round only (Creative). HUB_INCLUDE_LATER_ROUNDS=1 patches all present."""
     n = 0
@@ -367,7 +373,11 @@ def p_hub(s, G, fin, pend, today=None):
             if w not in ab: continue
             cd = f'<div class="cd" aria-label="{html.escape(w)} advanced; final score pending"><div class="lbl"><i>FINAL</i></div><div><b>{ab[w]}</b><i>ADVANCES</i></div><div><b>&ndash;</b><i>SCORE</i></div><div><b>&ndash;</b><i>PENDING</i></div></div>'
             note = f'<p class="hsn">{html.escape(w)} advanced. We post the final score once sources agree.</p>'
-        a = re.sub(r'<div class="cd".*?</div>(?=</div>)', cd, a, count=1)
+        # Replace the whole countdown block: its child divs hold no nested divs, so match
+        # each child through its own </div> and then the block's closing </div>.
+        # (The old lazy '.*?</div>(?=</div>)' stopped one </div> short and left a stray
+        # closing tag per final card, which broke the card wrapper at 320px.)
+        a = CD_BLOCK.sub(lambda _m: cd, a, count=1)
         a = re.sub(r'<div class="tix".*?</div><p class="hsw">.*?</p>', '', a, count=1)
         a = re.sub(r'<p class="hsn">.*?</p>', note, a, count=1)
         s = s[:i] + a + s[j:]; n += 1

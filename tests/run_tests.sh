@@ -282,4 +282,40 @@ assert rows == [], rows
 print("ok")
 PY
 check "unparsed score heading at the class level yields no rows" "[ \$(cat $OUT/d1d.rc) = 0 ]"
+# C1 card tag balance: the final-score swap must replace the whole countdown block.
+# Old regex '<div class="cd".*?</div>(?=</div>)' left one stray </div> per final card
+# (Nov 13 and Nov 21 verify fails: 6A cards escaped .c1w, 21px overflow at 320).
+python3 - << PY > "$OUT/c1.out" 2> "$OUT/c1.err"; echo $? > "$OUT/c1.rc"
+import re, sys
+sys.path.insert(0, "$ROOT/tools")
+import hs
+s = open("$ROOT/tests/fixtures/posted_r1_hs_index.html", encoding="utf-8").read()
+cd = '<div class="cd" aria-label="Final: A 21, B 28"><div class="lbl"><i>FINAL</i></div><div><b>21</b><i>A</i></div><div><b>28</b><i>B</i></div><div><b>B</b><i>WINS</i></div></div>'
+arts = [s[m.start():s.find('</article>', m.start()) + 10] for m in re.finditer(r'<article\b', s)]
+arts = [a for a in arts if '<div class="cd"' in a]
+assert arts, "no countdown cards in fixture"
+for a in arts:
+    assert hs.div_balance(a) == 0, ("fixture card unbalanced", a[:80])
+    new = hs.CD_BLOCK.sub(lambda _m: cd, a, count=1)
+    assert new != a and hs.div_balance(new) == 0, ("swap unbalanced", new[:200])
+    old = re.sub(r'<div class="cd".*?</div>(?=</div>)', cd, a, count=1)
+    assert hs.div_balance(old) == -1, "old-regex guard: test would not catch the bug"
+print("ok", len(arts))
+PY
+check "C1 final-score swap keeps every card's div tags balanced" "[ \$(cat $OUT/c1.rc) = 0 ]"
+# C2 patched output never changes a card's tag balance (T3 tree vs site/)
+python3 - << PY > "$OUT/c2.out" 2> "$OUT/c2.err"; echo $? > "$OUT/c2.rc"
+import re, sys, os
+sys.path.insert(0, "$ROOT/tools")
+import hs
+def cards(p):
+    s = open(p, encoding="utf-8").read()
+    return {re.search(r'id="([^"]+)"', s[m.start():m.start()+200]).group(1): hs.div_balance(s[m.start():s.find('</article>', m.start())]) for m in re.finditer(r'<article id=', s)}
+for f in hs.PAGES:
+    a = cards(os.path.join("$ROOT/site", f)); b = cards(os.path.join("$OUT/t3_newfinal/out", f))
+    for k, v in b.items():
+        assert v == a.get(k, 0), (f, k, a.get(k), v)
+print("ok")
+PY
+check "C2 patched HS pages keep per-card div balance" "[ \$(cat $OUT/c2.rc) = 0 ]"
 exit $fail
