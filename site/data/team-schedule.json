@@ -62,10 +62,9 @@
     "iso": "2026-11-28",
     "date": "Sat Nov 28",
     "ha": "vs",
-    "opp": "TBA",
-    "time": null,
-    "tv": null,
-    "label": "Flex game (opponent TBA)",
+    "opp": "Texas State",
+    "time": "7:30 PM MT",
+    "tv": "USA Network",
     "site": "Logan"
    },
    {
@@ -149,7 +148,8 @@
    "2026-10-24",
    "2026-10-31",
    "2026-11-07",
-   "2026-11-14"
+   "2026-11-14",
+   "2026-11-21"
   ],
   "weber": [
    "2026-08-28",
