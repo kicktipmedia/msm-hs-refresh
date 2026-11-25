@@ -216,7 +216,8 @@ def ticker_items(G, fin, pend, winner, today, tab):
             h, v = g['home']['school'], g['away']['school']
             sep = 'at' if g['round'] == 'QF' else 'vs.'
             pair = f'{html.escape(v)} at {html.escape(h)}' if sep == 'at' else f'{html.escape(h)} vs. {html.escape(v)}'
-            out.append(f'<span data-kt="{kt(g["date"], g["kickoff"])}"><b>{dfmt(g["date"])}</b> · <a class="tml"{ti} href="/high-school/#hs-{slug(h)}">{k} {ab[g["round"]]}: {pair}</a> · {tfmt(g["kickoff"])}</span>')
+            aid = hub_aid(g, current=None) or f"hs-{slug(h)}"
+            out.append(f'<span data-kt="{kt(g["date"], g["kickoff"])}"><b>{dfmt(g["date"])}</b> · <a class="tml"{ti} href="/high-school/#{aid}">{k} {ab[g["round"]]}: {pair}</a> · {tfmt(g["kickoff"])}</span>')
     order = ['R1', 'QF', 'SF', 'F']
     for k in ('6A', '5A'):
         done = [g for g in G.values() if g['cls'] == k and (g['id'] in fin or g['id'] in pend)]
@@ -560,14 +561,174 @@ def p_hub(s, G, fin, pend, today=None):
         s = s[:i] + a + s[j:]; n += 1
     return s, n
 
+
+# Later-pass hub polish (names, hash nav, leftover QF anchors). Kept in the
+# generator so a cron run cannot drop the CSS or restore dead R1/QF hrefs.
+POLISH_STYLE_ID = 'hs-polish'
+POLISH_CSS = (
+    # Full school names wrap on narrow hub cards (320–390) instead of ellipsizing.
+    '.hs .c1w .mx .team .nm{white-space:normal;overflow:visible;text-overflow:clip;'
+    'overflow-wrap:break-word;line-height:1.15;min-width:0;max-width:100%}'
+    # Sticky .top header (~67px phone, ~79px desktop) must not cover a 6A/5A
+    # heading, tab, or card when the page jumps to a hash.
+    '.hs #hub-6a,.hs #hub-5a,.hs #hs-6a-final,.hs #hs-5a-final,'
+    '.hs .hstabs,.hs #hubt-6a,.hs #hubt-5a,'
+    '.hs #st-6a,.hs #st-5a,.hs #stt-6a,.hs #stt-5a,'
+    '.hs [id="6a"],.hs [id="5a"],.hs .hs-frag{scroll-margin-top:96px}'
+    # UP NEXT pill: opaque left mask so mid-scroll ticker text cannot show
+    # under the tab (the "6" of "6A" was readable as a lone "A").
+    'html body .ticker[data-lvl=hs]>.tkmask{position:absolute;z-index:1;left:0;top:0;bottom:0;width:90px;'
+    'background:#fff;pointer-events:none}'
+)
+
+def p_polish(s):
+    """Inject or refresh the later-pass style block on an HS page."""
+    style = f'<style id="{POLISH_STYLE_ID}">{POLISH_CSS}</style>'
+    s2, n = re.subn(r'<style id="%s"[^>]*>.*?</style>' % POLISH_STYLE_ID, style, s, count=1, flags=re.S)
+    if n:
+        return s2, s2 != s
+    if '</head>' in s:
+        return s.replace('</head>', style + '\n</head>', 1), True
+    return s, False
+
+def p_ticker_mask(s):
+    """Add a left-edge mask sibling inside the HS ticker, once."""
+    if re.search(r'class="tkmask"', s):
+        return s, False
+    s2, n = re.subn(
+        r'(<div class="ticker"[^>]*data-lvl="hs"[^>]*>)',
+        r'\1<span class="tkmask" aria-hidden="true"></span>',
+        s, count=1)
+    return s2, bool(n)
+
+def hub_slug_targets(G, fin, pend, today):
+    """Map a school slug to a live hub hash (current-round card, else class section)."""
+    cur = current_hub_round(G, fin, pend, today)
+    m = {}
+    for g in G.values():
+        for side in ('home', 'away'):
+            t = g.get(side)
+            if t:
+                m[slug(t['school'])] = f'hub-{g["cls"].lower()}'
+    for g in G.values():
+        if g.get('round') != cur:
+            continue
+        aid = hub_aid(g, current=None)
+        if not aid:
+            continue
+        for side in ('home', 'away'):
+            t = g.get(side)
+            if t:
+                m[slug(t['school'])] = aid
+    return m
+
+def p_hub_hrefs(s, G, fin, pend, today):
+    """Point leftover /high-school/#hs-<school> links at ids that exist on the hub."""
+    targets = hub_slug_targets(G, fin, pend, today)
+    live = set(targets.values()) | {'hs-6a-final', 'hs-5a-final', 'hub-6a', 'hub-5a', '6a', '5a'}
+    def repl(mm):
+        sl = mm.group(2)
+        if sl in live or sl.endswith('-final'):
+            return mm.group(0)
+        dest = targets.get(sl)
+        if dest:
+            return f'href="{mm.group(1)}#{dest}"'
+        return mm.group(0)
+    return re.subn(r'href="(/high-school/?)#hs-([a-z0-9-]+)"', repl, s)
+
+HASHNAV_OLD = "var h=location.hash.slice(1).toLowerCase();show(h==='5a'?'5a':'6a',false)})();"
+HASHNAV_NEW = (
+    "function tabOf(h){h=(h||'').replace(/^#/,'').toLowerCase();"
+    "return /(?:^|-)5a(?:-|$)/.test(h)?'5a':'6a'}"
+    "function goHash(){var raw=location.hash.slice(1),k=tabOf(raw);show(k,false);"
+    "var el=raw&&document.getElementById(raw);if(el)el.scrollIntoView({block:'start',behavior:'auto'})}"
+    "goHash();addEventListener('hashchange',goHash)})();"
+)
+
+def p_hashnav(s):
+    """Select the 5A tab for #hs-5a-final / #hub-5a / #5a, then honor scroll-margin."""
+    if HASHNAV_NEW in s:
+        return s, False
+    if HASHNAV_OLD in s:
+        return s.replace(HASHNAV_OLD, HASHNAV_NEW, 1), True
+    return s, False
+
+def p_standings_frag_ids(s):
+    """Give ?view=bracket#6a / #5a a real id on the standings panels."""
+    n = 0
+    for cls in ('6a', '5a'):
+        if re.search(r'\bid="%s"' % cls, s):
+            continue
+        s2, c = re.subn(
+            r'(<section class="hsp" id="st-%s"[^>]*>)' % cls,
+            r'\1<span id="%s" class="hs-frag" aria-hidden="true"></span>' % cls,
+            s, count=1)
+        if c:
+            s = s2
+            n += 1
+    return s, n
+
+def hs_inpage_ids(html):
+    return set(re.findall(r'\bid="([^"]+)"', html))
+
+def unresolved_hs_hashes(pages):
+    """pages: dict of url path -> html. Returns leftover in-site hashes that do not resolve."""
+    # tab hashes 6a/5a count as resolved when the id exists (p_standings_frag_ids).
+    missing = []
+    for src, html in pages.items():
+        for href in re.findall(r'href="([^"]*#[^"]+)"', html):
+            if href.startswith('http') and 'mtnsportsmedia.com' not in href and 'ksl.com' not in href and 'google.com' not in href:
+                continue
+            if href.startswith('https://') and '/high-school' not in href:
+                continue
+            if '#' not in href:
+                continue
+            path, frag = href.split('#', 1)
+            path = path.split('?')[0]
+            if href.startswith('#'):
+                dest = src
+                frag = href[1:]
+            elif path.startswith('/high-school') or path == '':
+                if path in ('', '/high-school', '/high-school/'):
+                    dest = 'high-school/index.html'
+                elif path.rstrip('/').endswith('standings'):
+                    dest = 'high-school/standings/index.html'
+                elif path.rstrip('/').endswith('recruiting'):
+                    dest = 'high-school/recruiting/index.html'
+                else:
+                    dest = path.lstrip('/')
+                    if dest.endswith('/'):
+                        dest += 'index.html'
+                frag = frag
+            else:
+                continue
+            if frag.startswith('wx-'):
+                continue  # svg sprites on the same page
+            html_dest = pages.get(dest)
+            if html_dest is None:
+                missing.append((src, href, 'no-page'))
+                continue
+            if frag not in hs_inpage_ids(html_dest):
+                missing.append((src, href, frag))
+    return missing
+
 PAGES = ['high-school/index.html', 'high-school/standings/index.html', 'high-school/recruiting/index.html']
 def patch_site(root, sched, scores, today):
     G, fin, pend, winner = resolve(sched, scores); rep = {}
     for f in PAGES:
         p = f'{root}/{f}'; s0 = s = open(p, encoding='utf-8').read()
         s = p_ticker(s, G, fin, pend, winner, today)
+        s, _ = p_ticker_mask(s)
+        s, _ = p_polish(s)
+        s, _ = p_hashnav(s)
+        s, n_href = p_hub_hrefs(s, G, fin, pend, today)
         if f == PAGES[0]: s, rep['hub'] = p_hub(s, G, fin, pend, today)
-        if f == PAGES[1]: s, rep['bracket'] = p_bracket(s, G, fin, pend)
+        if f == PAGES[1]:
+            s, _ = p_standings_frag_ids(s)
+            s, rep['bracket'] = p_bracket(s, G, fin, pend)
         if s != s0: open(p, 'w', encoding='utf-8').write(s)
         rep[f] = s != s0
+        if n_href:
+            rep.setdefault('hrefs', 0)
+            rep['hrefs'] += n_href
     return rep

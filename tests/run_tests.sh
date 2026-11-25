@@ -212,7 +212,7 @@ assert "<span class=\"tkh\"></span>" not in filled
 
 # Hub shows state-final .c1w cards (not quarterfinals) once 6A-F and 5A-F are sourced.
 # A second pass is a no-op, so a later cron run cannot revert the cards.
-hub_src = open("$ROOT/site/high-school/index.html", encoding="utf-8").read()
+hub_src = open("$ROOT/tests/fixtures/posted_qf_hs_index.html", encoding="utf-8").read()
 assert "hs-skyridge" in hub_src and "6A <em>quarterfinals</em>" in hub_src
 G_h, fin_h, pend_h, _ = hs.resolve(sched, scores_live)
 assert hs.current_hub_round(G_h, fin_h, pend_h, "2026-11-25") == "F"
@@ -394,4 +394,8 @@ for f in hs.PAGES:
 print("ok")
 PY
 check "C2 patched HS pages keep per-card div balance" "[ \$(cat $OUT/c2.rc) = 0 ]"
+
+# Hub polish: name wrap CSS, hash nav, leftover QF hrefs resolve, second pass no-op.
+python3 "$ROOT/tests/hspolish_check.py" "$ROOT" > "$OUT/hspolish.out" 2> "$OUT/hspolish.err"; echo $? > "$OUT/hspolish.rc"
+check "HS polish: name wrap CSS, in-site hashes resolve, tab JS, second pass no-op" "[ \$(cat $OUT/hspolish.rc) = 0 ]"
 exit $fail
