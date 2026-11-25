@@ -34,12 +34,19 @@ run t2_window --event schedule --now 2026-10-31T12:00:00-06:00
 check "T2 schedule outside window skips before fetch" "grep -q skip-window $OUT/t2_window/report.json"
 # T3 new final: synthetic unrecorded state final. Semifinals are already in
 # data/hs_scores.json, so an SF fixture would conflict instead of patch.
-run t3_newfinal --fixture "$ROOT/tests/fixtures/sf_final.html" --now 2026-11-07T07:05:00-07:00
+# Drop already-recorded state finals from the throwaway scores so 21-17 still publishes
+# (live data/hs_scores.json now has the Nov 20 6A/5A finals).
+copy t3_newfinal
+python3 -c "import json;p='$OUT/t3_newfinal/data/hs_scores.json';d=json.load(open(p));d['finals']=[f for f in d['finals'] if f.get('rid')!='F'];json.dump(d,open(p,'w'),indent=1)"
+python3 "$ROOT/tools/run.py" --root "$OUT/t3_newfinal" --fixture "$ROOT/tests/fixtures/sf_final.html" --now 2026-11-07T07:05:00-07:00 --event dispatch --target none > "$OUT/t3_newfinal.log" 2>&1; echo $? > "$OUT/t3_newfinal.rc"
 check "T3 new final patches only high-school/*" "python3 -c \"import json;r=json.load(open('$OUT/t3_newfinal/report.json'));c=r['changed'];assert r['status']=='dry-run' and c and all(x.startswith('high-school/') for x in c),r\""
 diff -ru "$ROOT/site" "$OUT/t3_newfinal/out" > "$OUT/t3_newfinal.diff"
 check "T3 synthetic 6A final Skyridge 21-17 in bracket + ticker" "grep -q 'Skyridge 21' $OUT/t3_newfinal.diff && grep -q 'Corner Canyon 17' $OUT/t3_newfinal.diff"
-# T4 conflict fixture
-run t4_conflict --fixture "$ROOT/tests/fixtures/conflict_a.html" --fixture "$ROOT/tests/fixtures/conflict_b.html" --now 2026-11-07T07:05:00-07:00
+# T4 conflict fixture. Strip recorded state finals so the 5A-F conflict still has
+# nothing posted, matching the original assertion.
+copy t4_conflict
+python3 -c "import json;p='$OUT/t4_conflict/data/hs_scores.json';d=json.load(open(p));d['finals']=[f for f in d['finals'] if f.get('rid')!='F'];json.dump(d,open(p,'w'),indent=1)"
+python3 "$ROOT/tools/run.py" --root "$OUT/t4_conflict" --fixture "$ROOT/tests/fixtures/conflict_a.html" --fixture "$ROOT/tests/fixtures/conflict_b.html" --now 2026-11-07T07:05:00-07:00 --event dispatch --target none > "$OUT/t4_conflict.log" 2>&1; echo $? > "$OUT/t4_conflict.rc"
 check "T4 conflict -> pending + issue, no score published" "python3 -c \"import json;r=json.load(open('$OUT/t4_conflict/report.json'));s=json.load(open('$OUT/t4_conflict/data/hs_scores.json'));assert any(i['title'].startswith('HS pending: 5A-F') for i in r['issues']);assert any(p.get('class')=='5A' and p.get('rid')=='F' for p in s['pending']);assert not any(f.get('rid')=='F' for f in s['finals'])\""
 check "T4 no conflict final score in output" "! diff -ru $ROOT/site $OUT/t4_conflict/out | grep -E '^\+.*(West 24|Orem 21|Orem 27)'"
 # --- B1/B2 (mocked Cloudflare/wrangler/fetch via HS_MOCK; never touches network deploy) ---
@@ -104,6 +111,9 @@ import hs
 from check_cf_token import classify, decide, judge, verify_urls
 sched = json.load(open("$ROOT/data/hs_schedule.json"))
 scores = json.load(open("$ROOT/data/hs_scores.json"))
+# This block still covers "finals style parses as new rows." Live data now has 6A-F/5A-F,
+# so drop those posted finals here; scores_live below keeps them for the no-op / hub path.
+scores["finals"] = [f for f in scores["finals"] if f.get("rid") != "F"]
 pages = [
     ("$ROOT/tests/fixtures/ksl_578933_6a_sf.html", "https://sports.ksl.com/prep/6a-4a-semifinals-recap/578933"),
     ("$ROOT/tests/fixtures/ksl_578934_5a_sf.html", "https://sports.ksl.com/prep/uhsaa-playoffs-4a-5a-recap/578934"),
@@ -186,23 +196,42 @@ assert [(r["cls"], r["round"], r["a"], r["a_score"], r["b"], r["b_score"]) for r
 ], ch_rows
 scores_live = json.load(open("$ROOT/data/hs_scores.json", encoding="utf-8"))
 newC, confC, unC = hs.merge(sched, scores_live, ch_rows, "2026-11-25")
-assert confC == [] and unC == [] and len(newC) == 2, (newC, confC, unC)
-assert {(n["class"], n["home"], n["home_score"], n["away"], n["away_score"]) for n in newC} == {
-    ("5A", "West", 30, "Orem", 21),
-    ("6A", "Skyridge", 44, "Corner Canyon", 45),
-}, newC
+assert newC == [] and confC == [] and unC == [], (newC, confC, unC)
 
 empty_tk = '<div class="ticker" data-lvl="hs"><div><span class="tkh"></span><span class="tkh" aria-hidden="true"></span></div><template class="tkf"></template></div>'
-# reuse championship rows already merged into a throwaway scores copy
+# live scores already include the posted 6A-F / 5A-F rows
 sc_tk = json.load(open("$ROOT/data/hs_scores.json", encoding="utf-8"))
-for n in newC:
-    sc_tk["finals"].append(n)
 G_tk, fin_tk, pend_tk, win_tk = hs.resolve(sched, sc_tk)
 filled = hs.p_ticker(empty_tk, G_tk, fin_tk, pend_tk, win_tk, "2026-11-25")
 assert "West 30, Orem 21" in filled and "Corner Canyon 45, Skyridge 44" in filled, filled
 assert filled.count("data-kt") >= 4, filled  # two finals x two .tkh copies
+assert "/high-school/#hs-6a-final" in filled and "/high-school/#hs-5a-final" in filled, filled
+assert "/high-school/#hs-corner-canyon" not in filled and "/high-school/#hs-west" not in filled, filled
 assert "tabindex=\"-1\"" in filled
 assert "<span class=\"tkh\"></span>" not in filled
+
+# Hub shows state-final .c1w cards (not quarterfinals) once 6A-F and 5A-F are sourced.
+# A second pass is a no-op, so a later cron run cannot revert the cards.
+hub_src = open("$ROOT/site/high-school/index.html", encoding="utf-8").read()
+assert "hs-skyridge" in hub_src and "6A <em>quarterfinals</em>" in hub_src
+G_h, fin_h, pend_h, _ = hs.resolve(sched, scores_live)
+assert hs.current_hub_round(G_h, fin_h, pend_h, "2026-11-25") == "F"
+hub2, n_hub = hs.p_hub(hub_src, G_h, fin_h, pend_h, "2026-11-25")
+hub3, n_hub2 = hs.p_hub(hub2, G_h, fin_h, pend_h, "2026-11-25")
+assert n_hub == 2 and hub3 == hub2, (n_hub, n_hub2, hub3 == hub2)
+assert "hs-6a-final" in hub2 and "hs-5a-final" in hub2
+assert '<article id="hs-skyridge"' not in hub2 and '<article id="hs-west"' not in hub2
+assert "6A <em>quarterfinals</em>" not in hub2 and "5A <em>quarterfinals</em>" not in hub2
+assert "6A <em>state final</em>" in hub2 and "5A <em>state final</em>" in hub2
+assert "UHSAA state playoffs · State finals Fri Nov 20" in hub2
+assert "Corner Canyon 45, Skyridge 44" in hub2 and "West 30, Orem 21" in hub2
+assert "https://sports.ksl.com/prep/championship-football-friday/579084" in hub2
+assert "Rice-Eccles Stadium" in hub2 and "2:30 PM MT" in hub2 and "11:00 AM MT" in hub2
+for aid in ("hs-6a-final", "hs-5a-final"):
+    i = hub2.find(f'<article id="{aid}"')
+    a = hub2[i:hub2.find("</article>", i)+10]
+    assert hs.div_balance(a) == 0, (aid, hs.div_balance(a), a[:120])
+    assert "quarterfinals" not in a.lower()
 local = b'<p>Email <a href="mailto:huddle@mtnsportsmedia.com">huddle@mtnsportsmedia.com</a> thanks.</p>'
 remote = b'<p>Email <a href="/cdn-cgi/l/email-protection#abc" class="__cf_email__" data-cfemail="abc">[email&#160;protected]</a><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> thanks.</p>'
 remote2 = b'<p>Email <a class="__cf_email__" data-cfemail="abc" href="/cdn-cgi/l/email-protection">[email&#160;protected]</a> thanks.</p>'
