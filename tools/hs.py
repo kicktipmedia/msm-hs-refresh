@@ -228,7 +228,8 @@ def ticker_items(G, fin, pend, winner, today, tab):
         if exp[:10] < today: continue  # expired results are not re-emitted
         for g in sorted([g for g in done if order.index(g['round']) == last], key=lambda g: g['n']):
             if g['id'] not in fin and not pend[g['id']].get('winner'): continue  # unresolved: nothing published
-            anchor = f"hs-{slug(g['home']['school'] if g['round'] in ('R1','QF') else winner(g['id'])['school'])}"
+            # Final / SF cards use stable round ids (hs-6a-final), not the winner's QF slug
+            anchor = hub_aid(g, current=None) or f"hs-{slug(g['home']['school'] if g['round'] in ('R1','QF') else winner(g['id'])['school'])}"
             if g['id'] in fin:
                 f = fin[g['id']]; w = f['home'] if f['home_score'] > f['away_score'] else f['away']; l = f['away'] if w == f['home'] else f['home']
                 out.append(f'<span data-kt="{exp}"><b>{k} {LB[g['round']]}</b> · <a class="tml"{ti} href="/high-school/#{anchor}">{html.escape(w)} {max(f["home_score"], f["away_score"])}, {html.escape(l)} {min(f["home_score"], f["away_score"])}</a></span>')
@@ -353,10 +354,171 @@ def div_balance(s):
     """Open <div> count minus </div> count; 0 for a well-formed card."""
     return len(re.findall(r'<div\b', s)) - s.count('</div>')
 
+# Presentation for hub cards. Colors are the same approximations already used on the QF cards
+# (UHSAA-listed color names). Rice-Eccles lat/lon match the stadium cards on the live site.
+RICE_ECCLES = {
+    'name': 'Rice-Eccles Stadium',
+    'sub': 'University of Utah, Salt Lake City',
+    'maps': 'https://www.google.com/maps/search/?api=1&query=Rice-Eccles+Stadium%2C+University+of+Utah%2C+Salt+Lake+City%2C+UT',
+    'venue': 'rice-eccles', 'lat': '40.76', 'lon': '-111.8489',
+}
+# tb, jersey color, ink, bar accent — used when a school is not already on the hub page
+HUB_TEAM = {
+    'Skyridge':      ('SKY', '#6E7681', '#FFFFFF', '#CC5500'),
+    'Corner Canyon': ('CC',  '#1B2A4A', '#FFFFFF', '#A7A9AC'),
+    'West':          ('WST', '#D0202E', '#FFFFFF', '#111111'),
+    'Orem':          ('ORE', '#2251C2', '#FFFFFF', '#C99700'),
+}
+_WX = ('<span class="wx" data-wx-state="hidden" data-venue="{venue}" data-lat="{lat}" data-lon="{lon}" '
+       'title="Kickoff forecast (National Weather Service)"><svg role="img" aria-label=""><use href="#wx-sun"/>'
+       '</svg><span class="t"></span></span>')
+
+def _hub_team(page, school):
+    """Abbrev + colors from an existing hub card, else HUB_TEAM, else initials."""
+    for m in re.finditer(
+        r'<div class="team (away|home)" style="--accent:([^"]+)">(?:(?!</div>).)*?'
+        r'<span class="tb">([^<]+)</span><span class="nm">([^<]+)</span>',
+        page, re.S):
+        if html.unescape(m.group(4)) != school:
+            continue
+        side, accent, tb = m.group(1), m.group(2), html.unescape(m.group(3))
+        # nearest article opening style before this team block
+        head = page.rfind('<article ', 0, m.start())
+        sm = re.search(r'style="([^"]*)"', page[head:m.start()]) if head >= 0 else None
+        color = ink = None
+        if sm:
+            st = sm.group(1)
+            color = re.search(rf'--{side}-color:([^;"]+)', st)
+            ink = re.search(rf'--{side}-ink:([^;"]+)', st)
+            color = color.group(1) if color else None
+            ink = ink.group(1) if ink else None
+        fb = HUB_TEAM.get(school, (tb, '#000E28', '#FFFFFF', accent))
+        return tb, color or fb[1], ink or fb[2], accent or fb[3]
+    fb = HUB_TEAM.get(school)
+    if fb:
+        return fb
+    initials = ''.join(w[0] for w in school.split() if w)[:3].upper() or 'TBD'
+    return initials, '#000E28', '#FFFFFF', '#000E28'
+
+def _hub_kick_label(rnd, G):
+    lab = {'R1': 'First round', 'QF': 'Quarterfinals', 'SF': 'Semifinals', 'F': 'State finals'}[rnd]
+    games = [g for g in G.values() if g['round'] == rnd]
+    if not games:
+        return f'UHSAA state playoffs · {lab}'
+    d = min(g['date'] for g in games)
+    return f'UHSAA state playoffs · {lab} {dfmt(d)}'
+
+def render_hub_card(page, g, fin, pend):
+    """One .card.mx.c1 article for a hub game, same layout as the existing QF cards."""
+    if not g.get('home') or not g.get('away'):
+        return None
+    home, away = g['home'], g['away']
+    ht = _hub_team(page, home['school']); at = _hub_team(page, away['school'])
+    aid = hub_aid(g, current=None)
+    if not aid:
+        return None
+    rnd_lab = {'R1': 'First round', 'QF': 'Quarterfinals', 'SF': 'Semifinals', 'F': 'State final'}[g['round']]
+    strip = f"{g['cls']} · {rnd_lab}" + (f" · Game {g['n']}" if g['round'] != 'F' else '')
+    aria = f"{g['cls']} {rnd_lab.lower()}: No. {away['seed']} {away['school']} at No. {home['seed']} {home['school']}"
+    venue = RICE_ECCLES if g['round'] in ('SF', 'F') else None
+    if venue:
+        where = (f'<div class="where"><b><a href="{html.escape(venue["maps"])}" target="_blank" rel="noopener">'
+                 f'{html.escape(venue["name"])}</a></b><br>{html.escape(venue["sub"])}</div>')
+        wx = _WX.format(**venue)
+    else:
+        where = '<div class="where"></div>'
+        wx = _WX.format(venue=f"hs-{slug(home['school'])}", lat='', lon='')
+    iso = kt(g['date'], g.get('kickoff') or '18:00')
+    fid = g['id']
+    f = fin.get(fid); p = pend.get(fid)
+    def team_div(side, team, look):
+        tb, color, ink, accent = look
+        ha = 'HOME' if side == 'home' else 'AWAY'
+        return (f'<div class="team {side}" style="--accent:{html.escape(accent)}"><span class="ha">{ha}</span>'
+                f'<span class="sd">NO. {int(team["seed"])}</span><span class="tb">{html.escape(tb)}</span>'
+                f'<span class="nm">{html.escape(team["school"])}</span><span class="bar"></span></div>')
+    match = (f'<div class="match">{team_div("away", away, at)}<span class="at">@</span>'
+             f'{team_div("home", home, ht)}</div>')
+    art_style = (f'--away-color:{html.escape(at[1])};--away-ink:{html.escape(at[2])};'
+                 f'--home-color:{html.escape(ht[1])};--home-ink:{html.escape(ht[2])}')
+    if f:
+        hs, as_ = f['home_score'], f['away_score']
+        w = f['home'] if hs > as_ else f['away']
+        ab_h, ab_a = ht[0], at[0]
+        ab_w = ab_h if w == f['home'] else ab_a
+        loser = f['away'] if w == f['home'] else f['home']
+        cd = (f'<div class="cd" aria-label="Final: {html.escape(f["away"])} {as_}, {html.escape(f["home"])} {hs}">'
+              f'<div class="lbl"><i>FINAL</i></div><div><b>{as_}</b><i>{html.escape(ab_a)}</i></div>'
+              f'<div><b>{hs}</b><i>{html.escape(ab_h)}</i></div><div><b>{html.escape(ab_w)}</b><i>WINS</i></div></div>')
+        src_name = html.escape(f['source'].split(' (')[0].split(',')[0])
+        note = (f'<p class="hsn">Final: {html.escape(w)} {max(hs, as_)}, {html.escape(loser)} {min(hs, as_)}. '
+                f'Source: <a href="{html.escape(f["source_url"])}" rel="noopener">{src_name}</a>.</p>')
+        state, when = 'final', f'FINAL · {dfmt(g["date"]).upper()} · {tfmt(g.get("kickoff"))}'
+    elif p and p.get('winner'):
+        w = p['winner']
+        ab_w = ht[0] if w == home['school'] else at[0]
+        cd = (f'<div class="cd" aria-label="{html.escape(w)} advanced; final score pending">'
+              f'<div class="lbl"><i>FINAL</i></div><div><b>{html.escape(ab_w)}</b><i>ADVANCES</i></div>'
+              f'<div><b>&ndash;</b><i>SCORE</i></div><div><b>&ndash;</b><i>PENDING</i></div></div>')
+        note = f'<p class="hsn">{html.escape(w)} advanced. We post the final score once sources agree.</p>'
+        state, when = 'final', f'FINAL · {dfmt(g["date"]).upper()} · {tfmt(g.get("kickoff"))}'
+    else:
+        cd = ('<div class="cd" aria-label="Kickoff time"><div class="lbl"><i>KICKOFF<br>IN</i></div>'
+              '<div><b>&ndash;</b><i>DAYS</i></div><div><b>&ndash;</b><i>HRS</i></div>'
+              '<div><b>&ndash;</b><i>MIN</i></div></div>')
+        note = '<p class="hsn">Finals only. We post the score with a source once the game is final.</p>'
+        state, when = 'upcoming', f'{dfmt(g["date"]).upper()} · {tfmt(g.get("kickoff"))}'
+    return (
+        f'<article id="{html.escape(aid)}" class="card mx c1" data-theme="grey-mid" data-level="hs" '
+        f'data-game-state="{state}" data-kickoff="{html.escape(iso)}" style="{art_style}" '
+        f'aria-label="{html.escape(aria)}"><div class="strip"><span class="rnd">{html.escape(strip)}</span></div>'
+        f'<div class="inner"><div class="meta"><span class="when"><span class="kt">{html.escape(when)}</span></span>'
+        f'{wx}</div>{match}<div class="facts">{where}{cd}</div>{note}'
+        f'<div class="foot"><span class="brand">MTN SPORTS MEDIA</span></div></div></article>'
+    )
+
+def _set_hub_panel(s, cls, heading, cards_html):
+    """Replace the heading + .hsg.c1w grid inside #hub-6a / #hub-5a; leave the hsnote alone."""
+    mark = f'id="hub-{cls.lower()}"'
+    i = s.find(mark)
+    if i < 0:
+        return s, False
+    h2 = s.find('<h2 class="hsh">', i)
+    grid = s.find('<div class="hsg c1w">', h2 if h2 >= 0 else i)
+    note = s.find('<p class="hsnote">', grid if grid >= 0 else i)
+    if h2 < 0 or grid < 0 or note < 0 or not (i < h2 < grid < note):
+        return s, False
+    close = s.rfind('</div>', grid, note)
+    if close < 0:
+        return s, False
+    new = heading + '<div class="hsg c1w">' + cards_html + '</div>'
+    return s[:h2] + new + s[close + 6:], True
+
 def p_hub(s, G, fin, pend, today=None):
-    """Patch hub cards. Default: current round only (Creative). HUB_INCLUDE_LATER_ROUNDS=1 patches all present."""
+    """Patch hub cards. Default: current round only (Creative). When that round is the
+    state final and the live HTML still has quarterfinal cards, rewrite the .c1w grids
+    so a later cron run cannot revert them. HUB_INCLUDE_LATER_ROUNDS=1 patches all present."""
     n = 0
     cur = None if HUB_INCLUDE_LATER_ROUNDS else current_hub_round(G, fin, pend, today)
+    if cur == 'F':
+        for cls in ('6A', '5A'):
+            games = [g for g in G.values() if g['cls'] == cls and g['round'] == 'F']
+            cards = []
+            for g in sorted(games, key=lambda x: x['n']):
+                c = render_hub_card(s, g, fin, pend)
+                if c:
+                    cards.append(c); n += 1
+            if not cards:
+                continue
+            heading = f'<h2 class="hsh">{cls} <em>state final</em></h2>'
+            s, ok = _set_hub_panel(s, cls, heading, ''.join(cards))
+            if not ok:
+                continue
+        s2, k = re.subn(r'<span class="kick">[^<]*</span>',
+                         f'<span class="kick">{html.escape(_hub_kick_label("F", G))}</span>', s, count=1)
+        if k:
+            s = s2
+        return s, n
     for gid, g in G.items():
         aid = hub_aid(g, current=cur)
         if not aid: continue
