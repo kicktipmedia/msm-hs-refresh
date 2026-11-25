@@ -469,8 +469,11 @@ def render_hub_card(page, g, fin, pend):
               '<div><b>&ndash;</b><i>MIN</i></div></div>')
         note = '<p class="hsn">Finals only. We post the score with a source once the game is final.</p>'
         state, when = 'upcoming', f'{dfmt(g["date"]).upper()} · {tfmt(g.get("kickoff"))}'
+    # State-final hash target is a sentinel before the h2, so the heading
+    # stays clear of the sticky header. The article must not reuse that id.
+    id_attr = '' if g['round'] == 'F' else f'id="{html.escape(aid)}" '
     return (
-        f'<article id="{html.escape(aid)}" class="card mx c1" data-theme="grey-mid" data-level="hs" '
+        f'<article {id_attr}class="card mx c1" data-theme="grey-mid" data-level="hs" '
         f'data-game-state="{state}" data-kickoff="{html.escape(iso)}" style="{art_style}" '
         f'aria-label="{html.escape(aria)}"><div class="strip"><span class="rnd">{html.escape(strip)}</span></div>'
         f'<div class="inner"><div class="meta"><span class="when"><span class="kt">{html.escape(when)}</span></span>'
@@ -492,8 +495,13 @@ def _set_hub_panel(s, cls, heading, cards_html):
     close = s.rfind('</div>', grid, note)
     if close < 0:
         return s, False
+    # Include a previously injected jump sentinel so a second pass is a no-op.
+    start = h2
+    sent = s.rfind('<span ', i, h2)
+    if sent >= 0 and 'class="hs-jump"' in s[sent:h2] and 'id="hs-' in s[sent:h2]:
+        start = sent
     new = heading + '<div class="hsg c1w">' + cards_html + '</div>'
-    return s[:h2] + new + s[close + 6:], True
+    return s[:start] + new + s[close + 6:], True
 
 def p_hub(s, G, fin, pend, today=None):
     """Patch hub cards. Default: current round only (Creative). When that round is the
@@ -511,7 +519,10 @@ def p_hub(s, G, fin, pend, today=None):
                     cards.append(c); n += 1
             if not cards:
                 continue
-            heading = f'<h2 class="hsh">{cls} <em>state final</em></h2>'
+            heading = (
+                f'<span id="hs-{cls.lower()}-final" class="hs-jump" aria-hidden="true"></span>'
+                f'<h2 class="hsh">{cls} <em>state final</em></h2>'
+            )
             s, ok = _set_hub_panel(s, cls, heading, ''.join(cards))
             if not ok:
                 continue
@@ -571,14 +582,14 @@ POLISH_CSS = (
     'overflow-wrap:break-word;line-height:1.15;min-width:0;max-width:100%}'
     # Sticky .top header (~67px phone, ~79px desktop) must not cover a 6A/5A
     # heading, tab, or card when the page jumps to a hash.
-    '.hs #hub-6a,.hs #hub-5a,.hs #hs-6a-final,.hs #hs-5a-final,'
+    '.hs #hub-6a,.hs #hub-5a,.hs #hs-6a-final,.hs #hs-5a-final,.hs .hs-jump,'
     '.hs .hstabs,.hs #hubt-6a,.hs #hubt-5a,'
     '.hs #st-6a,.hs #st-5a,.hs #stt-6a,.hs #stt-5a,'
     '.hs [id="6a"],.hs [id="5a"],.hs .hs-frag{scroll-margin-top:96px}'
-    # UP NEXT pill: opaque left mask so mid-scroll ticker text cannot show
-    # under the tab (the "6" of "6A" was readable as a lone "A").
-    'html body .ticker[data-lvl=hs]>.tkmask{position:absolute;z-index:1;left:0;top:0;bottom:0;width:90px;'
-    'background:#fff;pointer-events:none}'
+    # UP NEXT pill mask: width matches the navy pill (~67px border-box), not the
+    # 84px text inset, and uses ticker navy so it cannot cover "6A STATE F".
+    'html body .ticker[data-lvl=hs]>.tkmask{position:absolute;z-index:1;left:0;top:0;bottom:0;width:67px;'
+    'background:#000e28;pointer-events:none}'
 )
 
 def p_polish(s):
@@ -623,18 +634,21 @@ def hub_slug_targets(G, fin, pend, today):
     return m
 
 def p_hub_hrefs(s, G, fin, pend, today):
-    """Point leftover /high-school/#hs-<school> links at ids that exist on the hub."""
+    """Retarget leftover hub anchors by the school named in the <a>, not the old href slug."""
     targets = hub_slug_targets(G, fin, pend, today)
-    live = set(targets.values()) | {'hs-6a-final', 'hs-5a-final', 'hub-6a', 'hub-5a', '6a', '5a'}
     def repl(mm):
-        sl = mm.group(2)
-        if sl in live or sl.endswith('-final'):
+        inner = mm.group('inner')
+        nm = re.search(r'<span class="nm">([^<]+)</span>', inner)
+        if not nm:
+            # Ticker lines have no .nm; leave their already-correct hashes alone.
             return mm.group(0)
-        dest = targets.get(sl)
-        if dest:
-            return f'href="{mm.group(1)}#{dest}"'
-        return mm.group(0)
-    return re.subn(r'href="(/high-school/?)#hs-([a-z0-9-]+)"', repl, s)
+        dest = targets.get(slug(html.unescape(nm.group(1))))
+        if not dest:
+            return mm.group(0)
+        return f'<a{mm.group("pre")}href="{mm.group("prefix")}#{dest}"{mm.group("post")}>{inner}</a>'
+    return re.subn(
+        r'<a(?P<pre>\s[^>]*?)href="(?P<prefix>/high-school/?)#hs-(?P<sl>[a-z0-9-]+)"(?P<post>[^>]*)>(?P<inner>.*?)</a>',
+        repl, s, flags=re.S)
 
 HASHNAV_OLD = "var h=location.hash.slice(1).toLowerCase();show(h==='5a'?'5a':'6a',false)})();"
 HASHNAV_NEW = (
@@ -657,7 +671,8 @@ def p_standings_frag_ids(s):
     """Give ?view=bracket#6a / #5a a real id on the standings panels."""
     n = 0
     for cls in ('6a', '5a'):
-        if re.search(r'\bid="%s"' % cls, s):
+        # Must match a real tag, not the polish CSS `[id="6a"]` selector.
+        if re.search(r'<span id="%s" class="hs-frag"' % cls, s):
             continue
         s2, c = re.subn(
             r'(<section class="hsp" id="st-%s"[^>]*>)' % cls,
@@ -669,11 +684,20 @@ def p_standings_frag_ids(s):
     return s, n
 
 def hs_inpage_ids(html):
-    return set(re.findall(r'\bid="([^"]+)"', html))
+    """Id attributes on real tags only — ignore CSS selectors and script strings."""
+    cut = re.sub(r'<style\b[^>]*>.*?</style>', ' ', html, flags=re.S | re.I)
+    cut = re.sub(r'<script\b[^>]*>.*?</script>', ' ', cut, flags=re.S | re.I)
+    ids = set()
+    for tag in re.findall(r'<[^>]+>', cut):
+        if tag.startswith('</') or tag.startswith('<!'):
+            continue
+        m = re.search(r'\bid=["\']([^"\']+)["\']', tag)
+        if m:
+            ids.add(m.group(1))
+    return ids
 
 def unresolved_hs_hashes(pages):
     """pages: dict of url path -> html. Returns leftover in-site hashes that do not resolve."""
-    # tab hashes 6a/5a count as resolved when the id exists (p_standings_frag_ids).
     missing = []
     for src, html in pages.items():
         for href in re.findall(r'href="([^"]*#[^"]+)"', html):
@@ -719,12 +743,14 @@ def patch_site(root, sched, scores, today):
         p = f'{root}/{f}'; s0 = s = open(p, encoding='utf-8').read()
         s = p_ticker(s, G, fin, pend, winner, today)
         s, _ = p_ticker_mask(s)
+        # Frag ids before p_polish so the CSS `[id="6a"]` cannot satisfy the existence check.
+        if f == PAGES[1]:
+            s, _ = p_standings_frag_ids(s)
         s, _ = p_polish(s)
         s, _ = p_hashnav(s)
         s, n_href = p_hub_hrefs(s, G, fin, pend, today)
         if f == PAGES[0]: s, rep['hub'] = p_hub(s, G, fin, pend, today)
         if f == PAGES[1]:
-            s, _ = p_standings_frag_ids(s)
             s, rep['bracket'] = p_bracket(s, G, fin, pend)
         if s != s0: open(p, 'w', encoding='utf-8').write(s)
         rep[f] = s != s0

@@ -227,11 +227,16 @@ assert "UHSAA state playoffs · State finals Fri Nov 20" in hub2
 assert "Corner Canyon 45, Skyridge 44" in hub2 and "West 30, Orem 21" in hub2
 assert "https://sports.ksl.com/prep/championship-football-friday/579084" in hub2
 assert "Rice-Eccles Stadium" in hub2 and "2:30 PM MT" in hub2 and "11:00 AM MT" in hub2
-for aid in ("hs-6a-final", "hs-5a-final"):
-    i = hub2.find(f'<article id="{aid}"')
-    a = hub2[i:hub2.find("</article>", i)+10]
+for aid, cls in (("hs-6a-final", "6A"), ("hs-5a-final", "5A")):
+    i = hub2.find(f'<span id="{aid}" class="hs-jump"')
+    assert i >= 0, aid
+    h2 = hub2.find(f'<h2 class="hsh">{cls} <em>state final</em></h2>', i)
+    assert h2 > i, (aid, 'heading must follow the jump sentinel')
+    j = hub2.find("<article ", h2)
+    a = hub2[j:hub2.find("</article>", j)+10]
     assert hs.div_balance(a) == 0, (aid, hs.div_balance(a), a[:120])
     assert "quarterfinals" not in a.lower()
+    assert f'<article id="{aid}"' not in hub2
 local = b'<p>Email <a href="mailto:huddle@mtnsportsmedia.com">huddle@mtnsportsmedia.com</a> thanks.</p>'
 remote = b'<p>Email <a href="/cdn-cgi/l/email-protection#abc" class="__cf_email__" data-cfemail="abc">[email&#160;protected]</a><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> thanks.</p>'
 remote2 = b'<p>Email <a class="__cf_email__" data-cfemail="abc" href="/cdn-cgi/l/email-protection">[email&#160;protected]</a> thanks.</p>'
