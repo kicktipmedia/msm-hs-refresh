@@ -405,6 +405,36 @@
    "source_url": "https://sports.ksl.com/prep/uhsaa-playoffs-4a-5a-recap/578934",
    "entered_by": "MSM Site Ops",
    "entered_at": "2026-11-13T21:55-07:00"
+  },
+  {
+   "class": "5A",
+   "rid": "F",
+   "round": "Final",
+   "game": 1,
+   "date": "2026-11-20",
+   "home": "West",
+   "home_score": 30,
+   "away": "Orem",
+   "away_score": 21,
+   "source": "KSL Sports (1 matching line(s))",
+   "source_url": "https://sports.ksl.com/prep/championship-football-friday/579084",
+   "entered_by": "msm-hs-refresh (auto)",
+   "entered_at": "2026-11-25T08:36-07:00"
+  },
+  {
+   "class": "6A",
+   "rid": "F",
+   "round": "Final",
+   "game": 1,
+   "date": "2026-11-20",
+   "home": "Skyridge",
+   "home_score": 44,
+   "away": "Corner Canyon",
+   "away_score": 45,
+   "source": "KSL Sports (1 matching line(s))",
+   "source_url": "https://sports.ksl.com/prep/championship-football-friday/579084",
+   "entered_by": "msm-hs-refresh (auto)",
+   "entered_at": "2026-11-25T08:36-07:00"
   }
  ],
  "pending": []
