@@ -156,6 +156,53 @@ assert {(n["class"], n["home"], n["home_score"], n["away"], n["away_score"]) for
     ("6A", "Skyridge", 21, "Corner Canyon", 17),
     ("5A", "West", 14, "Orem", 10),
 }
+
+# 2026 title-game KSL shape: slug championship-football-friday, heading "Championship Game",
+# 5A score split across adjacent <strong> tags, 4A ignored.
+idx = """
+<a href="https://sports.ksl.com/prep/championship-football-friday/579084">champ</a>
+<a href="https://sports.ksl.com/prep/uhsaa-playoffs-4a-5a-recap/578934">sf5</a>
+<a href="https://sports.ksl.com/prep/6a-4a-semifinals-recap/578933">sf6</a>
+<a href="https://sports.ksl.com/prep/playoffs-week-3/578813">qf</a>
+<a href="https://sports.ksl.com/prep/playoffs-streaming-guide/578712">stream</a>
+"""
+found = hs.ksl_discover(idx)
+assert found[0] == "https://sports.ksl.com/prep/championship-football-friday/579084", found
+assert "578934" in found[1] and len(found) == 4, found
+assert all("streaming-guide" not in u for u in found), found
+# without championship in the slug, this page was previously skipped
+old_idx = idx.replace("championship-football-friday", "friday-night-lights")
+assert all("579084" not in u for u in hs.ksl_discover(old_idx)), hs.ksl_discover(old_idx)
+champ = """<h3>Class 5A — Championship Game</h3>
+<p><strong>No. 1 West Panthers 30, </strong><strong>No. 2 Orem Tigers 21</strong></p>
+<h3>Class 6A — Championship Game</h3>
+<p><strong>No. 1 Skyridge Falcons 44, No. 3 Corner Canyon Chargers 45</strong></p>
+<h3>Class 4A — Championship Game (6 p.m. MT Kickoff)</h3>
+<p><strong>No. 1 Ridgeline Riverhawks 14, No. 6 Skyline Eagles 41</strong></p>"""
+ch_rows = hs.parse_ksl(champ, "https://sports.ksl.com/prep/championship-football-friday/579084")
+assert [(r["cls"], r["round"], r["a"], r["a_score"], r["b"], r["b_score"]) for r in ch_rows] == [
+    ("5A", "F", "West Panthers", 30, "Orem Tigers", 21),
+    ("6A", "F", "Skyridge Falcons", 44, "Corner Canyon Chargers", 45),
+], ch_rows
+scores_live = json.load(open("$ROOT/data/hs_scores.json", encoding="utf-8"))
+newC, confC, unC = hs.merge(sched, scores_live, ch_rows, "2026-11-25")
+assert confC == [] and unC == [] and len(newC) == 2, (newC, confC, unC)
+assert {(n["class"], n["home"], n["home_score"], n["away"], n["away_score"]) for n in newC} == {
+    ("5A", "West", 30, "Orem", 21),
+    ("6A", "Skyridge", 44, "Corner Canyon", 45),
+}, newC
+
+empty_tk = '<div class="ticker" data-lvl="hs"><div><span class="tkh"></span><span class="tkh" aria-hidden="true"></span></div><template class="tkf"></template></div>'
+# reuse championship rows already merged into a throwaway scores copy
+sc_tk = json.load(open("$ROOT/data/hs_scores.json", encoding="utf-8"))
+for n in newC:
+    sc_tk["finals"].append(n)
+G_tk, fin_tk, pend_tk, win_tk = hs.resolve(sched, sc_tk)
+filled = hs.p_ticker(empty_tk, G_tk, fin_tk, pend_tk, win_tk, "2026-11-25")
+assert "West 30, Orem 21" in filled and "Corner Canyon 45, Skyridge 44" in filled, filled
+assert filled.count("data-kt") >= 4, filled  # two finals x two .tkh copies
+assert "tabindex=\"-1\"" in filled
+assert "<span class=\"tkh\"></span>" not in filled
 local = b'<p>Email <a href="mailto:huddle@mtnsportsmedia.com">huddle@mtnsportsmedia.com</a> thanks.</p>'
 remote = b'<p>Email <a href="/cdn-cgi/l/email-protection#abc" class="__cf_email__" data-cfemail="abc">[email&#160;protected]</a><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> thanks.</p>'
 remote2 = b'<p>Email <a class="__cf_email__" data-cfemail="abc" href="/cdn-cgi/l/email-protection">[email&#160;protected]</a> thanks.</p>'

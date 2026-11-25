@@ -22,15 +22,25 @@ def get(url, timeout=30):
 
 def ksl_discover(index_html, limit=4):
     ids = {}
-    for u in re.findall(r'https://sports\.ksl\.com/prep/[a-z0-9-]*(?:playoff|recap|roundup)[a-z0-9-]*/(\d+)', index_html):
-        pass
-    for m in re.finditer(r'(https://sports\.ksl\.com/prep/([a-z0-9-]*(?:playoff|recap|roundup)[a-z0-9-]*)/(\d+))', index_html):
+    # Include "championship" slugs (e.g. championship-football-friday). playoff|recap|roundup alone missed the 2026 5A/6A title recap.
+    pat = r'(https://sports\.ksl\.com/prep/([a-z0-9-]*(?:playoff|recap|roundup|championship)[a-z0-9-]*)/(\d+))'
+    for m in re.finditer(pat, index_html):
         ids[int(m.group(3))] = m.group(1)
     return [ids[k] for k in sorted(ids, reverse=True)[:limit]]
 
 def norm(s): return re.sub(r'[^a-z]', '', html.unescape(s).lower())
 
 ROUNDMAP = {'firstround': 'R1', 'quarterfinals': 'QF', 'quarterfinal': 'QF', 'semifinals': 'SF', 'semifinal': 'SF', 'final': 'F', 'finals': 'F', 'championship': 'F', 'statechampionship': 'F', 'statefinal': 'F', 'statefinals': 'F'}
+def _round_of(rest):
+    """Map a Class heading remainder to a round. Exact first, then longest prefix.
+    'Championship Game' and 'Championship Game (6 p.m. MT Kickoff)' both map to F."""
+    n = norm(rest)
+    if n in ROUNDMAP:
+        return ROUNDMAP[n]
+    for key in sorted(ROUNDMAP, key=len, reverse=True):
+        if n.startswith(key):
+            return ROUNDMAP[key]
+    return None
 COVERED = {'5A', '6A'}  # 4A and other classifications are not on this site
 _CLASS = re.compile(r'^Class\s+(\dA)\b(?:\s*[—–\-]\s*|\s+)(.+)$', re.I)
 _SCORE = re.compile(r'^No\.\s*(\d+)\s+(.+?)\s+(\d+)\s*,\s*No\.\s*(\d+)\s+(.+?)\s+(\d+)(?:\s*,?\s*\(?\d?OT\)?)?\s*\.?$')
@@ -44,6 +54,7 @@ def parse_ksl(page, url):
     """KSL roundup. Accepts both shapes, and does not guess:
     <h3>Class 5A — First round</h3><strong>No. 16 Roy 0, No. 1 West 63</strong>
     <h2>Class 6A semifinals</h2><h3>No. 1 Skyridge 35, No. 4 Herriman 34</h3>
+    <h3>Class 5A — Championship Game</h3><strong>No. 1 West Panthers 30, </strong><strong>No. 2 Orem Tigers 21</strong>
     A score split across two adjacent <strong> tags, with a trailing mascot, is one line.
     A line that is not a complete seeded score is skipped. 4A is ignored."""
     page = re.sub(r'</strong>\s*<strong>', ' ', page, flags=re.I)
@@ -54,7 +65,7 @@ def parse_ksl(page, url):
             t = _plain(m.group(2))
             h = _CLASS.match(t)
             if h:
-                c, r = h.group(1).upper(), ROUNDMAP.get(norm(h.group(2)))
+                c, r = h.group(1).upper(), _round_of(h.group(2))
                 if c in COVERED and r:
                     cls, rnd, cls_level = c, r, level
                 else:
@@ -226,8 +237,12 @@ def ticker_items(G, fin, pend, winner, today, tab):
     return ''.join(out)
 
 def p_ticker(s, G, fin, pend, winner, today):
-    return re.sub(r'(<span class="tkh"[^>]*>)((?:<span data-kt[^>]*>.*?</span>)+)</span>',
-                  lambda m: m.group(1) + ticker_items(G, fin, pend, winner, today, 'tabindex="-1"' in m.group(2)) + '</span>', s)
+    """Fill .tkh even when the morning cleanup left it empty. Previously the regex
+    required an existing data-kt child, so a cleared ticker could never be repopulated."""
+    def _repl(m):
+        hidden = 'aria-hidden' in m.group(1)
+        return m.group(1) + ticker_items(G, fin, pend, winner, today, hidden) + '</span>'
+    return re.sub(r'(<span class="tkh"[^>]*>)(?:(?:<span data-kt[^>]*>.*?</span>)+)?</span>', _repl, s)
 
 ROW = r'(?:<a class="t[^"]*"[^>]*>.*?</a>|<div class="t[^"]*">.*?</div>)'
 BLK = re.compile(r'<(div|article)(?P<at>[^>]*\bclass="g(?: [^"]*)?"[^>]*)>(?P<r1>' + ROW + r')(?P<r2>' + ROW + r')(?P<gm><div class="gm[^"]*">.*?</div>)(?P<end></div>|</article>)', re.S)
