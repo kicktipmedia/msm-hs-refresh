@@ -5,6 +5,12 @@ set -u; ROOT=$(cd "$(dirname "$0")/.." && pwd); OUT=${1:-/tmp/hs-tests}; rm -rf 
 # still refuses to deploy when the root they are given actually has hold set.
 fresh_state(){ jq 'del(.hold)' "$1" > "$2"; }
 copy(){ rm -rf "$OUT/$1"; mkdir -p "$OUT/$1"; cp -a "$ROOT/site" "$ROOT/data" "$OUT/$1/"; fresh_state "$ROOT/state.json" "$OUT/$1/state.json"; }
+# Throwaway copy without recorded state finals (rid F). Tests that need the synthetic
+# sf_final.html (6A-F Skyridge 21-17) to publish must use this: once site/ is resynced to
+# a live tree that already shows the real finals, the recorded 6A-F row makes that fixture a
+# CONFLICT -> pending -> "no site change -> skip deploy", so the mocked deploy/verify/rollback
+# path is never reached and B1/B2/wrangler/verify-timeout fail-close (hs-refresh Nov 25-26).
+copy_nof(){ copy "$1"; python3 -c "import json,sys;p=sys.argv[1];d=json.load(open(p));d['finals']=[f for f in d['finals'] if f.get('rid')!='F'];json.dump(d,open(p,'w'),indent=1)" "$OUT/$1/data/hs_scores.json"; }
 run(){ name=$1; shift; copy $name; python3 "$ROOT/tools/run.py" --root "$OUT/$name" "$@" > "$OUT/$name.log" 2>&1; echo $? > "$OUT/$name.rc"; }
 check(){ if eval "$2"; then echo "PASS $1"; else echo "FAIL $1"; fail=1; fi; }
 # T1 frozen fixture of finals already in data/hs_scores.json: full path is a no-op.
@@ -55,8 +61,9 @@ gitinit(){ (cd "$OUT/$1" && git init -q && git add -A && git -c user.name=t -c u
 # workflow failure step, copied from hs-refresh.yml
 wf_fail(){ (cd "$OUT/$1" && git checkout -- data site && git clean -fdq data site && if jq -e .hold state.json >/dev/null && ! git diff --quiet -- state.json; then git add state.json && git -c user.name=t -c user.email=t@t commit -qm hold; else git checkout -- state.json; fi); }
 echo "{\"canon\":[\"$L\",\"$L\"],\"verify_bad\":true}" > "$OUT/m_b1.json"
-copy t5_b1; gitinit t5_b1
+copy_nof t5_b1; gitinit t5_b1
 HS_MOCK="$OUT/m_b1.json" python3 "$ROOT/tools/run.py" --root "$OUT/t5_b1" --target production --fixture "$FX" --now $NOW > "$OUT/t5_b1.log" 2>&1; echo $? > "$OUT/t5_b1.rc"
+check "B precondition: sf_final fixture changes site (mocked deploy path reached)" "grep -q 'changed files \['\''high-school/' $OUT/t5_b1.log && ! grep -q 'no site change -> skip deploy' $OUT/t5_b1.log"
 check "B1 verify fail -> exit 16, rollback confirmed, hold set" "[ \$(cat $OUT/t5_b1.rc) = 16 ] && grep -q 'ROLLED BACK to .* confirmed' $OUT/t5_b1.log && jq -e '.hold.code==16' $OUT/t5_b1/state.json >/dev/null"
 wf_fail t5_b1
 check "B1 data/site not committed (HEAD~1..HEAD touches only state.json, tree clean)" "(cd $OUT/t5_b1 && [ \"\$(git diff --name-only HEAD~1 HEAD)\" = state.json ] && git diff --quiet HEAD -- data site)"
@@ -65,17 +72,17 @@ HS_MOCK="$OUT/m_ok.json" python3 "$ROOT/tools/run.py" --root "$OUT/t5_b1" --targ
 check "B1 hold blocks next production run (exit 18, no deploy)" "[ \$(cat $OUT/t5_b1b.rc) = 18 ] && ! grep -q deployed $OUT/t5_b1b.log && grep -q 'production on HOLD' $OUT/t5_b1/report.json"
 # B2 rollback raises
 echo "{\"canon\":[\"$L\"],\"verify_bad\":true,\"rollback_raises\":true}" > "$OUT/m_b2.json"
-copy t6_b2
+copy_nof t6_b2
 HS_MOCK="$OUT/m_b2.json" python3 "$ROOT/tools/run.py" --root "$OUT/t6_b2" --target production --fixture "$FX" --now $NOW > "$OUT/t6_b2.log" 2>&1; echo $? > "$OUT/t6_b2.rc"
 check "B2 rollback exception -> exit 17 + report.json + PRODUCTION ROLLBACK FAILED issue + hold" "[ \$(cat $OUT/t6_b2.rc) = 17 ] && jq -e '.exit==17 and .status==\"fail-rollback\" and any(.issues[]; .title==\"PRODUCTION ROLLBACK FAILED\")' $OUT/t6_b2/report.json >/dev/null && jq -e '.hold.code==17' $OUT/t6_b2/state.json >/dev/null"
 # B2b rollback 'succeeds' but canonical still the bad deploy
 echo "{\"canon\":[\"$L\",\"deadbeef-bad\"],\"verify_bad\":true}" > "$OUT/m_b2b.json"
-copy t6_b2b
+copy_nof t6_b2b
 HS_MOCK="$OUT/m_b2b.json" python3 "$ROOT/tools/run.py" --root "$OUT/t6_b2b" --target production --fixture "$FX" --now $NOW > "$OUT/t6_b2b.log" 2>&1; echo $? > "$OUT/t6_b2b.rc"
 check "B2 rollback unconfirmed (live != pre-deploy) -> exit 17" "[ \$(cat $OUT/t6_b2b.rc) = 17 ] && grep -q 'deadbeef-bad != pre-deploy' $OUT/t6_b2b.log"
 # wrangler fails but canonical moved -> rollback
 echo "{\"canon\":[\"$L\",\"moved-1234\",\"$L\"],\"deploy\":{\"rc\":1,\"out\":\"boom\"}}" > "$OUT/m_w.json"
-copy t7_wr
+copy_nof t7_wr
 HS_MOCK="$OUT/m_w.json" python3 "$ROOT/tools/run.py" --root "$OUT/t7_wr" --target production --fixture "$FX" --now $NOW > "$OUT/t7_wr.log" 2>&1; echo $? > "$OUT/t7_wr.rc"
 check "wrangler fail + canonical moved -> rollback confirmed, exit 15, hold" "[ \$(cat $OUT/t7_wr.rc) = 15 ] && grep -q 'ROLLED BACK to .* confirmed' $OUT/t7_wr.log && jq -e '.hold.code==15' $OUT/t7_wr/state.json >/dev/null"
 # path guard catches deletions
@@ -84,11 +91,11 @@ HS_MOCK="$OUT/m_del.json" python3 "$ROOT/tools/run.py" --root "$OUT/t8_del" --fi
 check "path guard: file missing from output (deletion) -> exit 14" "[ \$(cat $OUT/t8_del.rc) = 14 ] && grep -q 'DELETED robots.txt' $OUT/t8_del.log"
 # Post-deploy fetch error and post-verify canonical read must roll back and hold (exit 16), not crash as rc 1.
 echo "{\"canon\":[\"$L\",\"$L\"],\"verify_raises\":true}" > "$OUT/m_vr.json"
-copy t_vr
+copy_nof t_vr
 HS_MOCK="$OUT/m_vr.json" python3 "$ROOT/tools/run.py" --root "$OUT/t_vr" --target production --fixture "$FX" --now $NOW > "$OUT/t_vr.log" 2>&1; echo $? > "$OUT/t_vr.rc"
 check "verify fetch timeout -> rollback confirmed, hold, exit 16" "[ \$(cat $OUT/t_vr.rc) = 16 ] && grep -q 'verify fetch failed' $OUT/t_vr.log && grep -q 'ROLLED BACK to .* confirmed' $OUT/t_vr.log && jq -e '.hold.code==16' $OUT/t_vr/state.json >/dev/null"
 echo "{\"canon\":[\"$L\",\"$L\"],\"canon_raises\":true,\"verify_match_out\":true}" > "$OUT/m_cr.json"
-copy t_cr
+copy_nof t_cr
 HS_MOCK="$OUT/m_cr.json" python3 "$ROOT/tools/run.py" --root "$OUT/t_cr" --target production --fixture "$FX" --now $NOW > "$OUT/t_cr.log" 2>&1; echo $? > "$OUT/t_cr.rc"
 check "post-verify canonical read timeout -> rollback confirmed, hold, exit 16" "[ \$(cat $OUT/t_cr.rc) = 16 ] && grep -q 'canonical read failed' $OUT/t_cr.log && grep -q 'ROLLED BACK to .* confirmed' $OUT/t_cr.log && jq -e '.hold.code==16' $OUT/t_cr/state.json >/dev/null"
 # allowlist
