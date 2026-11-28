@@ -256,6 +256,23 @@ def ticker_items(G, fin, pend, winner, today, tab):
                 out.append(f'<span data-kt="{exp}"><b>{k} {LB[g['round']]}</b> · <a class="tml"{ti} href="/high-school/#{anchor}">{html.escape(pend[g["id"]]["winner"])} advances</a></span>')
     return ''.join(out)
 
+PILL_UP = 'UP NEXT'
+PILL_CHAMPS = 'STATE CHAMPS'
+# Measured with Oswald 700, 0.6rem, letter-spacing .1em, padding 4px 8px 3px 21px (ticker-pill-v2.css):
+# UP NEXT is 66.7px (matches the 67px mask). STATE CHAMPS is 97.5px, so the mask is 98px
+# and the text inset stays 17px past the mask (84 - 67 = 17; 98 + 17 = 115).
+PILL_CHAMPS_MASK_PX = 98
+PILL_CHAMPS_PAD_PX = 115
+
+def ticker_pill_label(G, fin, pend, winner, today):
+    """Pill text for the HS ticker. STATE CHAMPS only when every visible item is a sourced
+    state final (the existing '<b>6A State final</b>' / '5A State final' labels). Upcoming
+    games or earlier-round results keep UP NEXT."""
+    labels = re.findall(r'<b>([^<]+)</b>', ticker_items(G, fin, pend, winner, today, False))
+    if labels and all(re.fullmatch(r'(?:6A|5A) State final', x) for x in labels):
+        return PILL_CHAMPS
+    return PILL_UP
+
 def p_ticker(s, G, fin, pend, winner, today):
     """Fill .tkh even when the morning cleanup left it empty. Previously the regex
     required an existing data-kt child, so a cleared ticker could never be repopulated."""
@@ -610,9 +627,24 @@ POLISH_CSS = (
     'background:#000e28;pointer-events:none}'
 )
 
-def p_polish(s):
+def polish_css(pill=PILL_UP):
+    """Base later-pass CSS, plus a STATE CHAMPS override when the ticker is champs-only.
+    The override lives here (after ticker-pill-v2.css in the page) with a [data-lvl=hs]
+    selector so it wins over the shared UP NEXT rule without editing that file, which
+    the cron does not own. Default UP NEXT adds no extra rules, so a non-champs patch
+    stays byte-identical to the existing polish block."""
+    css = POLISH_CSS
+    if pill == PILL_CHAMPS:
+        css += (
+            'html body .ticker[data-lvl=hs]::before{content:"%s"}'
+            'html body .ticker[data-lvl=hs]>.tkmask{width:%dpx}'
+            'html body .ticker[data-lvl=hs]>div{padding-left:%dpx}'
+        ) % (PILL_CHAMPS, PILL_CHAMPS_MASK_PX, PILL_CHAMPS_PAD_PX)
+    return css
+
+def p_polish(s, pill=PILL_UP):
     """Inject or refresh the later-pass style block on an HS page."""
-    style = f'<style id="{POLISH_STYLE_ID}">{POLISH_CSS}</style>'
+    style = f'<style id="{POLISH_STYLE_ID}">{polish_css(pill)}</style>'
     s2, n = re.subn(r'<style id="%s"[^>]*>.*?</style>' % POLISH_STYLE_ID, style, s, count=1, flags=re.S)
     if n:
         return s2, s2 != s
@@ -757,6 +789,8 @@ def unresolved_hs_hashes(pages):
 PAGES = ['high-school/index.html', 'high-school/standings/index.html', 'high-school/recruiting/index.html']
 def patch_site(root, sched, scores, today):
     G, fin, pend, winner = resolve(sched, scores); rep = {}
+    pill = ticker_pill_label(G, fin, pend, winner, today)
+    rep['pill'] = pill
     for f in PAGES:
         p = f'{root}/{f}'; s0 = s = open(p, encoding='utf-8').read()
         s = p_ticker(s, G, fin, pend, winner, today)
@@ -764,7 +798,7 @@ def patch_site(root, sched, scores, today):
         # Frag ids before p_polish so the CSS `[id="6a"]` cannot satisfy the existence check.
         if f == PAGES[1]:
             s, _ = p_standings_frag_ids(s)
-        s, _ = p_polish(s)
+        s, _ = p_polish(s, pill)
         s, _ = p_hashnav(s)
         s, n_href = p_hub_hrefs(s, G, fin, pend, today)
         if f == PAGES[0]: s, rep['hub'] = p_hub(s, G, fin, pend, today)
