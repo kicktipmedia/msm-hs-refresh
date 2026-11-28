@@ -207,6 +207,17 @@ def tfmt(hhmm):
     return datetime.datetime.strptime(hhmm, '%H:%M').strftime('%-I:%M %p') + ' MT'
 def dfmt(date): return datetime.date.fromisoformat(date).strftime('%a %b %-d')
 
+CHAMP_KEEP_DAYS = 365  # data-kt offset for kept champions; stable so a daily patch is byte-identical (no daily redeploy)
+def champs_rolled(G, today, final_date):
+    """True once the next HS season has a posted game. That is any schedule row whose date is in a
+    later calendar year than the state final (a season runs Aug-Nov inside one year), or any row dated
+    today or later that is not a state final (round F). Rows are only ever read, never invented."""
+    for g in G.values():
+        d = g.get('date') or ''
+        if d[:4] > final_date[:4]: return True
+        if d >= today and g['round'] != 'F': return True
+    return False
+
 def ticker_items(G, fin, pend, winner, today, tab):
     ti = ' tabindex="-1"' if tab else ''
     out = []; ab = {'QF': 'QF', 'SF': 'SF', 'F': 'State final'}
@@ -226,7 +237,14 @@ def ticker_items(G, fin, pend, winner, today, tab):
         LB = {'R1': 'Final', 'QF': 'QF final', 'SF': 'Semifinal', 'F': 'State final'}
         nxt = [g for g in G.values() if g['cls'] == k and order.index(g['round']) == last + 1]
         exp = kt(min(g['date'] for g in nxt), '18:00') if nxt else kt((datetime.date.fromisoformat(max(g['date'] for g in done)) + datetime.timedelta(days=7)).isoformat(), '18:00')
-        if exp[:10] < today: continue  # expired results are not re-emitted
+        # Sourced state finals (round F, in fin) stay up through the offseason. They roll off when the next
+        # season's first game is posted (champs_rolled). Earlier rounds, and a final that is only in pend, keep the 7-day rule.
+        champs = [g for g in done if g['round'] == 'F' and g['id'] in fin]
+        if champs and last == order.index('F'):
+            fd = max(g['date'] for g in champs)
+            if champs_rolled(G, today, fd): continue
+            exp = kt((datetime.date.fromisoformat(fd) + datetime.timedelta(days=CHAMP_KEEP_DAYS)).isoformat(), '18:00')
+        elif exp[:10] < today: continue  # expired results are not re-emitted
         for g in sorted([g for g in done if order.index(g['round']) == last], key=lambda g: g['n']):
             if g['id'] not in fin and not pend[g['id']].get('winner'): continue  # unresolved: nothing published
             # Final / SF cards use stable round ids (hs-6a-final), not the winner's QF slug

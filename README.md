@@ -22,3 +22,6 @@ A failed production verify, a failed/unconfirmed rollback, or a wrangler failure
 Exit codes: 0 ok/skip, 12 guard mismatch, 13 stale base, 14 diff scope (incl. deletions), 15 deploy fail, 16 verify fail (rolled back + confirmed, hold), 17 PRODUCTION ROLLBACK FAILED (issue, hold), 18 refused: hold set.
 
 Sources: KSL only (`sports.ksl.com`, `ksl.com`, `www.ksl.com`, https, re-checked after redirects). UHSAA/school sites are hand-entry only.
+
+## Ticker: state champions stay up through the offseason
+Sourced state finals (round F, recorded in `data/hs_scores.json`) stay on the HS ticker after the 7-day window. Their `data-kt` is the final date plus 365 days at 6 PM MT, a fixed value so the daily patch stays byte-identical and `hs-ticker.js` (which drops items 3 hours past `data-kt`) does not hide them. They roll off when the next season has a posted game: any schedule row dated in a later calendar year than the final, or any row dated today or later that is not a state final. Earlier rounds, and a final that exists only as a hand-held pending winner, keep the 7-day rule. See `champs_rolled` / `ticker_items` in `tools/hs.py` and `tests/champs_check.py`.
