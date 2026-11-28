@@ -410,4 +410,8 @@ check "C2 patched HS pages keep per-card div balance" "[ \$(cat $OUT/c2.rc) = 0 
 # Hub polish: name wrap CSS, hash nav, leftover QF hrefs resolve, second pass no-op.
 python3 "$ROOT/tests/hspolish_check.py" "$ROOT" > "$OUT/hspolish.out" 2> "$OUT/hspolish.err"; echo $? > "$OUT/hspolish.rc"
 check "HS polish: name wrap CSS, in-site hashes resolve, tab JS, second pass no-op" "[ \$(cat $OUT/hspolish.rc) = 0 ]"
+
+# Offseason champions: sourced 6A/5A state finals stay on the HS ticker until the next season has a posted game; earlier rounds keep the 7-day rule.
+python3 "$ROOT/tests/champs_check.py" "$ROOT" > "$OUT/champs.out" 2> "$OUT/champs.err"; echo $? > "$OUT/champs.rc"
+check "HS ticker keeps sourced state finals through the offseason, rolls off on a next-season game, earlier rounds expire in 7 days" "[ \$(cat $OUT/champs.rc) = 0 ]"
 exit $fail
